@@ -45,6 +45,9 @@
     <ClInclude Include="Sounds.h">
       <Filter>Game</Filter>
     </ClInclude>
+    <ClInclude Include="GameResources.h">
+      <Filter>Game</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -57,6 +60,9 @@
       <Filter>Game</Filter>
     </ClCompile>
     <ClCompile Include="Sounds.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="GameResources.cpp">
       <Filter>Game</Filter>
     </ClCompile>
   </ItemGroup>

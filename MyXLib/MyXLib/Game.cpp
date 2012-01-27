@@ -3,6 +3,7 @@
 #include "game.h"
 #include "GameMap.h"
 #include "Sounds.h"
+#include "GameResources.h"
 #include "../MXLib/MXParticles.h"
 #include "../MXLib/MXAnimUtils.h"
 
@@ -72,6 +73,21 @@ shared_ptr<MX::Animation> CreateAnimationFromFile(wchar_t* file, int number, DWO
 		}
 	};
 
+	class Flower1 : public ActorSprite
+	{
+	public:
+		Flower1()
+		{
+			scaleX = 0.5f;
+			scaleY = 0.5f;
+
+			pos.x = 100.0f;
+			pos.y = 100.0f;
+			animation = make_shared<SpecificAnimation>(GraphicRes.flower1);
+			animation->Start();
+		}
+	};
+
 
 	
 	class Player : public ActorSprite
@@ -137,7 +153,7 @@ shared_ptr<MX::Animation> CreateAnimationFromFile(wchar_t* file, int number, DWO
 
 			z = previous->z+0.01f;
 
-			animation = make_shared<SpecificAnimation>(CreateAnimationFromFile(L"images\\wonsz\\WonszBody.png"));
+			animation = make_shared<SpecificAnimation>(GraphicRes.snake_body);
 			animation->Start();
 
 			previous_part = previous;
@@ -187,7 +203,7 @@ shared_ptr<MX::Animation> CreateAnimationFromFile(wchar_t* file, int number, DWO
 			//y = 100.0f;
 			pos = v2d(100.0f,100.0f);
 			z = 0.0f;
-			animation = make_shared<SpecificAnimation>(CreateAnimationFromFile(L"images\\wonsz\\WonszGlowa.png"));
+			animation = make_shared<SpecificAnimation>(GraphicRes.snake_head);
 			animation->Start();
 
 			AddBodypart();
@@ -231,6 +247,8 @@ void InitializeGame(const shared_ptr<MX::Draw> &_draw, const shared_ptr<MX::Spri
 
 	scene->AddActor(make_shared<MX::PlayerSnake>(*draw));
 
+	scene->AddActor(make_shared<MX::Flower1>());
+
 }
 
 void initGame(const shared_ptr<MX::Draw> &_draw, const shared_ptr<MX::Spriter> &_spriter, MX::Scene *_scene)
@@ -239,6 +257,8 @@ void initGame(const shared_ptr<MX::Draw> &_draw, const shared_ptr<MX::Spriter> &
 	spriter = _spriter;
 	scene = _scene;
 	SoundBank::Initialize();
+
+	GraphicRes.Init(*_draw);
 
 }
 
