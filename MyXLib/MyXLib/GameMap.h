@@ -88,8 +88,8 @@ public:
 		for(int i=0;i<height;i++){
 			for(int j=0;j<width;j++){
 				shared_ptr<ImageSprite> tile = tiles[i*width+j].actor;
-				tile->x=(float)j*tile->GetImage()->Width();
-				tile->y=(float)i*tile->GetImage()->Height();
+				tile->pos.x=(float)j*tile->GetImage()->Width();
+				tile->pos.y=(float)i*tile->GetImage()->Height();
 				tile->z=1.0f;
 				scene->AddActor(tile);
 			}

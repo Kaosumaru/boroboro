@@ -5,6 +5,7 @@
 #include <memory>
 #include <vector>
 #include <map>
+#include "v2d.hpp"
 #include "MXUtils.h"
 #include "MXDraw.h"
 #include "MXAnimation.h"
@@ -78,7 +79,7 @@ namespace MX
 		Actor()
 		{
 			z = -1.0f;
-			x = y = 0.0f;
+			//x = y = 0.0f;
 			scaleX = scaleY = 1.0f;
 			color = 0xFFFFFFFF;
 			rotation = 0.0f;
@@ -91,8 +92,9 @@ namespace MX
 		virtual void Die();
 		bool alive;
 	//aktor przechowuje pozycje
-		float x; 
-		float y;
+		//float x; 
+		//float y;
+		v2d pos;
 		float z;
 	//podstawowy kolor
 		D3DXCOLOR color;
@@ -127,8 +129,9 @@ namespace MX
 
 	protected:
 		shared_ptr<Image> image;
-		float cx;
-		float cy;
+		//float cx;
+		//float cy;
+		v2d cpos;
 	};
 
 

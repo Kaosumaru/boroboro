@@ -62,23 +62,23 @@ namespace MX
 
 		bool operator () (Actor &actor) 
 		{
-			float dx = _x - actor.x;
-			float dy = _y - actor.y;
+			float dx = _x - actor.pos.x;
+			float dy = _y - actor.pos.y;
 			float dist = sqrt(dx*dx + dy*dy);
 			dx/=dist;
 			dy/=dist;
 			dx*=_speed*World::GetElapsedFloat();
 			dy*=_speed*World::GetElapsedFloat();
 
-			if ((actor.x  < _x) != (actor.x + dx <= _x))
-				actor.x = _x;
+			if ((actor.pos.x  < _x) != (actor.pos.x + dx <= _x))
+				actor.pos.x = _x;
 			else
-				actor.x += dx;
-			if ((actor.y  < _y) != (actor.y + dy <= _y))
-				actor.y = _y;
+				actor.pos.x += dx;
+			if ((actor.pos.y  < _y) != (actor.pos.y + dy <= _y))
+				actor.pos.y = _y;
 			else
-				actor.y += dy;
-			return actor.x != _x || actor.y != _y;
+				actor.pos.y += dy;
+			return actor.pos.x != _x || actor.pos.y != _y;
 		}
 
 	protected:
@@ -96,8 +96,8 @@ namespace MX
 
 		bool operator () (Actor &actor) 
 		{
-			actor.x = _x;
-			actor.y = _y;
+			actor.pos.x = _x;
+			actor.pos.y = _y;
 			return false;
 		}
 
