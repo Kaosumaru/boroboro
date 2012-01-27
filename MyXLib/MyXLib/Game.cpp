@@ -145,11 +145,50 @@ shared_ptr<MX::Animation> CreateAnimationFromFile(wchar_t* file, int number, DWO
 	};
 
 
-	class PlayerSnake : public Player
+
+	class PlayerSnake_Body : public ActorSprite
+	{
+	public:
+		PlayerSnake_Body(ActorSprite *previous)
+		{
+			scaleX = 0.5f;
+			scaleY = 0.5f;
+
+			animation = make_shared<SpecificAnimation>(CreateAnimationFromFile(L"images\\wonsz\\WonszBody.png"));
+			animation->Start();
+
+			previous_part = previous;
+		}
+			
+		void Do()
+		{
+			float dx, dy;
+			dx = cos(previous_part->rotation);
+			dy = sin(previous_part->rotation);
+
+			x = previous_part->x;
+			y = previous_part->y;
+
+			x -= dx*32;
+			y -= dy*32;
+
+			rotation = previous_part->rotation;
+			__super::Do();
+		}
+
+	protected:
+
+		ActorSprite *previous_part;
+
+	};
+
+	class PlayerSnake : public Player, public enable_shared_from_this<PlayerSnake>
 	{
 	public:
 		PlayerSnake(Draw &draw) : Player() 
 		{
+			last_body_part = this;
+
 			Player_Direction = 0.0f;
 
 			scaleX = 0.5f;
@@ -160,17 +199,29 @@ shared_ptr<MX::Animation> CreateAnimationFromFile(wchar_t* file, int number, DWO
 			z = 0.0f;
 			animation = make_shared<SpecificAnimation>(CreateAnimationFromFile(L"images\\wonsz\\WonszGlowa.png"));
 			animation->Start();
+
+			AddBodypart();
+			AddBodypart();
+			AddBodypart();
+		}
+
+		void AddBodypart()
+		{
+			auto body_part = make_shared<PlayerSnake_Body>(last_body_part);
+
+			last_body_part = &(*body_part);
+			scene->AddActor(body_part);
 		}
 
 		void Do()
 		{
-			
 			KeyoardNavigate();
 			Move();
-
 			Actor::rotation = Player_Direction;
 			__super::Do();
 		}
+	protected:
+		ActorSprite *last_body_part;
 	};
 
 }
