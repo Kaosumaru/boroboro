@@ -1,0 +1,143 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Draw">
+      <UniqueIdentifier>{58968a86-8c70-46fe-9547-03eaa6bd9cba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utils">
+      <UniqueIdentifier>{6ee88c15-232d-497f-acb6-2818d1be634e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sound">
+      <UniqueIdentifier>{20663f1f-d793-49ae-83c9-2172e2109dc5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Theathrum">
+      <UniqueIdentifier>{a118fa3c-0edc-4128-aa16-99179f7bedaf}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="stdafx.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MXDraw.h">
+      <Filter>Draw</Filter>
+    </ClInclude>
+    <ClInclude Include="MXImage.h">
+      <Filter>Draw</Filter>
+    </ClInclude>
+    <ClInclude Include="MXSpriter.h">
+      <Filter>Draw</Filter>
+    </ClInclude>
+    <ClInclude Include="MXWindow.h">
+      <Filter>Draw</Filter>
+    </ClInclude>
+    <ClInclude Include="MXUtils.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="MXTimer.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="MXWorld.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="MXAnimation.h">
+      <Filter>Draw</Filter>
+    </ClInclude>
+    <ClInclude Include="bass.h">
+      <Filter>Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="MXSound.h">
+      <Filter>Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="MXFont.h">
+      <Filter>Draw</Filter>
+    </ClInclude>
+    <ClInclude Include="MXLine.h">
+      <Filter>Draw</Filter>
+    </ClInclude>
+    <ClInclude Include="MXScene.h">
+      <Filter>Theathrum</Filter>
+    </ClInclude>
+    <ClInclude Include="MXScript.h">
+      <Filter>Theathrum</Filter>
+    </ClInclude>
+    <ClInclude Include="MXParticles.h">
+      <Filter>Theathrum</Filter>
+    </ClInclude>
+    <ClInclude Include="MXAnimUtils.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MXDraw.cpp">
+      <Filter>Draw</Filter>
+    </ClCompile>
+    <ClCompile Include="MXImage.cpp">
+      <Filter>Draw</Filter>
+    </ClCompile>
+    <ClCompile Include="MXSpriter.cpp">
+      <Filter>Draw</Filter>
+    </ClCompile>
+    <ClCompile Include="MXWindow.cpp">
+      <Filter>Draw</Filter>
+    </ClCompile>
+    <ClCompile Include="MXTimer.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="MXWorld.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="MXAnimation.cpp">
+      <Filter>Draw</Filter>
+    </ClCompile>
+    <ClCompile Include="MXSound.cpp">
+      <Filter>Sound</Filter>
+    </ClCompile>
+    <ClCompile Include="MXFont.cpp">
+      <Filter>Draw</Filter>
+    </ClCompile>
+    <ClCompile Include="MXUtils.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="MXLine.cpp">
+      <Filter>Draw</Filter>
+    </ClCompile>
+    <ClCompile Include="MXScene.cpp">
+      <Filter>Theathrum</Filter>
+    </ClCompile>
+    <ClCompile Include="MXScript.cpp">
+      <Filter>Theathrum</Filter>
+    </ClCompile>
+    <ClCompile Include="MXParticles.cpp">
+      <Filter>Theathrum</Filter>
+    </ClCompile>
+    <ClCompile Include="MXAnimUtils.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="lib\bass.lib">
+      <Filter>Sound</Filter>
+    </Library>
+  </ItemGroup>
+</Project>
