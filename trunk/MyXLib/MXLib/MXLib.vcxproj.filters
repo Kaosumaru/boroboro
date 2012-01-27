@@ -84,6 +84,9 @@
     <ClInclude Include="MXAnimUtils.h">
       <Filter>Utils</Filter>
     </ClInclude>
+    <ClInclude Include="v2d.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">

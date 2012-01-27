@@ -33,8 +33,8 @@ namespace MX
 			}
 			float fP = GetPercent();
 
-			x += dx * speed * World::GetElapsedFloat();
-			y += dy * speed * World::GetElapsedFloat();
+			pos.x += delta.x * speed * World::GetElapsedFloat();
+			pos.y += delta.y * speed * World::GetElapsedFloat();
 			
 			//z -= World::GetElapsedFloat();
 
@@ -46,7 +46,7 @@ namespace MX
 			D3DXCOLOR c;
 			D3DXColorLerp(&c, &color, &dest_color, fP);
 
-			animation->Animate(*spriter, x, y, 0.0f, rot, sX, sY, c);
+			animation->Animate(*spriter, pos.x, pos.y, 0.0f, rot, sX, sY, c);
 
 		}
 
@@ -55,8 +55,9 @@ namespace MX
 
 		float speed;
 
-		float dx;
-		float dy;
+		//float dx;
+		//float dy;
+		v2d delta;
 
 		float dest_scaleX;
 		float dest_scaleY;
@@ -141,11 +142,12 @@ namespace MX
 
 			float dir = GetFloat(direction);
 
-			particle->dx = sin(dir);
-			particle->dy = cos(dir);
+			//particle->delta.x = sin(dir);
+			//particle->delta.y = cos(dir);
+			particle->delta = dirVec(dir);
 
-			particle->x = start_x;
-			particle->y = start_y;
+			particle->pos.x = start_x;
+			particle->pos.y = start_y;
 			particle->z = GetFloat(particle_z);
 
 			scene->AddActor(particle);

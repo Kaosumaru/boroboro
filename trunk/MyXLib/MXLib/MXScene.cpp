@@ -19,13 +19,16 @@ void Actor::Do()
 
 
 
-ImageSprite::ImageSprite(const shared_ptr<Image> &im) : image(im) { cx = cy = 0.0f; }
+ImageSprite::ImageSprite(const shared_ptr<Image> &im) : image(im)
+{
+	//cx = cy = 0.0f;
+}
 
 void ImageSprite::Do()
 {
 	Actor::Do();
 	if (image->IsImageLoaded())
-		ActorSprite::spriter->Draw(*image, x, y, z, cx, cy, rotation, scaleX, scaleY, color);
+		ActorSprite::spriter->Draw(*image, pos.x, pos.y, z, cpos.x, cpos.y, rotation, scaleX, scaleY, color);
 }
 
 
@@ -46,7 +49,7 @@ void ActorSprite::Do()
 
 void ActorSprite::DrawSprite()
 {
-	animation->AnimateElapse(*spriter, x, y, z == -1.0f ? 0.5f - (y/RESY)*0.1f : z, rotation, scaleX, scaleY, color);
+	animation->AnimateElapse(*spriter, pos.x, pos.y, z == -1.0f ? 0.5f - (pos.y/RESY)*0.1f : z, rotation, scaleX, scaleY, color);
 }
 
 AnimationFrame &ActorSprite::GetCurrentFrame()
@@ -57,8 +60,8 @@ AnimationFrame &ActorSprite::GetCurrentFrame()
 void ActorSprite::GetCurrentRect(float &_x, float &_y, float &_w, float &_h)
 {
 	AnimationFrame &frame = GetCurrentFrame();
-	_x = x - frame.centerX;
-	_y = y - frame.centerY;
+	_x = pos.x - frame.centerX;
+	_y = pos.y - frame.centerY;
 	_w = frame.frame->Width();
 	_h = frame.frame->Height();
 }

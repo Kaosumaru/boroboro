@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "../MXLib/v2d.hpp"
 #include "game.h"
 #include "GameMap.h"
 #include "Sounds.h"
@@ -65,8 +66,8 @@ shared_ptr<MX::Animation> CreateAnimationFromFile(wchar_t* file, int number, DWO
 
 		void Do()
 		{
-			x = (float)World::MouseX;
-			y = (float)World::MouseY;
+			pos.x = (float)World::MouseX;
+			pos.y = (float)World::MouseY;
 			__super::Do();
 		}
 	};
@@ -100,12 +101,18 @@ shared_ptr<MX::Animation> CreateAnimationFromFile(wchar_t* file, int number, DWO
 
 		void Move()
 		{
-			float dx, dy;
-			dx = cos(Player_Direction);
-			dy = sin(Player_Direction);
+			//float dx, dy;
+			//dx = cos(Player_Direction);
+			//dy = sin(Player_Direction);
+			v2d d = dirVec(Player_Direction);
 
-			x += dx * Player_Speed * World::GetElapsedFloat();
-			y += dy * Player_Speed * World::GetElapsedFloat();
+			//x += dx * Player_Speed * World::GetElapsedFloat();
+			//y += dy * Player_Speed * World::GetElapsedFloat();
+			pos = pos + d * Player_Speed * World::GetElapsedFloat();
+
+			//std::wstringstream w;
+			//w<<
+			//OutputDebugString(
 		}
 
 		float Player_Direction; //direction in radians
@@ -138,17 +145,23 @@ shared_ptr<MX::Animation> CreateAnimationFromFile(wchar_t* file, int number, DWO
 			
 		void Do()
 		{
-			float dx, dy;
-			dx = cos(previous_part->rotation);
-			dy = sin(previous_part->rotation);
+			//float dx, dy;
+			//dx = cos(previous_part->rotation);
+			//dy = sin(previous_part->rotation);
 
-			x = previous_part->x;
-			y = previous_part->y;
+			//x = previous_part->x;
+			//y = previous_part->y;
 
-			x -= dx*32;
-			y -= dy*32;
+			//x -= dx*32;
+			//y -= dy*32;
 
-			rotation = previous_part->rotation;
+			//rotation = previous_part->rotation;
+
+			v2d d = normalized(previous_part->pos - pos);
+			d = normalized(d);
+		    
+			pos = pos + d* 400.0f * World::GetElapsedFloat();
+			
 			__super::Do();
 		}
 
@@ -170,8 +183,9 @@ shared_ptr<MX::Animation> CreateAnimationFromFile(wchar_t* file, int number, DWO
 			scaleX = 0.5f;
 			scaleY = 0.5f;
 
-			x = 100.0f;
-			y = 100.0f;
+			//x = 100.0f;
+			//y = 100.0f;
+			pos = v2d(100.0f,100.0f);
 			z = 0.0f;
 			animation = make_shared<SpecificAnimation>(CreateAnimationFromFile(L"images\\wonsz\\WonszGlowa.png"));
 			animation->Start();
