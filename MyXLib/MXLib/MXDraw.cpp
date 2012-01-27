@@ -141,7 +141,7 @@ void Draw::AfterReset()
 
 
 	
-	D3DXMatrixOrthoRH(&Ortho2D, (float)width, (float)height, 0.0f, 1.0f);
+	D3DXMatrixOrthoRH(&Ortho2D, (float)width, (float)height, 0.0f,  1.0f);
 	D3DXMatrixIdentity(&Identity);
 
 	Device()->SetTransform(D3DTS_PROJECTION, &Ortho2D);
