@@ -12,32 +12,6 @@ shared_ptr<MX::Liner> liner;
 
 #define INVICIBLE_TIME 2000
 
-#define BABA_HP 50.0f
-#define BABA_DAMAGE 50.0f
-#define BABA_COOLDOWN 1000
-#define BABA_SPEED 90.0f
-#define BABA_BULLET_SPEED 300.0f
-#define BABA_STUN 750
-
-#define SMALLGUY_HP 50.0f
-#define SMALLGUY_DAMAGE 25.0f
-#define SMALLGUY_COOLDOWN 100
-#define SMALLGUY_SPEED 270.0f
-
-#define SIMPLEENEMY_HP 100.0f
-#define SIMPLEENEMY_SPEED 60.0f
-
-#define DZIUBAK_HP 100.0f
-#define DZIUBAK_SPEED 180.0f
-
-#define TANK_HP 400.0f
-#define TANK_SPEED 30.0f
-
-#define CHAIN_LENGTH 300.0f
-#define CHAIN_STRESS 100.0f
-#define CHAIN_SLOW 0.3f
-
-
 namespace MX
 {
 
@@ -73,9 +47,9 @@ shared_ptr<MX::Animation> CreateAnimationFromFile(wchar_t* file, int number, DWO
 
 	void NormalizeDir(float &dx, float &dy)
 	{
-		float length = sqrt(dx*dx + dy*dy);
-		dx /= length;
-		dy /= length;
+		float ilength = 1.f/sqrt(dx*dx + dy*dy);
+		dx *= ilength;
+		dy *= ilength;
 	}
 
 
@@ -154,6 +128,8 @@ shared_ptr<MX::Animation> CreateAnimationFromFile(wchar_t* file, int number, DWO
 			scaleX = 0.5f;
 			scaleY = 0.5f;
 
+			z = previous->z-0.01f;
+
 			animation = make_shared<SpecificAnimation>(CreateAnimationFromFile(L"images\\wonsz\\WonszBody.png"));
 			animation->Start();
 
@@ -196,7 +172,7 @@ shared_ptr<MX::Animation> CreateAnimationFromFile(wchar_t* file, int number, DWO
 
 			x = 100.0f;
 			y = 100.0f;
-			z = 0.0f;
+			z = 0.9f;
 			animation = make_shared<SpecificAnimation>(CreateAnimationFromFile(L"images\\wonsz\\WonszGlowa.png"));
 			animation->Start();
 
