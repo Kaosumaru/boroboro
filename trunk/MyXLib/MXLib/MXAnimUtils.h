@@ -10,8 +10,8 @@ namespace MX
 	using namespace std;
 
 
-	shared_ptr<MX::Animation> CreateAnimationFromFile(wchar_t* file);
-	shared_ptr<MX::Animation> CreateAnimationFromFile(wchar_t* file, int number, DWORD speed, float cx, float cy);
+	shared_ptr<MX::Animation> CreateAnimationFromFile(MX::Draw &draw, wchar_t* file);
+	shared_ptr<MX::Animation> CreateAnimationFromFile(MX::Draw &draw, wchar_t* file, int number, DWORD speed, float cx, float cy);
 
 };
 
