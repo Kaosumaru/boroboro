@@ -17,7 +17,6 @@
 #include "../MXLib/MXLine.h"
 #include "GameMap.h"
 #include "game.h"
-#include "FrameManager.h"
 
 using namespace std;
 
@@ -32,7 +31,6 @@ using namespace std;
 HINSTANCE hInst;								// current instance
 TCHAR szTitle[MAX_LOADSTRING];					// The title bar text
 TCHAR szWindowClass[MAX_LOADSTRING];			// the main window class name
-FrameManager frameManager;
 MX::Stream menu1Music,menu2Music,game1Music,winMusic;
 
 // Forward declarations of functions included in this code module:
@@ -69,11 +67,8 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 	
 	bool bs = MX::Sound::Initialize();
 
-	
-	frameManager.initScenes(draw1,spriter);
-	frameManager.setCurrentFrame(draw1, FrameType::TITLE);
 
-	initGame(draw1,spriter,frameManager.getScene(FrameType::GAME));
+	initGame(draw1,spriter,&(*General_Scene));
 
 	
 	/*
