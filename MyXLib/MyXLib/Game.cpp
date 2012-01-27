@@ -104,22 +104,34 @@ shared_ptr<MX::Animation> CreateAnimationFromFile(wchar_t* file, int number, DWO
 	public:
 		Player()
 		{
-			Player_Speed = 5.0f;
+			Player_Direction = 0.0f;
+			Rotation_Speed = 6.0f;
+			Player_Speed = 400.0f;
+			KeyLeft = VK_LEFT;
+			KeyRight = VK_RIGHT;
 		}
 			
 
 		void KeyoardNavigate()
 		{
+			if (World::Key[KeyLeft])
+			{
+				Player_Direction -= Rotation_Speed * World::GetElapsedFloat();
+			}
+			else if (World::Key[KeyRight])
+			{
+				Player_Direction += Rotation_Speed * World::GetElapsedFloat();
+			}
 		}
 
 		void Move()
 		{
 			float dx, dy;
-			dx = sin(Player_Direction);
-			dy = cos(Player_Direction);
+			dx = cos(Player_Direction);
+			dy = sin(Player_Direction);
 
-			x += dx * Player_Speed;
-			x += dy * Player_Speed;
+			x += dx * Player_Speed * World::GetElapsedFloat();
+			y += dy * Player_Speed * World::GetElapsedFloat();
 		}
 
 		float Player_Direction; //direction in radians
@@ -152,11 +164,11 @@ shared_ptr<MX::Animation> CreateAnimationFromFile(wchar_t* file, int number, DWO
 
 		void Do()
 		{
-			Actor::rotation = Player_Direction;
-
+			
+			KeyoardNavigate();
 			Move();
 
-			
+			Actor::rotation = Player_Direction;
 			__super::Do();
 		}
 	};

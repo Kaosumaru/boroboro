@@ -51,31 +51,6 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
                      int       nCmdShow)
 {
 	auto General_Scene = make_shared<MX::Scene>();
-	/*
-	MX::Actor actor1;
-	shared_ptr<MX::Command> com = MX::q(
-		[](MX::Actor &actor) -> bool
-		{ 
-			static bool a = false; 
-			MessageBox(0,L"sadas",L"1", 0);
-			if (a) 
-				return false; 
-			a = true; 
-			return true; 
-		},
-		[](MX::Actor &actor) -> bool
-		{ 
-			MessageBox(0,L"sadas",L"2", 0);
-			return false; 
-		},
-		MX::die()
-	);
-
-	actor1.OnDo.connect(com);
-
-	while(actor1.alive)
-		actor1.Do();*/
-	//while((*com)(actor1)) {};
 	
 	
 	draw1 = shared_ptr<MX::Draw>(new MX::Draw);
@@ -84,7 +59,6 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 	if (!draw1->Initialize())
 		return -1;
 
-	
 
 	if (!draw1->ChangeView(1280, 800, true))
 		return -1;
@@ -102,20 +76,20 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 	initGame(draw1,spriter,frameManager.getScene(FrameType::GAME));
 
 	
-
+	/*
 	shared_ptr<MX::Image> image(new MX::Image), image2(new MX::Image), image3(new MX::Image);
 	image->Load(*draw1, L"images\\plansza_1_layer1.png");
 	image2->Load(*draw1, L"images\\plansza_1_layer2.png");
 	image3->Load(*draw1, L"images\\interface_main.png");
-	
+	*/
 
 
-
+	/*
 	menu1Music.LoadStream(L"music\\menu.mp3");
 	menu2Music.LoadStream(L"music\\menu2.mp3");
 	game1Music.LoadStream(L"music\\game.mp3");
 	winMusic.LoadStream(L"music\\win.mp3");
-	menu1Music.Play();
+	menu1Music.Play();*/
 
 	
 	
