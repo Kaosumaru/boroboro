@@ -128,7 +128,7 @@ shared_ptr<MX::Animation> CreateAnimationFromFile(wchar_t* file, int number, DWO
 			scaleX = 0.5f;
 			scaleY = 0.5f;
 
-			z = previous->z-0.01f;
+			z = previous->z+0.01f;
 
 			animation = make_shared<SpecificAnimation>(CreateAnimationFromFile(L"images\\wonsz\\WonszBody.png"));
 			animation->Start();
@@ -172,7 +172,7 @@ shared_ptr<MX::Animation> CreateAnimationFromFile(wchar_t* file, int number, DWO
 
 			x = 100.0f;
 			y = 100.0f;
-			z = 0.9f;
+			z = 0.0f;
 			animation = make_shared<SpecificAnimation>(CreateAnimationFromFile(L"images\\wonsz\\WonszGlowa.png"));
 			animation->Start();
 
