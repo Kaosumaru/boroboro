@@ -50,7 +50,11 @@ public:
 
 	bool invisible;
 	bool AlternativeLook;
+
+	int GetLength() { return length; }
+	void RecalcLength();
 protected:
+	int length;
 	void ShieldSelf();
 	EffectWithGivenCooldown Shield;
 
