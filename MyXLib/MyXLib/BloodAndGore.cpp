@@ -11,13 +11,13 @@ namespace MX
 	{
 	public:
 		SikaczPrzedniCreator() : 
-			start_scaleX(1.0f, 1.0f),
-			start_scaleY(1.0f, 1.0f),
+			start_scaleX(0.5f, 1.0f),
+			start_scaleY(0.5f, 1.0f),
 			start_rotation(0.0f, 6.3f),
 			end_rotation(0.0f, 6.3f),
-			end_scaleX(1.0f, 1.0f),
-			end_scaleY(1.0f, 1.0f),		
-			speed(200.0f, 300.0f),
+			end_scaleX(0.5f, 1.0f),
+			end_scaleY(0.5f, 1.0f),		
+			speed(100.0f, 200.0f),
 			life(1000,1000),
 			direction(-1.0f, 1.0f),
 			particle_z(0.0f,1.0f),
@@ -106,13 +106,13 @@ namespace MX
 	{
 	public:
 		SikaczCreator() : 
-			start_scaleX(1.0f, 1.0f),
-			start_scaleY(1.0f, 1.0f),
+			start_scaleX(0.5f, 1.0f),
+			start_scaleY(0.5f, 1.0f),
 			start_rotation(0.0f, 6.3f),
 			end_rotation(0.0f, 6.3f),
-			end_scaleX(1.0f, 1.0f),
-			end_scaleY(1.0f, 1.0f),		
-			speed(60.0f, 100.0f),
+			end_scaleX(0.5f, 1.0f),
+			end_scaleY(0.5f, 1.0f),		
+			speed(30.0f, 70.0f),
 			life(1000,1000),
 			direction(0.0f, 6.3f),
 			particle_z(0.0f,1.0f),
