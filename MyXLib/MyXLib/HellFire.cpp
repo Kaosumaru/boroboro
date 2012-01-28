@@ -18,7 +18,7 @@ namespace MX
 			end_scaleX(0.25f, 0.25f),
 			end_scaleY(0.25f, 0.25f),		
 			speed(200.0f, 200.0f),
-			life(250,450),
+			life(150,350),
 			direction(-0.2f, 0.2f),
 			particle_z(0.5f,0.5f),
 			start_color(0xFFFFEE00, 0xFFFEE00), end_color(0x00FF0000, 0x70FF0000)
@@ -139,7 +139,7 @@ void AddHellFire(MX::Scene *scene, MX::Player *body)
 	
 	auto sikacz = make_shared<SikaczPrzedni>(scene);
 	sikacz->SetTarget(body);
-	sikacz->OnDo.connect(MX::q(wait(3000), die()));
+	sikacz->OnDo.connect(MX::q(wait(2000), die()));
 
 	body->OnDeath.boost::signal<void (Actor&)>::connect(bind(&SikaczPrzedni::Die, sikacz));
 

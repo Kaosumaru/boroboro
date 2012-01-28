@@ -2,6 +2,7 @@
 #include "Items.h"
 #include "Game.h"
 #include "GameResources.h"
+#include "HellFire.h"
 #include "../MXLib/MXScript.h"
 #include <set>
 
@@ -164,6 +165,39 @@ void PoopItem::Use(Scene *scene, Player *user)
 	scene->AddActor(make_shared<PoopMine>(scene, user));
 }
 
+
+class PentagramPlayer : public Actor
+{
+public:
+	PentagramPlayer(Player *u)
+	{
+		user = u;
+		OnDo.connect(MX::q(wait(2000), die()));
+		user->pentakill = true;
+	}
+
+
+	void OnDie()
+	{
+		__super::OnDie();
+		//user->speed_multiplier = 1.0f;
+		user->pentakill = false;
+	}
+
+protected:
+	Player *user;
+};
+
+PentagramItem::PentagramItem()
+{
+	item_image = GraphicRes.pentagram_small;
+}
+
+void PentagramItem::Use(Scene *scene, Player *user)
+{
+	scene->AddActor(make_shared<PentagramPlayer>(user));
+	AddHellFire(scene, user);
+}
 
 
 }

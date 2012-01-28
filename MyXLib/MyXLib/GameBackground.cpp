@@ -214,7 +214,7 @@ public:
 	void onEat(Player* player)
 	{
 		SoundBank::satan_hissing.Play();
-		//player->Item = make_shared<ItemType>();
+		player->Item = make_shared<PentagramItem>();
 		Die();
 	}
 };
