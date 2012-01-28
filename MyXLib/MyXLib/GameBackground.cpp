@@ -114,7 +114,5 @@ void InitBackground(MX::Scene *scene)
 	scene->AddActor(make_shared<Flower1>());
 	scene->AddActor(make_shared<GameBackground>());
 
-	for (int i = 0; i < 100; i ++)
-		scene->AddActor(make_shared<GameBackgroundGrass>());
 		
 }

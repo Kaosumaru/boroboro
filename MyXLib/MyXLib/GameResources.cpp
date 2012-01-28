@@ -25,7 +25,7 @@ void GraphicResources::Init(MX::Draw &draw)
 	flower2 = MX::CreateAnimationFromFile(draw, L"images\\flower\\flower2.png");
 
 
-	background =  MX::CreateAnimationFromFile(draw, L"images\\background.png");
+	background =  MX::CreateAnimationFromFile(draw, L"images\\background2.png");
 	background->frames[0].centerX = 0.0f;
 	background->frames[0].centerY = 0.0f;
 
