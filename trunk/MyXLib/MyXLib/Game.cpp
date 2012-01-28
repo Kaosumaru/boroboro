@@ -234,6 +234,9 @@ shared_ptr<MX::Animation> CreateAnimationFromFile(wchar_t* file, int number, DWO
 		//if(player->headonColCounter)
 		//	return;
 		//player->headonColCounter = 5;
+
+		
+
 		if(this->scaleX >= 0.4)
 		{
 			v2d normal = normalized(player->pos - pos);
@@ -253,6 +256,7 @@ shared_ptr<MX::Animation> CreateAnimationFromFile(wchar_t* file, int number, DWO
 			player->AddBodypart();
 #endif
 
+		SoundBank::bite.Play();
 		Urwij();
 	}
 
@@ -486,7 +490,7 @@ void InitializeGame(const shared_ptr<MX::Draw> &_draw, const shared_ptr<MX::Spri
 	liner->SetAntialias(true);
 	
 
-	InitBackground(_scene);
+	InitBackground(_scene, _spriter);
 
 	scene->AddActor(make_shared<MX::PlayerCrosshair>(*draw));
 

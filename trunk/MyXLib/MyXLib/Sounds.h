@@ -29,6 +29,7 @@ public:
 
 	static SoundSample hissing;
 	static SoundSample satan_hissing;
+	static SoundSample bite;
 };
 
 };

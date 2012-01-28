@@ -47,12 +47,15 @@ namespace MX
 			return fP > 1.0f ? 1.0f : fP;
 		}
 
+		void Clear() { _stamp = 0; }
+
 	protected:
 		unsigned _mili;
 		unsigned _stamp;
 	};
 
 	shared_ptr<Command> wait(unsigned time);
+
 
 
 	class MoveToCommand : public Command
@@ -233,7 +236,10 @@ namespace MX
 		bool operator () (Actor &actor)
 		{ 
 			if (current == commands.end())
+			{
+				for_each(commands.begin(), commands.end(), [](const shared_ptr<Command> &ptr){ptr->Clear();});
 				current = commands.begin();
+			}
 
 			if (current == commands.end())
 				return true;

@@ -20,7 +20,10 @@ void SoundBank::Initialize()
 
 	satan_hissing.AddSound(SoundSample::CreateSample(L"sounds\\sssatan.wav"));
 
+	bite.AddSound(SoundSample::CreateSample(L"sounds\\bite.wav"));
+
 }
 
 SoundSample SoundBank::hissing;
 SoundSample SoundBank::satan_hissing;
+SoundSample SoundBank::bite;

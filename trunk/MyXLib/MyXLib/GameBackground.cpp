@@ -8,6 +8,7 @@
 using namespace MX;
 
 MX::Scene *_scene;
+shared_ptr<MX::Spriter> _spriter;
 
 class WarpRotationCommand : public WaitCommand
 {
@@ -53,39 +54,8 @@ public:
 	}
 };
 
-class Pentagram : public ActorSprite
-{
-public:
-	Pentagram()
-	{
-		scaleX = 0.2f;
-		scaleY = 0.2f;
 
-		pos.x = 200.0f;
-		pos.y = 200.0f;
-		animation = make_shared<SpecificAnimation>(GraphicRes.pentagram);
-		animation->Start();
-	}
-	void Do(){
-		rotation +=  0.005 * World::GetElapsedTime();
-		ActorSprite::Do();
-	}
-};
 
-class PentagramStatic : public ActorSprite
-{
-public:
-	PentagramStatic()
-	{
-		scaleX = 0.2f;
-		scaleY = 0.2f;
-
-		pos.x = 200.0f;
-		pos.y = 200.0f;
-		animation = make_shared<SpecificAnimation>(GraphicRes.pentagram_static);
-		animation->Start();
-	}
-};
 
 class GameBackground : public ActorSprite
 {
@@ -212,7 +182,39 @@ public:
 	}
 };
 
+class PentagramBonus : public Collidable
+{
+public:
+	PentagramBonus()
+	{
+		z = 0.9f;
 
+		scaleX = 0.2f;
+		scaleY = 0.2f;
+
+		pos.x = (float)(rand()%1280);
+		pos.y = (float)(rand()%800);
+
+		animation = make_shared<SpecificAnimation>(GraphicRes.pentagram);
+		animation->Start();
+
+		auto loop = make_shared<LoopCommand> ();
+		loop->AddCommand(make_shared<WarpScaleCommand>(0.23f, 0.23f, 250));
+		loop->AddCommand(make_shared<WarpScaleCommand>(0.2f, 0.2f, 250));
+		OnDo.connect(loop);
+	}
+	void Do(){
+		rotation +=  0.005 * World::GetElapsedTime();
+		ActorSprite::Do();
+		GraphicRes.pentagram_static->Animate(*_spriter, pos.x, pos.y, z , 0.0f, scaleX, scaleY);
+	}
+
+	void onEat(Player* player)
+	{
+		//player->Item = make_shared<ItemType>();
+		Die();
+	}
+};
 
 
 class BerrySpawner : public Actor, public EffectWithCooldown
@@ -248,7 +250,7 @@ public:
 
 	void DoEffect()
 	{
-		switch (rand() % 3)
+		switch (rand() % 4)
 		{
 		case 0:
 			_scene->AddActor(make_shared<BonusItem<GoodBootleItem>>(GraphicRes.bottle, 5000, 3000));
@@ -258,6 +260,9 @@ public:
 			break;
 		case 2:
 			_scene->AddActor(make_shared<BonusItem<ShieldItem>>(GraphicRes.shield, 5000, 3000));
+			break;
+		case 3:
+			_scene->AddActor(make_shared<PentagramBonus>());
 			break;
 		}
 
@@ -271,17 +276,17 @@ public:
 };
 
 
-void InitBackground(MX::Scene *scene)
+void InitBackground(MX::Scene *scene, const shared_ptr<MX::Spriter> &spriter)
 {
+	_spriter = spriter;
 	_scene = scene;
+
 
 	scene->AddActor(make_shared<Flower1>());
 	scene->AddActor(make_shared<GameBackground>());
 	scene->AddActor(make_shared<BerrySpawner>());
 	scene->AddActor(make_shared<BonusSpawner>());
 	scene->AddActor(make_shared<GameForeground>());
-	scene->AddActor(make_shared<Pentagram>());
-	scene->AddActor(make_shared<PentagramStatic>());
 	
 	//for (int i = 0; i < 10; i ++)
 	//	scene->AddActor(make_shared<GameBackgroundGrass>());
