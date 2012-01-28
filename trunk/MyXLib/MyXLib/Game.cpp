@@ -96,287 +96,227 @@ shared_ptr<MX::Animation> CreateAnimationFromFile(wchar_t* file, int number, DWO
 	};
 	
 
-	class PlayerSnake_Body : public Collidable
+	PlayerSnake_Body::PlayerSnake_Body(ActorSprite *bef, Player *player, bool bAlternative)
 	{
-	public:
-		PlayerSnake_Body(ActorSprite *bef, Player *player, bool bAlternative)
+		AlternativeLook = bAlternative;
+		speedMult = 1.0f;
+		z = bef->z+0.00001f;
+
+		animation = make_shared<SpecificAnimation>(bAlternative ? GraphicRes.snake_body2 : GraphicRes.snake_body);
+		animation->Start();
+
+		before = bef;
+		head = player;
+		butt = NULL;
+		/*
+		if(before == head)
+			scaleX = scaleY = 0.9999999f * 0.54f;
+		else
 		{
-			AlternativeLook = bAlternative;
-			speedMult = 1.0f;
-			z = bef->z+0.00001f;
-
-			animation = make_shared<SpecificAnimation>(bAlternative ? GraphicRes.snake_body2 : GraphicRes.snake_body);
-			animation->Start();
-
-			before = bef;
-			head = player;
-			butt = NULL;
-			/*
-			if(before == head)
-				scaleX = scaleY = 0.9999999f * 0.54f;
-			else
-			{
-				scaleX = before->scaleX * before->scaleX * float(1.0/0.54);
-				scaleY = scaleX;
-			}
-			*/
-			/*
-			if(before == head)
-				scaleX = scaleY = 0.65f;
-			else
-			{
-				scaleX = 0.98f * before->scaleX;
-				scaleY = 0.98f * before->scaleX;
-			}
-			*/
-
-			sharpenTail();
-
-			dist = 64.0f * scaleX;
-
-			pos = before->pos - dirVec(before->rotation)*dist;
-			rotation = before->rotation; 
-			toPos = before->pos;
-			prevd = normalized(toPos-pos);
+			scaleX = before->scaleX * before->scaleX * float(1.0/0.54);
+			scaleY = scaleX;
 		}
-		
-		void sharpenTail()
+		*/
+		/*
+		if(before == head)
+			scaleX = scaleY = 0.65f;
+		else
 		{
-			scaleX = scaleY = 0.38f;
-			float lscale = scaleX;
-			for(auto befo = dynamic_cast<PlayerSnake_Body*>(this->before);
-				befo != NULL && this->before != head;
-				befo = dynamic_cast<PlayerSnake_Body*>(befo->before))
+			scaleX = 0.98f * before->scaleX;
+			scaleY = 0.98f * before->scaleX;
+		}
+		*/
+
+		sharpenTail();
+
+		dist = 64.0f * scaleX;
+
+		pos = before->pos - dirVec(before->rotation)*dist;
+		rotation = before->rotation; 
+		toPos = before->pos;
+		prevd = normalized(toPos-pos);
+	}
+	
+	void PlayerSnake_Body::sharpenTail()
+	{
+		scaleX = scaleY = 0.38f;
+		float lscale = scaleX;
+		for(auto befo = dynamic_cast<PlayerSnake_Body*>(this->before);
+			befo != NULL && this->before != head;
+			befo = dynamic_cast<PlayerSnake_Body*>(befo->before))
+		{
+			lscale +=0.01f;
+			befo->scaleX = befo->scaleY = lscale;				
+			befo->dist = 48.0f * lscale;
+			if(lscale > 0.58f)
 			{
-				lscale +=0.01f;
-				befo->scaleX = befo->scaleY = lscale;				
-				befo->dist = 48.0f * lscale;
-				if(lscale > 0.58f)
+				befo->scaleX = befo->scaleY = 0.58f;
+				//break;
+				while(befo != NULL && this->before != head)
 				{
 					befo->scaleX = befo->scaleY = 0.58f;
-					//break;
-					while(befo != NULL && this->before != head)
-					{
-						befo->scaleX = befo->scaleY = 0.58f;
-						befo = dynamic_cast<PlayerSnake_Body*>(befo->before);
-					}
-					break;
+					befo = dynamic_cast<PlayerSnake_Body*>(befo->before);
 				}
+				break;
 			}
 		}
+	}
 
 
-		void newButt(ActorSprite *b)
+	void PlayerSnake_Body::newButt(ActorSprite *b)
+	{
+		butt = b;
+	}
+
+	float PlayerSnake_Body::GetSpeed()
+	{
+		return head ? head->GetSpeed() : 150.0f;
+	}
+
+
+	void PlayerSnake_Body::Do()
+	{
+		if (before == NULL)
 		{
-			butt = b;
-		}
-
-		float GetSpeed()
-		{
-			return head ? head->GetSpeed() : 150.0f;
-		}
-
-
-		void Do()
-		{
-			if (before == NULL)
-			{
-				rotation += (rand()%100-50)*0.005f+(rand()%100-50)*0.005f+(rand()%100-50)*0.005f+(rand()%100-50)*0.005f;
-				v2d d = dirVec(rotation);
-				pos = pos + d * GetSpeed() * World::GetElapsedFloat();
-				__super::Do();
-				return;
-			}
-
-			v2d d = toPos - pos;
-			float ld = length(d);
-			if(ld < 7.0f+dist*0.15f)
-			{
-				toPos = before->pos;
-				d = toPos - pos;
-			}
-			v2d dd = before->pos - pos;
-			float ldd = length(dd);
-			speedMult = ldd/dist;
-		
-			speedMult = speedMult*speedMult;
-
-			if(speedMult < 0.9f)
-				speedMult = 0.9f;
-			else if(speedMult > 1.1f)
-				speedMult = 1.1f;
-
-			d = normalized(d);
-			dd = normalized(dd);
-			d = d*2+ prevd*4.5f + dd;
-			d = normalized(d);
-
-			prevd = d;
-
-			v2d prevPos = pos;
-			pos = pos + d * speedMult * GetSpeed() * World::GetElapsedFloat();
-
-			if(length(pos - prevPos) > 4.0f)
-			{
-				d = dd;
-			}
-
-			if(butt)
-			{
-				v2d b = normalized(pos - butt->pos);
-				dd = dd + b;
-				dd = normalized(dd);
-			}
-			this->rotation = atan2(dd.y, dd.x); 
-
+			rotation += (rand()%100-50)*0.005f+(rand()%100-50)*0.005f+(rand()%100-50)*0.005f+(rand()%100-50)*0.005f;
+			v2d d = dirVec(rotation);
+			pos = pos + d * GetSpeed() * World::GetElapsedFloat();
 			__super::Do();
+			return;
 		}
 
-		void onEat(Player* player)
+		v2d d = toPos - pos;
+		float ld = length(d);
+		if(ld < 7.0f+dist*0.15f)
 		{
-			//if(player->headonColCounter)
-			//	return;
-			//player->headonColCounter = 5;
-			if(this->scaleX >= 0.5)
-			{
-				v2d normal = normalized(player->pos - pos);
-				player->bounce(normal);
-				return;
-			}
+			toPos = before->pos;
+			d = toPos - pos;
+		}
+		v2d dd = before->pos - pos;
+		float ldd = length(dd);
+		speedMult = ldd/dist;
+	
+		speedMult = speedMult*speedMult;
 
-			if (head && head->invisible)
-				return;
+		if(speedMult < 0.9f)
+			speedMult = 0.9f;
+		else if(speedMult > 1.1f)
+			speedMult = 1.1f;
 
-			if (head == NULL && AlternativeLook == player->AlternativeLook)
-				player->AddBodypart();
+		d = normalized(d);
+		dd = normalized(dd);
+		d = d*2+ prevd*4.5f + dd;
+		d = normalized(d);
+
+		prevd = d;
+
+		v2d prevPos = pos;
+		pos = pos + d * speedMult * GetSpeed() * World::GetElapsedFloat();
+
+		if(length(pos - prevPos) > 4.0f)
+		{
+			d = dd;
+		}
+
+		if(butt)
+		{
+			v2d b = normalized(pos - butt->pos);
+			dd = dd + b;
+			dd = normalized(dd);
+		}
+		this->rotation = atan2(dd.y, dd.x); 
+
+		__super::Do();
+	}
+
+	void PlayerSnake_Body::onEat(Player* player)
+	{
+		//if(player->headonColCounter)
+		//	return;
+		//player->headonColCounter = 5;
+		if(this->scaleX >= 0.4)
+		{
+			v2d normal = normalized(player->pos - pos);
+			player->bounce(normal);
+			return;
+		}
+
+		if (head && head->invisible)
+			return;
+
+		if (head == NULL && AlternativeLook == player->AlternativeLook)
+			player->AddBodypart();
 
 
 #if 0
-			if (head != player)
-				player->AddBodypart();
-#endif
-			Urwij();
-		}
-
-		void Urwij()
-		{
-#if 0
-			auto part = make_shared<MX::ParticleGenerator<MX::SimpleParticleCreator, MX::SimpleParticleDispatcher<3,10>>>(scene);
-			part->creator.SetAnimation(GraphicRes.blood);
-			part->pos.x = pos.x;
-			part->pos.y = pos.y;
-
-			shared_ptr<MX::Command> com = MX::q(wait(250), die());
-			part->OnDo.connect(com);
-			scene->AddActor(part);
+		if (head != player)
+			player->AddBodypart();
 #endif
 
-			if (head)
-			{
-				head->last_body_part = before;
-				PlayerSnake_Body* tail = dynamic_cast<PlayerSnake_Body*>(head->last_body_part);
-				if(tail)
-					tail->sharpenTail();
-			}
+		Urwij();
+	}
 
-			PlayerSnake_Body * bef = dynamic_cast<PlayerSnake_Body*>(before);
-			if (bef)
-				bef->butt = NULL;	
-			else if (head && head == before)
-			{
-				head->next_body_part = NULL;
-				head = NULL;
-				
-			}
-
-			if (before)
-				AddBackGore(scene, before);
-
-
-			if (butt)
-			{
-				PlayerSnake_Body * body = dynamic_cast<PlayerSnake_Body*>(butt);
-				body->before = NULL;
-				AddFrontGore(scene, butt);
-
-				for(auto next = dynamic_cast<PlayerSnake_Body*>(butt);
-					next != NULL;
-					next = dynamic_cast<PlayerSnake_Body*>(next->butt))
-					next->head = NULL;
-
-				butt = NULL;
-			}
-		
-			if (head)
-				head->RecalcLength();
-
-			Die();
-
-		}
-
-		ActorSprite * GetButt() { return butt; }
-
-
-		ActorSprite *before;  ///< before this segment
-	protected:
-
-		friend class Player;
-		Player* head;
-		ActorSprite *butt;    ///< after this segment
-		float speedMult;
-		float dist;
-		v2d toPos;
-		v2d prevd;
-		bool AlternativeLook;
-		//unsigned num;
-	};
-
-
-	class ShieldPlayer : public Actor
+	void PlayerSnake_Body::Urwij()
 	{
-	public:
-		ShieldPlayer(Player *u)
+		if (head)
 		{
-			user = u;
-			OnDo.connect(MX::q(wait(2000), die()));
-			user->speed_multiplier = 0.0f;
-			user->invisible = true;
-
-			u->OnDo.connect(MX::q(lerp_color(0x80FFFFFF, 500), wait(1250), lerp_color(0xFFFFFFFF, 250)));
-
-		for(auto next = dynamic_cast<PlayerSnake_Body*>(u->next_body_part);
-			next != NULL;
-			next = dynamic_cast<PlayerSnake_Body*>(next->GetButt()))
-			next->OnDo.connect(MX::q(lerp_color(0x80FFFFFF, 500), wait(1250), lerp_color(0xFFFFFFFF, 250)));
-
+			head->last_body_part = before;
+			PlayerSnake_Body* tail = dynamic_cast<PlayerSnake_Body*>(head->last_body_part);
+			if(tail)
+				tail->sharpenTail();
 		}
 
-
-		void OnDie()
+		PlayerSnake_Body * bef = dynamic_cast<PlayerSnake_Body*>(before);
+		if (bef)
+			bef->butt = NULL;	
+		else if (head && head == before)
 		{
-			__super::OnDie();
-			user->speed_multiplier = 1.0f;
-			user->invisible = false;
+			head->next_body_part = NULL;
+			head = NULL;
+			
 		}
 
-		void Do()
+		if (before)
+			AddBackGore(scene, before);
+
+
+		if (butt)
 		{
-			Actor::Do();
+			PlayerSnake_Body * body = dynamic_cast<PlayerSnake_Body*>(butt);
+			body->before = NULL;
+			AddFrontGore(scene, butt);
+
+			for(auto next = dynamic_cast<PlayerSnake_Body*>(butt);
+				next != NULL;
+				next = dynamic_cast<PlayerSnake_Body*>(next->butt))
+				next->head = NULL;
+
+			butt = NULL;
 		}
+	
+		if (head)
+			head->RecalcLength();
 
-	protected:
-		Player *user;
-	};
+		Die();
 
-	Player::Player(const v2d& p, float d, bool alternative) : Shield(1000)
+	}
+
+
+
+
+
+	Player::Player(const v2d& p, float d, bool alternative) : Shield(10000)
 	{
+		item_pos.x = 80;
+		item_pos.y = 695;
+
 		headonColCounter=0;
 		length = 0;
 		AlternativeLook = alternative;
 		invisible = false;
 		rotation = 0.0f;
 		Rotation_Speed = 2.0f;
-		speed = 300.0f;
+		speed = 150.0f;
 		speed_multiplier = 1.0f;
 		KeyLeft = VK_LEFT;
 		KeyRight = VK_RIGHT;
@@ -399,13 +339,13 @@ shared_ptr<MX::Animation> CreateAnimationFromFile(wchar_t* file, int number, DWO
 		animation = make_shared<SpecificAnimation>(AlternativeLook ? GraphicRes.snake_head2 : GraphicRes.snake_head);
 		animation->Start();
 
-		for(int i =0; i<10; ++i)
+		for(int i =0; i<30; ++i)
 			AddBodypart();
 	}
 
 	void Player::calculate_playerspeed()
 	{
-		Rotation_Speed = GetSpeed() / 50.0f;
+		Rotation_Speed = GetSpeed() / 75.0f;
 	}
 
 
@@ -427,10 +367,16 @@ shared_ptr<MX::Animation> CreateAnimationFromFile(wchar_t* file, int number, DWO
 		}
 		else if (World::Key[KeyShield])
 		{
-			if (Shield.DoThis())
-				scene->AddActor(make_shared<ShieldPlayer>(this));
-				//AddHellFire(scene, this);
+
 		}
+	}
+
+	void Player::DrawItems()
+	{
+		if (!Item || !Item->item_image)
+			return;
+
+		Item->item_image->Animate(*spriter, item_pos.x, item_pos.y);
 	}
 
 	void Player::Move()
@@ -442,6 +388,7 @@ shared_ptr<MX::Animation> CreateAnimationFromFile(wchar_t* file, int number, DWO
 
 	void Player::Do()
 	{
+		DrawItems();
 		if(headonColCounter)
 			--headonColCounter;
 		KeyoardNavigate();
@@ -501,6 +448,9 @@ shared_ptr<MX::Animation> CreateAnimationFromFile(wchar_t* file, int number, DWO
 			next = dynamic_cast<PlayerSnake_Body*>(next->butt))
 			length ++;
 	}
+
+
+	
 }
 
 void Player::AddBodypart()
@@ -546,6 +496,8 @@ void InitializeGame(const shared_ptr<MX::Draw> &_draw, const shared_ptr<MX::Spri
 	player2->KeyRight = 'D';
 	player2->KeyUse = 'W';
 	player2->KeyShield = 'S';
+
+	player2->item_pos.x = 1200;
 
 
 	scene->AddActor(player2);

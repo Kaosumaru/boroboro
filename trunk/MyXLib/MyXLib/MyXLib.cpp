@@ -58,7 +58,7 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 		return -1;
 
 
-	if (!draw1->ChangeView(1280, 800, true))
+	if (!draw1->ChangeView(1280, 800, false))
 		return -1;
 
 

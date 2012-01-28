@@ -152,11 +152,11 @@ public:
 	}
 };
 
-
-class Bottle : public Collidable
+template<typename ItemType>
+class BonusItem : public Collidable
 {
 public:
-	Bottle()
+	BonusItem(const shared_ptr<Animation> &anim, int time = 5000, int vanish_time = 3000)
 	{
 		z = 0.9f;
 		r = 16.0f;
@@ -164,19 +164,20 @@ public:
 		pos.x = (float)(rand()%1280);
 		pos.y = (float)(rand()%800);
 
-		animation = make_shared<SpecificAnimation>(GraphicRes.bottle);
+		animation = make_shared<SpecificAnimation>(anim);
 		animation->Start();
 
-		shared_ptr<MX::Command> com = MX::q(wait(5000), lerp_color(0x00FFFFFF, 3000), die());
+		shared_ptr<MX::Command> com = MX::q(wait(time), lerp_color(0x00FFFFFF, vanish_time), die());
 		OnDo.connect(com);
 	}
 
 	void onEat(Player* player)
 	{
-		player->Item = make_shared<GoodBootleItem>();
+		player->Item = make_shared<ItemType>();
 		Die();
 	}
 };
+
 
 class BerrySpawner : public Actor, public EffectWithCooldown
 {
@@ -211,7 +212,11 @@ public:
 
 	void DoEffect()
 	{
-		_scene->AddActor(make_shared<Bottle>());
+		if (rand() % 2)
+			_scene->AddActor(make_shared<BonusItem<GoodBootleItem>>(GraphicRes.bottle, 5000, 3000));
+		else
+			_scene->AddActor(make_shared<BonusItem<ShieldItem>>(GraphicRes.shield, 5000, 3000));
+
 	}
 
 	void Do()
