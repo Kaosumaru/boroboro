@@ -141,7 +141,7 @@ shared_ptr<MX::Animation> CreateAnimationFromFile(wchar_t* file, int number, DWO
 					break;
 			}
 
-			dist = 48.0f * scaleX;
+			dist = 64.0f * scaleX;
 
 			pos = before->pos - dirVec(before->rotation)*dist;
 			rotation = before->rotation; 
@@ -154,13 +154,19 @@ shared_ptr<MX::Animation> CreateAnimationFromFile(wchar_t* file, int number, DWO
 			butt = b;
 		}
 
+		float GetSpeed()
+		{
+			return head ? head->GetSpeed() : 150.0f;
+		}
+
+
 		void Do()
 		{
 			if (before == NULL)
 			{
 				rotation += (rand()%100-50)*0.005f+(rand()%100-50)*0.005f+(rand()%100-50)*0.005f+(rand()%100-50)*0.005f;
 				v2d d = dirVec(rotation);
-				pos = pos + d * head->speed * World::GetElapsedFloat();
+				pos = pos + d * GetSpeed() * World::GetElapsedFloat();
 				__super::Do();
 				return;
 			}
@@ -191,7 +197,7 @@ shared_ptr<MX::Animation> CreateAnimationFromFile(wchar_t* file, int number, DWO
 			prevd = d;
 
 			v2d prevPos = pos;
-			pos = pos + d * speedMult * head->speed * World::GetElapsedFloat();
+			pos = pos + d * speedMult * GetSpeed() * World::GetElapsedFloat();
 
 			if(length(pos - prevPos) > 4.0f)
 			{
@@ -211,6 +217,10 @@ shared_ptr<MX::Animation> CreateAnimationFromFile(wchar_t* file, int number, DWO
 
 		void onEat(Player* player)
 		{
+#if 0
+			if (head != player)
+				player->AddBodypart();
+#endif
 			Urwij();
 		}
 
@@ -227,31 +237,41 @@ shared_ptr<MX::Animation> CreateAnimationFromFile(wchar_t* file, int number, DWO
 			scene->AddActor(part);
 #endif
 
+			if (head)
+				head->last_body_part = before;
 
 			PlayerSnake_Body * bef = dynamic_cast<PlayerSnake_Body*>(before);
 			if (bef)
-			{
-				head->last_body_part = before;
-				bef->butt = NULL;
-			}
-			else if (head == before)
+				bef->butt = NULL;	
+			else if (head && head == before)
 			{
 				head->next_body_part = NULL;
-				head->last_body_part = NULL;
+				head = NULL;
+				
 			}
+
+			if (before)
+				AddBackGore(scene, before);
+
+
 
 
 			if (butt)
 			{
-		
 				PlayerSnake_Body * body = dynamic_cast<PlayerSnake_Body*>(butt);
 				body->before = NULL;
 				AddFrontGore(scene, butt);
+
+				for(auto next = dynamic_cast<PlayerSnake_Body*>(butt);
+					next != NULL;
+					next = dynamic_cast<PlayerSnake_Body*>(next->butt))
+					next->head = NULL;
+
 				butt = NULL;
 			}
 
 		
-			AddBackGore(scene, this);
+			
 
 			Die();
 
@@ -273,13 +293,16 @@ shared_ptr<MX::Animation> CreateAnimationFromFile(wchar_t* file, int number, DWO
 		//unsigned num;
 	};
 
-	Player::Player(const v2d& p, float d)
+	Player::Player(const v2d& p, float d, DWORD c)
 	{
+		color = c;
 		Player_Direction = 0.0f;
 		Rotation_Speed = 2.0f;
 		speed = 150.0f;
+		speed_multiplier = 1.0f;
 		KeyLeft = VK_LEFT;
 		KeyRight = VK_RIGHT;
+		KeyUse = VK_UP;
 		next_body_part = NULL;
 		last_body_part = this;
 
@@ -302,7 +325,7 @@ shared_ptr<MX::Animation> CreateAnimationFromFile(wchar_t* file, int number, DWO
 
 	void Player::calculate_playerspeed()
 	{
-		Rotation_Speed = speed / 50.0f;
+		Rotation_Speed = GetSpeed() / 50.0f;
 	}
 
 
@@ -317,57 +340,17 @@ shared_ptr<MX::Animation> CreateAnimationFromFile(wchar_t* file, int number, DWO
 		{
 			Player_Direction += Rotation_Speed * World::GetElapsedFloat();
 		}
-		else if (World::Key[VK_SPACE])
+		else if (World::Key[KeyUse] && Item)
 		{
-			static EffectWithGivenCooldown boom(1000);
-
-			if (boom.DoThis())
-			{
-				ActorSprite *test = next_body_part;
-				
-
-				for (int i = 0; i < 6; i ++)
-				{
-					PlayerSnake_Body * body = dynamic_cast<PlayerSnake_Body*>(test);
-					test = body->GetButt();
-					
-				}
-
-				PlayerSnake_Body * body = dynamic_cast<PlayerSnake_Body*>(test);
-				body->Urwij();
-
-			}
-
-			/*
-			if (boom.DoThis())
-			{
-			auto part = make_shared<MX::ParticleGenerator<MX::SimpleParticleCreator, MX::SimpleParticleDispatcher<3,10>>>(scene);
-			part->creator.SetAnimation(GraphicRes.blood);
-			part->pos.x = pos.x;
-			part->pos.y = pos.y;
-
-			shared_ptr<MX::Command> com = MX::q(wait(250), die());
-			part->OnDo.connect(com);
-			scene->AddActor(part);
-			}*/
-
+			Item->Use(scene, this);
+			Item = NULL;
 		}
 	}
 
 	void Player::Move()
 	{
-		//float dx, dy;
-		//dx = cos(Player_Direction);
-		//dy = sin(Player_Direction);
 		v2d d = dirVec(Player_Direction);
-
-		//x += dx * speed * World::GetElapsedFloat();
-		//y += dy * speed * World::GetElapsedFloat();
-		pos = pos + d * speed * World::GetElapsedFloat();
-
-		//std::wstringstream w;
-		//w<<
-		//OutputDebugString(
+		pos = pos + d * GetSpeed() * World::GetElapsedFloat();
 	}
 
 
@@ -416,13 +399,18 @@ shared_ptr<MX::Animation> CreateAnimationFromFile(wchar_t* file, int number, DWO
 
 void Player::AddBodypart()
 {
+	if (last_body_part == NULL)
+		last_body_part = this;
 	auto body_part = make_shared<PlayerSnake_Body>(last_body_part, this);
+
+	body_part->color = color;
+
 	if (!next_body_part)
 		next_body_part = body_part.get();
 	PlayerSnake_Body* lastButt = dynamic_cast<PlayerSnake_Body*>(last_body_part);
 	if(lastButt)
-		lastButt->newButt(&(*body_part));
-	last_body_part = &(*body_part);
+		lastButt->newButt(body_part.get());
+	last_body_part = body_part.get();
 	scene->AddActor(body_part);
 }
 
@@ -444,12 +432,14 @@ void InitializeGame(const shared_ptr<MX::Draw> &_draw, const shared_ptr<MX::Spri
 	scene->AddActor(make_shared<MX::PlayerCrosshair>(*draw));
 
 	auto player1 = make_shared<MX::Player>(v2d(150.0f, 400.0f), 1.57f);
-	auto player2 = make_shared<MX::Player>(v2d(1000.0f, 400.0f), -1.57f);
+	auto player2 = make_shared<MX::Player>(v2d(1000.0f, 400.0f), -1.57f, 0xFFFF5050);
 	
 	scene->AddActor(player1);
 
 	player2->KeyLeft = 'A';
 	player2->KeyRight = 'D';
+	player2->KeyUse = 'W';
+
 
 	scene->AddActor(player2);
 

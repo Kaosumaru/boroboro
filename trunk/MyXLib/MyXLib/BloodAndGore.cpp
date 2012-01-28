@@ -229,6 +229,9 @@ void AddFrontGore(MX::Scene *scene, MX::ActorSprite *body)
 	
 	auto sikacz = make_shared<SikaczPrzedni>(scene);
 	sikacz->SetTarget(body);
+
+	body->OnDeath.boost::signal<void (Actor&)>::connect(bind(&SikaczPrzedni::Die, sikacz));
+
 	scene->AddActor(sikacz);	
 }
 void AddBackGore(MX::Scene *scene, MX::ActorSprite *body)

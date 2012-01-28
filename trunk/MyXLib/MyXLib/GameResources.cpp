@@ -50,6 +50,8 @@ void GraphicResources::Init(MX::Draw &draw)
 	foreground = MX::CreateAnimationFromFile(draw, L"images\\background3.png");
 	foreground->frames[0].centerX = 0.0f;
 	foreground->frames[0].centerY = 0.0f;
+
+	bottle = MX::CreateAnimationFromFile(draw, L"images\\bottle.png");
 }
 
 

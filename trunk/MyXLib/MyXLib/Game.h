@@ -10,6 +10,7 @@
 #include "../MXLib/MXLine.h"
 #include "../MXLib/MXScript.h"
 #include "collidable.h"
+#include "Items.h"
 
 using namespace std;
 
@@ -18,7 +19,7 @@ namespace MX
 class Player : public Collidable
 {
 public:
-	Player(const v2d& p, float d);
+	Player(const v2d& p, float d, DWORD c = 0xFFFFFFFF);
 
 	void calculate_playerspeed();
 	void KeyoardNavigate();
@@ -29,9 +30,12 @@ public:
 	void bounce(const v2d& normal);
 	virtual void onEat(Player* another) override;
 
+	inline float GetSpeed() { return speed * speed_multiplier; }
+
 	float Player_Direction; //direction in radians
 	float Rotation_Speed;
 	float speed;
+	float speed_multiplier;
 
 
 	char KeyLeft;
@@ -41,6 +45,7 @@ public:
 	ActorSprite *next_body_part;
 	ActorSprite *last_body_part;
 
+	shared_ptr<UseItem> Item;
 };
 
 };
