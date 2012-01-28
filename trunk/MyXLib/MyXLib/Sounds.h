@@ -29,7 +29,11 @@ public:
 
 	static SoundSample hissing;
 	static SoundSample satan_hissing;
-	static SoundSample bite;
+	static SoundSample apple_bite;
+	static SoundSample snake_bite;
+	static SoundSample put_shit;
+	static SoundSample no_ass;
+	static SoundSample bump;
 };
 
 };

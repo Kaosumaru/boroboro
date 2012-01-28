@@ -235,8 +235,6 @@ shared_ptr<MX::Animation> CreateAnimationFromFile(wchar_t* file, int number, DWO
 		//	return;
 		//player->headonColCounter = 5;
 
-		
-
 		if(this->scaleX >= 0.4)
 		{
 			v2d normal = normalized(player->pos - pos);
@@ -256,7 +254,7 @@ shared_ptr<MX::Animation> CreateAnimationFromFile(wchar_t* file, int number, DWO
 			player->AddBodypart();
 #endif
 
-		SoundBank::bite.Play();
+		SoundBank::snake_bite.Play();
 		Urwij();
 	}
 

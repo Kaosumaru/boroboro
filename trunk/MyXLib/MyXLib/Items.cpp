@@ -130,6 +130,12 @@ public:
 		auto next = dynamic_cast<PlayerSnake_Body*>(user->next_body_part);
 		for(;next != NULL && next->GetButt() != NULL;next = dynamic_cast<PlayerSnake_Body*>(next->GetButt())){}
 
+		if(!next)
+		{
+			// shit form head
+			pos.x = user->pos.x;
+			pos.y = user->pos.y;
+		}
 		pos.x = next->pos.x;
 		pos.y = next->pos.y;
 

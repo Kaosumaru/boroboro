@@ -20,10 +20,17 @@ void SoundBank::Initialize()
 
 	satan_hissing.AddSound(SoundSample::CreateSample(L"sounds\\sssatan.wav"));
 
-	bite.AddSound(SoundSample::CreateSample(L"sounds\\bite.wav"));
+	apple_bite.AddSound(SoundSample::CreateSample(L"sounds\\apple-crunch.wav"));
+	snake_bite.AddSound(SoundSample::CreateSample(L"sounds\\bite.wav"));
+
+	bump.AddSound(SoundSample::CreateSample(L"sounds\\bing.wav"));
 
 }
 
 SoundSample SoundBank::hissing;
 SoundSample SoundBank::satan_hissing;
-SoundSample SoundBank::bite;
+SoundSample SoundBank::apple_bite;
+SoundSample SoundBank::snake_bite;
+SoundSample SoundBank::put_shit;
+SoundSample SoundBank::no_ass;
+SoundSample SoundBank::bump;
