@@ -60,6 +60,9 @@
     <ClInclude Include="Items.h">
       <Filter>Game</Filter>
     </ClInclude>
+    <ClInclude Include="HellFire.h">
+      <Filter>Game</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -87,6 +90,9 @@
       <Filter>Game</Filter>
     </ClCompile>
     <ClCompile Include="Items.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="HellFire.cpp">
       <Filter>Game</Filter>
     </ClCompile>
   </ItemGroup>

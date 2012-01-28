@@ -72,7 +72,7 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 
 	
 	/*
-	shared_ptr<MX::Image> image(new MX::Image), image2(new MX::Image), image3(new MX::Image);
+	shared_ptr<MX::Image> image(new MX::Image), image2(new MX::Image), image3(new MX::Ima0ge);
 	image->Load(*draw1, L"images\\plansza_1_layer1.png");
 	image2->Load(*draw1, L"images\\plansza_1_layer2.png");
 	image3->Load(*draw1, L"images\\interface_main.png");
