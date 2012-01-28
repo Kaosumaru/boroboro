@@ -88,6 +88,7 @@ public:
 	std::shared_ptr<MX::Animation> berry;
 
 	std::shared_ptr<MX::Animation> bottle;
+	std::shared_ptr<MX::Animation> shield;
 
 };
 

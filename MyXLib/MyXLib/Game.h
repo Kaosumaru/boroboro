@@ -17,6 +17,34 @@ using namespace std;
 
 namespace MX
 {
+
+class Player;
+
+class PlayerSnake_Body : public Collidable
+{
+public:
+	PlayerSnake_Body(ActorSprite *bef, Player *player, bool bAlternative);
+	void sharpenTail();
+	void newButt(ActorSprite *b);
+	float GetSpeed();
+	void Do();
+	void onEat(Player* player);
+	void Urwij();
+	ActorSprite * GetButt() { return butt; }
+	ActorSprite *before;  ///< before this segment
+protected:
+
+	friend class Player;
+	Player* head;
+	ActorSprite *butt;    ///< after this segment
+	float speedMult;
+	float dist;
+	v2d toPos;
+	v2d prevd;
+	bool AlternativeLook;
+	//unsigned num;
+};
+
 class Player : public Collidable
 {
 public:
@@ -24,6 +52,7 @@ public:
 
 	void calculate_playerspeed();
 	void KeyoardNavigate();
+	void DrawItems();
 	void Move();
 	void AddBodypart();
 	void Do();
@@ -53,12 +82,16 @@ public:
 
 	int GetLength() { return length; }
 	void RecalcLength();
+
+	v2d item_pos;
 protected:
 	int length;
 	void ShieldSelf();
 	EffectWithGivenCooldown Shield;
 
 	unsigned headonColCounter;
+	
+
 	
 };
 

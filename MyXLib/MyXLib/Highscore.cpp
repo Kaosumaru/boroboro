@@ -13,7 +13,7 @@ shared_ptr<Image> digits;
 class DigitsDrawer
 {
 public:
-	static void DrawDigit(Spriter &spriter, const shared_ptr<Image> &image, float x, float y, float z, int digit, DWORD color = 0xFFFFFFFF)
+	static void DrawDigit(Spriter &spriter, const shared_ptr<Image> &image, float x, float y, float z, int digit, DWORD color = 0xFFFFFFFF,  float scale = 1.0f)
 	{
 		//int w = image->Width() / 10;
 		int w = 40;
@@ -22,11 +22,11 @@ public:
 		r.bottom = image->Height();
 		r.left = w * digit;
 		r.right = r.left + w;
-		spriter.Draw(*image, x, y, z, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, color, &r);
+		spriter.Draw(*image, x, y, z, 0.0f, 0.0f, 0.0f, scale, scale, color, &r);
 		
 	}
 
-	static void DrawText(Spriter &spriter, const shared_ptr<Image> &image, float x, float y, float z, const char *strText, DWORD color = 0xFFFFFFFF)
+	static void DrawText(Spriter &spriter, const shared_ptr<Image> &image, float x, float y, float z, const char *strText, DWORD color = 0xFFFFFFFF,  float scale = 1.0f)
 	{
 		int len = strlen(strText);
 		//int w = image->Width() / 10;
@@ -36,23 +36,20 @@ public:
 		{
 			int number = strText[i]-L'0';
 			if (number >= 0 && number < 10)
-				DrawDigit(spriter, image, x + i*w, y, z, strText[i]-L'0', color);
+				DrawDigit(spriter, image, x + (float)(i*w)*scale, y, z, strText[i]-L'0', color, scale);
+			else
+				DrawDigit(spriter, image, x + (float)(i*w)*scale, y, z, 10, color, scale);
+
 		}
 	}
 
-	static void DrawTextRight(Spriter &spriter, const shared_ptr<Image> &image, float x, float y, float z, const char *strText, DWORD color = 0xFFFFFFFF)
+	static void DrawTextRight(Spriter &spriter, const shared_ptr<Image> &image, float x, float y, float z, const char *strText, DWORD color = 0xFFFFFFFF,  float scale = 1.0f)
 	{
 		int len = strlen(strText);
 		//int w = image->Width() / 10;
 		int w = 40;
-		x -= len * w;
-	
-		for (int i = 0; i < len; i ++)
-		{
-			int number = strText[i]-L'0';
-			if (number >= 0 && number < 10)
-				DrawDigit(spriter, image, x + i*w, y, z, strText[i]-L'0', color);
-		}
+		x -= (float)(len * w) * scale;
+		DrawText(spriter, image, x, y, z, strText, color, scale);
 	}
 };
 
@@ -77,9 +74,9 @@ public:
 		}
 
 		if (align_right)
-			DigitsDrawer::DrawTextRight(*spriter, digits, pos.x, pos.y, z, pointstext, color);
+			DigitsDrawer::DrawTextRight(*spriter, digits, pos.x, pos.y, z, pointstext, color, 0.5f);
 		else
-			DigitsDrawer::DrawText(*spriter, digits, pos.x, pos.y, z, pointstext, color);
+			DigitsDrawer::DrawText(*spriter, digits, pos.x, pos.y, z, pointstext, color, 0.5f);
 		Actor::Do();
 	}
 
@@ -109,7 +106,7 @@ public:
 			elapsed_time ++;
 			int remaining = max_time - elapsed_time;
 			if (remaining > 0)
-				sprintf(pointstext, "%d:%d", remaining/60, remaining%60);
+				sprintf(pointstext, "%02d:%02d", remaining/60, remaining%60);
 		}
 		DigitsDrawer::DrawText(*spriter, digits, pos.x, pos.y, z, pointstext, color);
 		Actor::Do();
@@ -132,16 +129,16 @@ void InitHighscore(const shared_ptr<MX::Draw> &draw, const shared_ptr<MX::Sprite
 	MX::digits->Load( *draw, L"images\\digits.png");
 
 	auto hi1 = make_shared<MX::HiPoints>(player1);
-	hi1->pos.x = 50;
-	hi1->pos.y = 5;
+	hi1->pos.x = 35;
+	hi1->pos.y = 745;
 	hi1->z = 0.0f;
 	hi1->color = 0xFF00FF00;
 	MX::scene->AddActor(hi1);
 
 
-	auto hi2 = make_shared<MX::HiPoints>(player2, true);
-	hi2->pos.x = 1230;
-	hi2->pos.y = 5;
+	auto hi2 = make_shared<MX::HiPoints>(player2);
+	hi2->pos.x = 1160;
+	hi2->pos.y = 745;
 	hi2->z = 0.0f;
 	hi2->color = 0xFFFF0000;
 	MX::scene->AddActor(hi2);
