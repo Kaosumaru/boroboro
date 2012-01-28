@@ -12,7 +12,12 @@ void Actor::Do()
 	OnDo(*this);
 }
 
- void Actor::Die()
+void Actor::Die()
+{
+	alive = false;
+}
+
+ void Actor::OnDie()
  {
 	 OnDeath(*this);
  }
@@ -94,7 +99,7 @@ void Scene::Draw()
 		Actor &a = *(*it);
 		if (!a.alive)
 		{
-			a.Die();
+			a.OnDie();
 			it = lActors.erase(it);
 		}
 		else
@@ -102,7 +107,7 @@ void Scene::Draw()
 			a.Do();
 			if (!a.alive)
 			{
-				a.Die();
+				a.OnDie();
 				it = lActors.erase(it);
 			}
 			else 

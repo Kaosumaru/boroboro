@@ -43,7 +43,7 @@ public:
 	float r;
 	Collidable()
 	{
-		r = 10;
+		r = 16.0f;
 		sw.addCollidable(this);	
 	}
 	virtual ~Collidable()

@@ -227,10 +227,23 @@ shared_ptr<MX::Animation> CreateAnimationFromFile(wchar_t* file, int number, DWO
 			scene->AddActor(part);
 #endif
 
-			
+
+			PlayerSnake_Body * bef = dynamic_cast<PlayerSnake_Body*>(before);
+			if (bef)
+			{
+				head->last_body_part = before;
+				bef->butt = NULL;
+			}
+			else if (head == before)
+			{
+				head->next_body_part = NULL;
+				head->last_body_part = NULL;
+			}
+
 
 			if (butt)
 			{
+		
 				PlayerSnake_Body * body = dynamic_cast<PlayerSnake_Body*>(butt);
 				body->before = NULL;
 				AddFrontGore(scene, butt);
