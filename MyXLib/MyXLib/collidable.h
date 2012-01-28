@@ -11,7 +11,7 @@ class SphereWorld
 	typedef std::vector<Collidable*> ColCol;  // Coladibles Collection
 	ColCol collidables;
 public:
-	addCollidable(Colidable* c)
+	addCollidable(Collidable* c)
 	{
 		collidables.push_back(c);
 	}
@@ -21,7 +21,7 @@ public:
 class Collidable : public ActorSprite
 {
 public:
-	virtual void onEat(Player* player)
+	virtual void onEat(MX::Player* player)
 	{
 
 	}
