@@ -53,6 +53,40 @@ public:
 	}
 };
 
+class Pentagram : public ActorSprite
+{
+public:
+	Pentagram()
+	{
+		scaleX = 0.2f;
+		scaleY = 0.2f;
+
+		pos.x = 200.0f;
+		pos.y = 200.0f;
+		animation = make_shared<SpecificAnimation>(GraphicRes.pentagram);
+		animation->Start();
+	}
+	void Do(){
+		rotation +=  0.005 * World::GetElapsedTime();
+		ActorSprite::Do();
+	}
+};
+
+class PentagramStatic : public ActorSprite
+{
+public:
+	PentagramStatic()
+	{
+		scaleX = 0.2f;
+		scaleY = 0.2f;
+
+		pos.x = 200.0f;
+		pos.y = 200.0f;
+		animation = make_shared<SpecificAnimation>(GraphicRes.pentagram_static);
+		animation->Start();
+	}
+};
+
 class GameBackground : public ActorSprite
 {
 public:
@@ -236,6 +270,8 @@ void InitBackground(MX::Scene *scene)
 	scene->AddActor(make_shared<BerrySpawner>());
 	scene->AddActor(make_shared<BonusSpawner>());
 	scene->AddActor(make_shared<GameForeground>());
+	scene->AddActor(make_shared<Pentagram>());
+	scene->AddActor(make_shared<PentagramStatic>());
 	
 	//for (int i = 0; i < 10; i ++)
 	//	scene->AddActor(make_shared<GameBackgroundGrass>());

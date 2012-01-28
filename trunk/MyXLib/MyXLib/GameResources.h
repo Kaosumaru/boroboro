@@ -90,6 +90,9 @@ public:
 	std::shared_ptr<MX::Animation> bottle;
 	std::shared_ptr<MX::Animation> shield;
 
+	std::shared_ptr<MX::Animation> pentagram;
+	std::shared_ptr<MX::Animation> pentagram_static;
+
 };
 
 extern GraphicResources GraphicRes;
