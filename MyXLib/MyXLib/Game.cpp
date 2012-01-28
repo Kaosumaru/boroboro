@@ -5,6 +5,7 @@
 #include "Sounds.h"
 #include "GameResources.h"
 #include "Gamebackground.h"
+#include "Collidable.h"
 #include "../MXLib/MXParticles.h"
 #include "../MXLib/MXAnimUtils.h"
 
@@ -92,111 +93,96 @@ shared_ptr<MX::Animation> CreateAnimationFromFile(wchar_t* file, int number, DWO
 		}
 	};
 	
-	class Player : public ActorSprite
+
+	Player::Player()
 	{
-	public:
-		Player()
+		Player_Direction = 0.0f;
+		Rotation_Speed = 2.0f;
+		speed = 300.0f;
+		KeyLeft = VK_LEFT;
+		KeyRight = VK_RIGHT;
+
+		last_body_part = this;
+
+		Player_Direction = 0.0f;
+
+		scaleX = 0.65f;
+		scaleY = 0.8f;
+
+		//x = 100.0f;
+		//y = 100.0f;
+		pos = v2d(100.0f,100.0f);
+		z = 0.0f;
+		animation = make_shared<SpecificAnimation>(GraphicRes.snake_head);
+		animation->Start();
+
+		for(int i =0; i<12; ++i)
+			AddBodypart();
+	}
+
+	void Player::calculate_playerspeed()
+	{
+		Rotation_Speed = speed / 50.0f;
+	}
+
+
+	void Player::KeyoardNavigate()
+	{
+		calculate_playerspeed();
+		if (World::Key[KeyLeft])
 		{
-			Player_Direction = 0.0f;
-			Rotation_Speed = 2.0f;
-			speed = 300.0f;
-			KeyLeft = VK_LEFT;
-			KeyRight = VK_RIGHT;
-
-			last_body_part = this;
-
-			Player_Direction = 0.0f;
-
-			scaleX = 0.65f;
-			scaleY = 0.8f;
-
-			//x = 100.0f;
-			//y = 100.0f;
-			pos = v2d(100.0f,100.0f);
-			z = 0.0f;
-			animation = make_shared<SpecificAnimation>(GraphicRes.snake_head);
-			animation->Start();
-
-			for(int i =0; i<12; ++i)
-				AddBodypart();
+			Player_Direction -= Rotation_Speed * World::GetElapsedFloat();
 		}
-
-		void calculate_playerspeed()
+		else if (World::Key[KeyRight])
 		{
-			Rotation_Speed = speed / 50.0f;
+			Player_Direction += Rotation_Speed * World::GetElapsedFloat();
 		}
-
-
-		void KeyoardNavigate()
+		else if (World::Key[VK_SPACE])
 		{
-			calculate_playerspeed();
-			if (World::Key[KeyLeft])
+			static EffectWithGivenCooldown boom(1000);
+
+			if (boom.DoThis())
 			{
-				Player_Direction -= Rotation_Speed * World::GetElapsedFloat();
+			auto part = make_shared<MX::ParticleGenerator<MX::SimpleParticleCreator, MX::SimpleParticleDispatcher<3,10>>>(scene);
+			part->creator.SetAnimation(GraphicRes.blood);
+			part->pos.x = pos.x;
+			part->pos.y = pos.y;
+
+			shared_ptr<MX::Command> com = MX::q(wait(250), die());
+			part->OnDo.connect(com);
+			scene->AddActor(part);
 			}
-			else if (World::Key[KeyRight])
-			{
-				Player_Direction += Rotation_Speed * World::GetElapsedFloat();
-			}
-			else if (World::Key[VK_SPACE])
-			{
-				static EffectWithGivenCooldown boom(1000);
 
-				if (boom.DoThis())
-				{
-				auto part = make_shared<MX::ParticleGenerator<MX::SimpleParticleCreator, MX::SimpleParticleDispatcher<3,10>>>(scene);
-				part->creator.SetAnimation(GraphicRes.blood);
-				part->pos.x = pos.x;
-				part->pos.y = pos.y;
-
-				shared_ptr<MX::Command> com = MX::q(wait(250), die());
-				part->OnDo.connect(com);
-				scene->AddActor(part);
-				}
-
-			}
 		}
+	}
 
-		void Move()
-		{
-			//float dx, dy;
-			//dx = cos(Player_Direction);
-			//dy = sin(Player_Direction);
-			v2d d = dirVec(Player_Direction);
+	void Player::Move()
+	{
+		//float dx, dy;
+		//dx = cos(Player_Direction);
+		//dy = sin(Player_Direction);
+		v2d d = dirVec(Player_Direction);
 
-			//x += dx * speed * World::GetElapsedFloat();
-			//y += dy * speed * World::GetElapsedFloat();
-			pos = pos + d * speed * World::GetElapsedFloat();
+		//x += dx * speed * World::GetElapsedFloat();
+		//y += dy * speed * World::GetElapsedFloat();
+		pos = pos + d * speed * World::GetElapsedFloat();
 
-			//std::wstringstream w;
-			//w<<
-			//OutputDebugString(
-		}
-
-		void AddBodypart();
-
-		void Do()
-		{
-			KeyoardNavigate();
-			Move();
-			Actor::rotation = Player_Direction;
-			__super::Do();
-		}
-
-		float Player_Direction; //direction in radians
-		float Rotation_Speed;
-		float speed;
+		//std::wstringstream w;
+		//w<<
+		//OutputDebugString(
+	}
 
 
-		char KeyLeft;
-		char KeyRight;
-		char KeyUse;
+	void Player::Do()
+	{
+		KeyoardNavigate();
+		Move();
+		Actor::rotation = Player_Direction;
+		__super::Do();
+	}
 
-		ActorSprite *last_body_part;
 
-	};
-
-	class PlayerSnake_Body : public ActorSprite
+	class PlayerSnake_Body : public Collidable
 	{
 	public:
 		PlayerSnake_Body(ActorSprite *bef, Player *player)

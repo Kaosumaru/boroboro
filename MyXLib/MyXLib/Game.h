@@ -13,6 +13,34 @@
 
 using namespace std;
 
+namespace MX
+{
+class Player : public ActorSprite
+{
+public:
+	Player();
+
+	void calculate_playerspeed();
+	void KeyoardNavigate();
+	void Move();
+	void AddBodypart();
+	void Do();
+
+	float Player_Direction; //direction in radians
+	float Rotation_Speed;
+	float speed;
+
+
+	char KeyLeft;
+	char KeyRight;
+	char KeyUse;
+
+	ActorSprite *last_body_part;
+
+};
+
+};
+
 void InitializeGame(const shared_ptr<MX::Draw> &_draw, const shared_ptr<MX::Spriter> &_spriter, MX::Scene *_scene);
 
 

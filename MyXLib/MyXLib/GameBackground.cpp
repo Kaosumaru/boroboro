@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "GameBackground.h"
 #include "GameResources.h"
+#include "Collidable.h"
 #include "../MXLib/MXScript.h"
 
 using namespace MX;
@@ -111,7 +112,7 @@ public:
 };
 
 
-class Berry : public ActorSprite
+class Berry : public Collidable
 {
 public:
 	Berry()
@@ -127,6 +128,11 @@ public:
 
 		shared_ptr<MX::Command> com = MX::q(wait(5000), lerp_color(0x00FFFFFF, 1000), die());
 		OnDo.connect(com);
+	}
+
+	void onEat(Player* player)
+	{
+
 	}
 };
 
