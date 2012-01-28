@@ -2,14 +2,18 @@
 
 #include <vector>
 #include "../MXLib/MXScene.h"
+#include "Game.h"
+
+class Collidable;
 
 class SphereWorld
 {
-	std::vector<Collidable*> collidables;
+	typedef std::vector<Collidable*> ColCol;  // Coladibles Collection
+	ColCol collidables;
 public:
 	addCollidable(Colidable* c)
 	{
-		//co
+		collidables.push_back(c);
 	}
 
 };
