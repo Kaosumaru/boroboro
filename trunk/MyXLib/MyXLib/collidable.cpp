@@ -19,13 +19,15 @@ void SphereWorld::allUCanEat(MX::Player* player)
 			(*it)->onEat(player);
 	}
 
-	if(player->pos.x < 30)
+	static const float MARGIN = 50.0f;
+
+	if(player->pos.x < MARGIN)
 		player->bounce(v2d(1.0f, 0.0f));
-	else if(player->pos.x > 1250)
+	else if(player->pos.x > 1280-MARGIN)
 		player->bounce(v2d(-1.0f, 0.0f));
 
-	if(player->pos.y < 30)
+	if(player->pos.y < MARGIN)
 		player->bounce(v2d(0.0f, 1.0f));
-	else if(player->pos.y > 770)
+	else if(player->pos.y > 800-MARGIN)
 		player->bounce(v2d(0.0f, -1.0f));
 }

@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "../MXLib/v2d.hpp"
-#include "game.h"
+#include "Game.h"
 #include "GameMap.h"
 #include "Sounds.h"
 #include "GameResources.h"
@@ -129,9 +129,21 @@ shared_ptr<MX::Animation> CreateAnimationFromFile(wchar_t* file, int number, DWO
 			}
 			*/
 
+			sharpenTail();
+
+			dist = 64.0f * scaleX;
+
+			pos = before->pos - dirVec(before->rotation)*dist;
+			rotation = before->rotation; 
+			toPos = before->pos;
+			prevd = normalized(toPos-pos);
+		}
+		
+		void sharpenTail()
+		{
 			scaleX = scaleY = 0.38f;
-			for(auto befo = dynamic_cast<PlayerSnake_Body*>(before);
-				befo != NULL && bef != head;
+			for(auto befo = dynamic_cast<PlayerSnake_Body*>(this->before);
+				befo != NULL && this->before != head;
 				befo = dynamic_cast<PlayerSnake_Body*>(befo->before))
 			{
 				befo->scaleX += 0.01f;
@@ -142,15 +154,9 @@ shared_ptr<MX::Animation> CreateAnimationFromFile(wchar_t* file, int number, DWO
 				if(befo->scaleX > 0.58f)
 					break;
 			}
-
-			dist = 64.0f * scaleX;
-
-			pos = before->pos - dirVec(before->rotation)*dist;
-			rotation = before->rotation; 
-			toPos = before->pos;
-			prevd = normalized(toPos-pos);
 		}
-		
+
+
 		void newButt(ActorSprite *b)
 		{
 			butt = b;
@@ -247,7 +253,12 @@ shared_ptr<MX::Animation> CreateAnimationFromFile(wchar_t* file, int number, DWO
 #endif
 
 			if (head)
+			{
 				head->last_body_part = before;
+				PlayerSnake_Body* tail = dynamic_cast<PlayerSnake_Body*>(head->last_body_part);
+				if(tail)
+					tail->sharpenTail();
+			}
 
 			PlayerSnake_Body * bef = dynamic_cast<PlayerSnake_Body*>(before);
 			if (bef)
@@ -342,6 +353,7 @@ shared_ptr<MX::Animation> CreateAnimationFromFile(wchar_t* file, int number, DWO
 
 	Player::Player(const v2d& p, float d, bool alternative) : Shield(1000)
 	{
+		headonColCounter=0;
 		AlternativeLook = alternative;
 		invisible = false;
 		rotation = 0.0f;
@@ -359,6 +371,8 @@ shared_ptr<MX::Animation> CreateAnimationFromFile(wchar_t* file, int number, DWO
 
 		scaleX = 0.65f;
 		scaleY = 0.8f;
+
+		r = 24.0f;
 
 		//x = 100.0f;
 		//y = 100.0f;
@@ -410,6 +424,8 @@ shared_ptr<MX::Animation> CreateAnimationFromFile(wchar_t* file, int number, DWO
 
 	void Player::Do()
 	{
+		if(headonColCounter)
+			--headonColCounter;
 		KeyoardNavigate();
 		Move();
 		sw.allUCanEat(this);
@@ -436,23 +452,27 @@ shared_ptr<MX::Animation> CreateAnimationFromFile(wchar_t* file, int number, DWO
 	{
 		v2d dir;
 		dir = dirVec(this->rotation);
-		if(dot(dir, normal) < -0.7)
+		float dadot = dot(dir, normal);
+		if(dadot > 0)
+			return;
+		else if(dadot < -0.7)
 		{
-			this->rotation +=1.57;
+			this->rotation += sign(cross(dir, normal)) * 1.6; // must be * a little more than PI/2
 			return;
 		}
-		v2d bou = dir + normal * (dot(dir, normal) * 2);
-		float newrot = atan2(bou.x, bou.y);
+		v2d bou = dir - normal * (dadot * 2);
+		float newrot = atan2(bou.y, bou.x);
 		rotation = newrot;
-
-		/// @todo DO not always mirror 
 	}
 
 	void Player::onEat(Player* another)
 	{
+		if(headonColCounter || another->headonColCounter)
+			return;
+		headonColCounter = another->headonColCounter = 5;
 		v2d normal = normalized(another->pos - pos);
-		bounce(normal);
-		another->bounce(normal*-1);
+		bounce(normal*-1);
+		another->bounce(normal);
 	}
 }
 

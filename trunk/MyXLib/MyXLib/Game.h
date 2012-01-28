@@ -54,6 +54,7 @@ protected:
 	void ShieldSelf();
 	EffectWithGivenCooldown Shield;
 
+	unsigned headonColCounter;
 	
 };
 
