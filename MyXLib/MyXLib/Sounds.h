@@ -27,9 +27,8 @@ class SoundBank
 public:
 	static void Initialize();
 
-	static SoundSample meat_hit;
-	static SoundSample sword_hit;
-	static SoundSample augh;
+	static SoundSample hissing;
+	static SoundSample satan_hissing;
 };
 
 };
