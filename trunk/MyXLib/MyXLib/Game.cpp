@@ -98,12 +98,12 @@ shared_ptr<MX::Animation> CreateAnimationFromFile(wchar_t* file, int number, DWO
 	class PlayerSnake_Body : public Collidable
 	{
 	public:
-		PlayerSnake_Body(ActorSprite *bef, Player *player)
+		PlayerSnake_Body(ActorSprite *bef, Player *player, bool bAlternative)
 		{
 			speedMult = 1.0f;
 			z = bef->z+0.00001f;
 
-			animation = make_shared<SpecificAnimation>(GraphicRes.snake_body);
+			animation = make_shared<SpecificAnimation>(bAlternative ? GraphicRes.snake_body2 : GraphicRes.snake_body);
 			animation->Start();
 
 			before = bef;
@@ -220,6 +220,8 @@ shared_ptr<MX::Animation> CreateAnimationFromFile(wchar_t* file, int number, DWO
 		{
 			if (head && head->invisible)
 				return;
+
+
 #if 0
 			if (head != player)
 				player->AddBodypart();
@@ -325,10 +327,10 @@ shared_ptr<MX::Animation> CreateAnimationFromFile(wchar_t* file, int number, DWO
 		Player *user;
 	};
 
-	Player::Player(const v2d& p, float d, DWORD c) : Shield(1000)
+	Player::Player(const v2d& p, float d, bool alternative) : Shield(1000)
 	{
+		AlternativeLook = alternative;
 		invisible = false;
-		color = c;
 		rotation = 0.0f;
 		Rotation_Speed = 2.0f;
 		speed = 300.0f;
@@ -349,7 +351,7 @@ shared_ptr<MX::Animation> CreateAnimationFromFile(wchar_t* file, int number, DWO
 		//y = 100.0f;
 		pos = p;
 		z = 0.1f;
-		animation = make_shared<SpecificAnimation>(GraphicRes.snake_head);
+		animation = make_shared<SpecificAnimation>(AlternativeLook ? GraphicRes.snake_head2 : GraphicRes.snake_head);
 		animation->Start();
 
 		for(int i =0; i<10; ++i)
@@ -381,8 +383,8 @@ shared_ptr<MX::Animation> CreateAnimationFromFile(wchar_t* file, int number, DWO
 		else if (World::Key[KeyShield])
 		{
 			if (Shield.DoThis())
-				//scene->AddActor(make_shared<ShieldPlayer>(this));
-				AddHellFire(scene, this);
+				scene->AddActor(make_shared<ShieldPlayer>(this));
+				//AddHellFire(scene, this);
 		}
 	}
 
@@ -440,7 +442,7 @@ void Player::AddBodypart()
 {
 	if (last_body_part == NULL)
 		last_body_part = this;
-	auto body_part = make_shared<PlayerSnake_Body>(last_body_part, this);
+	auto body_part = make_shared<PlayerSnake_Body>(last_body_part, this, AlternativeLook);
 	body_part->color = color;
 	if (!next_body_part)
 		next_body_part = body_part.get();
@@ -468,8 +470,8 @@ void InitializeGame(const shared_ptr<MX::Draw> &_draw, const shared_ptr<MX::Spri
 
 	scene->AddActor(make_shared<MX::PlayerCrosshair>(*draw));
 
-	auto player1 = make_shared<MX::Player>(v2d(150.0f, 400.0f), 1.57f);
-	auto player2 = make_shared<MX::Player>(v2d(1000.0f, 400.0f), -1.57f, 0xFFFF5050);
+	auto player1 = make_shared<MX::Player>(v2d(150.0f, 400.0f), 1.57f, false);
+	auto player2 = make_shared<MX::Player>(v2d(1000.0f, 400.0f), -1.57f, true);
 	
 	scene->AddActor(player1);
 

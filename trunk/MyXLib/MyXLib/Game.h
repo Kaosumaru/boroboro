@@ -20,7 +20,7 @@ namespace MX
 class Player : public Collidable
 {
 public:
-	Player(const v2d& p, float d, DWORD c = 0xFFFFFFFF);
+	Player(const v2d& p, float d, bool alternative);
 
 	void calculate_playerspeed();
 	void KeyoardNavigate();
@@ -52,6 +52,8 @@ public:
 protected:
 	void ShieldSelf();
 	EffectWithGivenCooldown Shield;
+
+	bool AlternativeLook;
 };
 
 };
