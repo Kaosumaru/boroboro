@@ -100,6 +100,7 @@ shared_ptr<MX::Animation> CreateAnimationFromFile(wchar_t* file, int number, DWO
 	public:
 		PlayerSnake_Body(ActorSprite *bef, Player *player, bool bAlternative)
 		{
+			AlternativeLook = bAlternative;
 			speedMult = 1.0f;
 			z = bef->z+0.00001f;
 
@@ -221,6 +222,9 @@ shared_ptr<MX::Animation> CreateAnimationFromFile(wchar_t* file, int number, DWO
 			if (head && head->invisible)
 				return;
 
+			if (head == NULL && AlternativeLook == player->AlternativeLook)
+				player->AddBodypart();
+
 
 #if 0
 			if (head != player)
@@ -295,6 +299,7 @@ shared_ptr<MX::Animation> CreateAnimationFromFile(wchar_t* file, int number, DWO
 		float dist;
 		v2d toPos;
 		v2d prevd;
+		bool AlternativeLook;
 		//unsigned num;
 	};
 
@@ -308,6 +313,14 @@ shared_ptr<MX::Animation> CreateAnimationFromFile(wchar_t* file, int number, DWO
 			OnDo.connect(MX::q(wait(2000), die()));
 			user->speed_multiplier = 0.0f;
 			user->invisible = true;
+
+			u->OnDo.connect(MX::q(lerp_color(0x80FFFFFF, 500), wait(1250), lerp_color(0xFFFFFFFF, 250)));
+
+		for(auto next = dynamic_cast<PlayerSnake_Body*>(u->next_body_part);
+			next != NULL;
+			next = dynamic_cast<PlayerSnake_Body*>(next->GetButt()))
+			next->OnDo.connect(MX::q(lerp_color(0x80FFFFFF, 500), wait(1250), lerp_color(0xFFFFFFFF, 250)));
+
 		}
 
 

@@ -49,11 +49,12 @@ public:
 	shared_ptr<UseItem> Item;
 
 	bool invisible;
+	bool AlternativeLook;
 protected:
 	void ShieldSelf();
 	EffectWithGivenCooldown Shield;
 
-	bool AlternativeLook;
+	
 };
 
 };
