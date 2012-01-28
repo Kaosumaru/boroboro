@@ -152,23 +152,38 @@ public:
 	}
 };
 
+
+class Bottle : public Collidable
+{
+public:
+	Bottle()
+	{
+		z = 0.9f;
+		r = 16.0f;
+
+		pos.x = (float)(rand()%1280);
+		pos.y = (float)(rand()%800);
+
+		animation = make_shared<SpecificAnimation>(GraphicRes.bottle);
+		animation->Start();
+
+		shared_ptr<MX::Command> com = MX::q(wait(5000), lerp_color(0x00FFFFFF, 3000), die());
+		OnDo.connect(com);
+	}
+
+	void onEat(Player* player)
+	{
+		player->Item = make_shared<GoodBootleItem>();
+		Die();
+	}
+};
+
 class BerrySpawner : public Actor, public EffectWithCooldown
 {
 public:
-	BerrySpawner()
-	{
-
-	}
-
 	DWORD GetCooldownTime()
 	{
-		
 		return 3000 * ((float)(rand()%100)/100.0f) * 2000;
-	}
-
-	float RandFloat()
-	{
-		return ((float)(rand()%1001) / 1000.0);
 	}
 
 
@@ -177,19 +192,33 @@ public:
 		_scene->AddActor(make_shared<Berry>());
 	}
 
+	void Do()
+	{
+		if (CooldownElapsed())
+			DoEffect();
+	}
+};
 
+
+class BonusSpawner : public Actor, public EffectWithCooldown
+{
+public:
+	DWORD GetCooldownTime()
+	{
+		return 20000 * ((float)(rand()%100)/100.0f) * 5000;
+	}
+
+
+	void DoEffect()
+	{
+		_scene->AddActor(make_shared<Bottle>());
+	}
 
 	void Do()
 	{
 		if (CooldownElapsed())
 			DoEffect();
-
 	}
-
-
-
-protected:
-
 };
 
 
@@ -200,6 +229,7 @@ void InitBackground(MX::Scene *scene)
 	scene->AddActor(make_shared<Flower1>());
 	scene->AddActor(make_shared<GameBackground>());
 	scene->AddActor(make_shared<BerrySpawner>());
+	scene->AddActor(make_shared<BonusSpawner>());
 	scene->AddActor(make_shared<GameForeground>());
 	
 	//for (int i = 0; i < 10; i ++)

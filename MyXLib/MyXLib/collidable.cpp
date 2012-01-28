@@ -8,6 +8,8 @@ void SphereWorld::allUCanEat(MX::Player* player)
 {
 	for(auto it = collidables.begin(); it!=collidables.end(); ++it)
 	{
+		if (!(*it)->alive)
+			continue;
 		if(player->isInNeck(*it) || *it == player)
 			continue;
 		v2d d = (*it)->pos - player->pos;

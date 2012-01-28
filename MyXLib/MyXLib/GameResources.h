@@ -83,6 +83,8 @@ public:
 	std::shared_ptr<MX::Animation> blood;
 	std::shared_ptr<MX::Animation> berry;
 
+	std::shared_ptr<MX::Animation> bottle;
+
 };
 
 extern GraphicResources GraphicRes;

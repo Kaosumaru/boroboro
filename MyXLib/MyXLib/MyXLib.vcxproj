@@ -85,6 +85,7 @@
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameBackground.h" />
     <ClInclude Include="GameResources.h" />
+    <ClInclude Include="Items.h" />
     <ClInclude Include="MyXLib.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="Sounds.h" />
@@ -97,6 +98,7 @@
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameBackground.cpp" />
     <ClCompile Include="GameResources.cpp" />
+    <ClCompile Include="Items.cpp" />
     <ClCompile Include="MyXLib.cpp" />
     <ClCompile Include="Sounds.cpp" />
     <ClCompile Include="stdafx.cpp">

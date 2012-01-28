@@ -57,6 +57,9 @@
     <ClInclude Include="BloodAndGore.h">
       <Filter>Game</Filter>
     </ClInclude>
+    <ClInclude Include="Items.h">
+      <Filter>Game</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -81,6 +84,9 @@
       <Filter>Game</Filter>
     </ClCompile>
     <ClCompile Include="BloodAndGore.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Items.cpp">
       <Filter>Game</Filter>
     </ClCompile>
   </ItemGroup>
