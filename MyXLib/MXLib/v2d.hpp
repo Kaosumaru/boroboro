@@ -27,6 +27,11 @@ inline float dot(const v2d& a, const v2d& b)
 	return a.x*b.x+a.y*b.y;
 }
 
+inline float cross(const v2d& v1, const v2d& v2)
+{
+    return (v1.x*v2.y) - (v1.y*v2.x);
+}
+
 inline float norm(const v2d& v)
 {
 	return dot(v, v);
@@ -45,6 +50,11 @@ inline v2d dirVec(float a)
 inline v2d normalized(const v2d& v)
 {
    return v*float(1.0f/length(v));
+}
+
+template <typename T> T sign(T val)
+{
+    return (val > T(0)) - (val < T(0));
 }
 
 //inline std::wostream
