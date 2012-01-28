@@ -37,6 +37,7 @@ Spriter *ActorSprite::spriter = NULL;
 
 ActorSprite::ActorSprite(const shared_ptr<Animation> &anim) 
 {
+	custom_transform = NULL;
 	animation = shared_ptr<SpecificAnimation>(new SpecificAnimation(anim));
 }
 
@@ -49,7 +50,7 @@ void ActorSprite::Do()
 
 void ActorSprite::DrawSprite()
 {
-	animation->AnimateElapse(*spriter, pos.x, pos.y, z == -1.0f ? 0.5f - (pos.y/RESY)*0.1f : z, rotation, scaleX, scaleY, color);
+	animation->AnimateElapse(*spriter, pos.x, pos.y, z == -1.0f ? 0.5f - (pos.y/RESY)*0.1f : z, rotation, scaleX, scaleY, color, 1.0f, custom_transform);
 }
 
 AnimationFrame &ActorSprite::GetCurrentFrame()

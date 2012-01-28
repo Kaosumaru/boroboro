@@ -27,7 +27,7 @@ public:
 
 	void AddFrame(const AnimationFrame &frame) { frames.push_back(frame); if (frames.back().duration == 0) frames.back().duration = frame_duration; }
 
-	void Animate(Spriter &spriter, float x, float y, float z = 0.0f, float rotation = 0.0f, float scaleX = 1.0f, float scaleY = 1.0f, D3DCOLOR color = 0xFFFFFFFF, float speed = 1.0f);
+	void Animate(Spriter &spriter, float x, float y, float z = 0.0f, float rotation = 0.0f, float scaleX = 1.0f, float scaleY = 1.0f, D3DCOLOR color = 0xFFFFFFFF, float speed = 1.0f, D3DXMATRIX *custom_transform = NULL);
 
 	AnimationFrame &GetCurrentFrame(float speed);
 
@@ -40,11 +40,11 @@ class SpecificAnimation
 public:
 	SpecificAnimation(const shared_ptr<Animation> &anim, bool loop = true);
 
-	void Animate(Spriter &spriter, float x, float y, float z = 0.0f, float rotation = 0.0f, float scaleX = 1.0f, float scaleY = 1.0f, D3DCOLOR color = 0xFFFFFFFF, float speed = 1.0f);
+	void Animate(Spriter &spriter, float x, float y, float z = 0.0f, float rotation = 0.0f, float scaleX = 1.0f, float scaleY = 1.0f, D3DCOLOR color = 0xFFFFFFFF, float speed = 1.0f, D3DXMATRIX *custom_transform = NULL);
 	AnimationFrame &GetCurrentFrame();
 
 	//automatically calls ElapseTime,
-	bool AnimateElapse(Spriter &spriter, float x, float y, float z = 0.0f, float rotation = 0.0f, float scaleX = 1.0f, float scaleY = 1.0f, D3DCOLOR color = 0xFFFFFFFF, float speed = 1.0f);
+	bool AnimateElapse(Spriter &spriter, float x, float y, float z = 0.0f, float rotation = 0.0f, float scaleX = 1.0f, float scaleY = 1.0f, D3DCOLOR color = 0xFFFFFFFF, float speed = 1.0f, D3DXMATRIX *custom_transform = NULL);
 
 	void Start();
 	void Stop();

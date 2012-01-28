@@ -6,10 +6,10 @@
 using namespace MX;
 
 
-void Animation::Animate(Spriter &spriter, float x, float y, float z, float rotation, float scaleX, float scaleY, D3DCOLOR color, float speed)
+void Animation::Animate(Spriter &spriter, float x, float y, float z, float rotation, float scaleX, float scaleY, D3DCOLOR color, float speed, D3DXMATRIX *custom_transform)
 {
 	int frame = (World::GetCurrentTime() / (DWORD)((float)frame_duration/speed)) % frames.size();
-	spriter.Draw(*(frames[frame].frame), x, y, z, frames[frame].centerX, frames[frame].centerY, rotation, scaleX, scaleY, color);
+	spriter.Draw(*(frames[frame].frame), x, y, z, frames[frame].centerX, frames[frame].centerY, rotation, scaleX, scaleY, color, custom_transform);
 }
 
 AnimationFrame &Animation::GetCurrentFrame(float speed)
@@ -27,9 +27,9 @@ SpecificAnimation::SpecificAnimation(const shared_ptr<Animation> &anim, bool loo
 	animating = false;
 }
 
-void SpecificAnimation::Animate(Spriter &spriter, float x, float y, float z, float rotation, float scaleX, float scaleY, D3DCOLOR color, float speed)
+void SpecificAnimation::Animate(Spriter &spriter, float x, float y, float z, float rotation, float scaleX, float scaleY, D3DCOLOR color, float speed, D3DXMATRIX *custom_transform)
 {
-	spriter.Draw(*(animation->frames[current_frame].frame), x, y, z, animation->frames[current_frame].centerX, animation->frames[current_frame].centerY, rotation, scaleX, scaleY, color);
+	spriter.Draw(*(animation->frames[current_frame].frame), x, y, z, animation->frames[current_frame].centerX, animation->frames[current_frame].centerY, rotation, scaleX, scaleY, color, custom_transform);
 }
 
 AnimationFrame &SpecificAnimation::GetCurrentFrame()
@@ -37,10 +37,10 @@ AnimationFrame &SpecificAnimation::GetCurrentFrame()
 	return animation->frames[current_frame];
 }
 
-bool SpecificAnimation::AnimateElapse(Spriter &spriter, float x, float y, float z, float rotation, float scaleX, float scaleY, D3DCOLOR color, float speed)
+bool SpecificAnimation::AnimateElapse(Spriter &spriter, float x, float y, float z, float rotation, float scaleX, float scaleY, D3DCOLOR color, float speed, D3DXMATRIX *custom_transform)
 {
 	bool end = false;
-	Animate(spriter, x, y, z, rotation, scaleX, scaleY, color, speed);
+	Animate(spriter, x, y, z, rotation, scaleX, scaleY, color, speed, custom_transform);
 	if (last_tick != World::GetTick())
 	{
 		last_tick = World::GetTick();

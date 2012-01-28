@@ -17,6 +17,7 @@ public:
 	std::shared_ptr<MX::Animation> flower2;
 
 	std::shared_ptr<MX::Animation> background;
+	std::shared_ptr<MX::Animation> grass[4];
 
 };
 

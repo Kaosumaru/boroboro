@@ -26,11 +26,11 @@ namespace MX
 		void End();
 		void ResetTransform();
 
-		void Draw(Image &image, float x, float y, float z = 0.0f, float cx = 0.0f, float cy = 0.0f, float rotation = 0.0f, float scaleX = 1.0f, float scaleY = 1.0f, D3DCOLOR color = 0xFFFFFFFF, RECT *src = NULL);
+		void Draw(Image &image, float x, float y, float z = 0.0f, float cx = 0.0f, float cy = 0.0f, float rotation = 0.0f, float scaleX = 1.0f, float scaleY = 1.0f, D3DCOLOR color = 0xFFFFFFFF, RECT *src = NULL, D3DXMATRIX *custom_transform = NULL);
 		void DrawCenter(Image &image, float x, float y, float z = 0.0f, float rotation = 0.0f, float scaleX = 1.0f, float scaleY = 1.0f, D3DCOLOR color = 0xFFFFFFFF, RECT *src = NULL);
 		void Draw(Image &image, const D3DXVECTOR3 &position, const D3DXVECTOR3 &center = D3DXVECTOR3(0.0f,0.0f,0.0f), D3DCOLOR color = 0xFFFFFFFF, RECT *src = NULL);
 
-		void Draw(Frame &frame, float x, float y, float z = 0.0f, float cx = 0.0f, float cy = 0.0f, float rotation = 0.0f, float scaleX = 1.0f, float scaleY = 1.0f, D3DCOLOR color = 0xFFFFFFFF);
+		void Draw(Frame &frame, float x, float y, float z = 0.0f, float cx = 0.0f, float cy = 0.0f, float rotation = 0.0f, float scaleX = 1.0f, float scaleY = 1.0f, D3DCOLOR color = 0xFFFFFFFF, D3DXMATRIX *custom_transform = NULL);
 		void DrawCenter(Frame &frame, float x, float y, float z = 0.0f, float rotation = 0.0f, float scaleX = 1.0f, float scaleY = 1.0f, D3DCOLOR color = 0xFFFFFFFF);
 		void Draw(Frame &frame, const D3DXVECTOR3 &position, const D3DXVECTOR3 &center = D3DXVECTOR3(0.0f,0.0f,0.0f), D3DCOLOR color = 0xFFFFFFFF);
 
