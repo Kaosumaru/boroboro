@@ -3,6 +3,7 @@
 #include "Game.h"
 #include "GameMap.h"
 #include "Sounds.h"
+#include "Highscore.h"
 #include "GameResources.h"
 #include "Gamebackground.h"
 #include "Collidable.h"
@@ -291,6 +292,8 @@ shared_ptr<MX::Animation> CreateAnimationFromFile(wchar_t* file, int number, DWO
 			}
 
 		
+			if (head)
+				head->RecalcLength();
 			
 
 			Die();
@@ -354,6 +357,7 @@ shared_ptr<MX::Animation> CreateAnimationFromFile(wchar_t* file, int number, DWO
 	Player::Player(const v2d& p, float d, bool alternative) : Shield(1000)
 	{
 		headonColCounter=0;
+		length = 0;
 		AlternativeLook = alternative;
 		invisible = false;
 		rotation = 0.0f;
@@ -474,10 +478,21 @@ shared_ptr<MX::Animation> CreateAnimationFromFile(wchar_t* file, int number, DWO
 		bounce(normal*-1);
 		another->bounce(normal);
 	}
+
+	void Player::RecalcLength()
+	{
+		length = 0;
+		for(auto next = dynamic_cast<PlayerSnake_Body*>(next_body_part);
+			next != NULL;
+			next = dynamic_cast<PlayerSnake_Body*>(next->butt))
+			length ++;
+	}
 }
 
 void Player::AddBodypart()
 {
+	length ++;
+
 	if (last_body_part == NULL)
 		last_body_part = this;
 	auto body_part = make_shared<PlayerSnake_Body>(last_body_part, this, AlternativeLook);
@@ -522,6 +537,9 @@ void InitializeGame(const shared_ptr<MX::Draw> &_draw, const shared_ptr<MX::Spri
 	scene->AddActor(player2);
 
 	scene->AddActor(make_shared<MX::Flower1>());
+
+	InitHighscore(draw, spriter, scene, player1, player2);
+
 }
 
 void initGame(const shared_ptr<MX::Draw> &_draw, const shared_ptr<MX::Spriter> &_spriter, MX::Scene *_scene)
