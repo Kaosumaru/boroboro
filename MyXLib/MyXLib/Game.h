@@ -26,6 +26,8 @@ public:
 	void AddBodypart();
 	void Do();
 	bool isInNeck(Collidable* c);
+	void bounce(const v2d& normal);
+	virtual void onEat(Player* another) override;
 
 	float Player_Direction; //direction in radians
 	float Rotation_Speed;
