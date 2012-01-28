@@ -421,13 +421,18 @@ shared_ptr<MX::Animation> CreateAnimationFromFile(wchar_t* file, int number, DWO
 
 	void Player::bounce(const v2d& normal)
 	{
-	     v2d dir;
-		 dir = dirVec(this->rotation);
-		 v2d bou = dir + normal * (dot(dir, normal) * 2);
-		 float newrot = atan2(bou.x, bou.y);
-		 rotation = newrot;
+		v2d dir;
+		dir = dirVec(this->rotation);
+		if(dot(dir, normal) < -0.7)
+		{
+			this->rotation +=1.57;
+			return;
+		}
+		v2d bou = dir + normal * (dot(dir, normal) * 2);
+		float newrot = atan2(bou.x, bou.y);
+		rotation = newrot;
 
-		 /// @todo DO not always mirror 
+		/// @todo DO not always mirror 
 	}
 
 	void Player::onEat(Player* another)
