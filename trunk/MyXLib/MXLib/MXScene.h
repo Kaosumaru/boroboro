@@ -90,6 +90,7 @@ namespace MX
 
 		virtual void Do();
 		virtual void Die();
+
 		bool alive;
 	//aktor przechowuje pozycje
 		//float x; 
@@ -110,6 +111,9 @@ namespace MX
 		ScriptSignal OnDeath;
 		boost::signal<void (Actor&,int,int,int)> OnChangeState;
 	protected:
+		friend class Scene;
+		virtual void OnDie();
+
 		void ChangeState(int which, int oldstate, int newstate)
 		{
 			OnChangeState(*this, which, oldstate, newstate);
