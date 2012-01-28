@@ -113,7 +113,7 @@ shared_ptr<MX::Animation> CreateAnimationFromFile(wchar_t* file, int number, DWO
 			animation = make_shared<SpecificAnimation>(GraphicRes.snake_head);
 			animation->Start();
 
-			for(int i =0; i<10; ++i)
+			for(int i =0; i<100; ++i)
 				AddBodypart();
 		}
 
@@ -184,6 +184,7 @@ shared_ptr<MX::Animation> CreateAnimationFromFile(wchar_t* file, int number, DWO
 			animation->Start();
 
 			before = bef;
+			toPos = before->pos;
 			head = player;
 			butt = NULL;
 			pos = before->pos - dirVec(before->rotation)*dist; 
@@ -196,25 +197,34 @@ shared_ptr<MX::Animation> CreateAnimationFromFile(wchar_t* file, int number, DWO
 
 		void Do()
 		{
-			v2d d = before->pos - pos;
+			v2d d = toPos - pos;
 			float ld = length(d);
-			speedMult = ld/dist;
+			if(ld < 5)
+			{
+				toPos = before->pos;
+				d = toPos - pos;
+			}
+			v2d dd = before->pos - pos;
+			float ldd = length(dd);
+			speedMult = ldd/dist;
 			/*if(speedMult < 0.9f)
 				speedMult = 0.9f;
 			else if(speedMult > 1.1f)
 				speedMult = 1.1f;
 				*/
 			speedMult = speedMult*speedMult;
+			
 			d = normalized(d);
 			pos = pos + d * speedMult * head->speed * World::GetElapsedFloat();
-			
+
+			dd = normalized(dd);
 			if(butt)
 			{
 				v2d b = normalized(pos - butt->pos);
-				d = d + b;
-				d = normalized(d);
+				dd = dd + b;
+				dd = normalized(dd);
 			}
-			this->rotation = atan(d.y/d.x); 
+			this->rotation = atan2(dd.y, dd.x); 
 
 			__super::Do();
 		}
@@ -226,6 +236,7 @@ shared_ptr<MX::Animation> CreateAnimationFromFile(wchar_t* file, int number, DWO
 		ActorSprite *butt;    ///< after this segment
 		float speedMult;
 		float dist;
+		v2d toPos;
 	};
 }
 
