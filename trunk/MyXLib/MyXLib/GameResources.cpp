@@ -43,6 +43,9 @@ void GraphicResources::Init(MX::Draw &draw)
 
 	grass[2]->frames[0].centerX = 256.0f;
 	grass[2]->frames[0].centerY = 128.0f;
+
+	blood = MX::CreateAnimationFromFile(draw, L"images\\blood.png");
+	berry = MX::CreateAnimationFromFile(draw, L"images\\berry.png");
 }
 
 
