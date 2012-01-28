@@ -25,7 +25,7 @@ void SoundBank::Initialize()
 
 	bump.AddSound(SoundSample::CreateSample(L"sounds\\bing.wav"));
 
-	flame.AddSound(SoundSample::CreateSample(L"sounds\\flamewind.wav"));
+	flame.AddSound(SoundSample::CreateSample(L"sounds\\flamewind2.wav"));
 }
 
 SoundSample SoundBank::hissing;
