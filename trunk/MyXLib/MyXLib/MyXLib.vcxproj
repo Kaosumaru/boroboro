@@ -80,6 +80,7 @@
     <None Include="small.ico" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BloodAndGore.h" />
     <ClInclude Include="collidable.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameBackground.h" />
@@ -91,6 +92,7 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="BloodAndGore.cpp" />
     <ClCompile Include="collidable.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameBackground.cpp" />

@@ -38,8 +38,8 @@ void World::ElapseTime()
 	timer.Stop();
 	tick ++;
 	elapsed = timer.GetMili();
-	if (elapsed > 100.0f)
-		elapsed = 100.0f;
+	if (elapsed > 40.0f)
+		elapsed = 40.0f;
 	sec = (float)elapsed / 1000.0f;
 	time += elapsed;
 	timer.Reset();
