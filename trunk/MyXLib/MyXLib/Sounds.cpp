@@ -13,18 +13,14 @@ Sample SoundSample::CreateSample(wchar_t *file)
 
 void SoundBank::Initialize()
 {
-	meat_hit.AddSound(SoundSample::CreateSample(L"sounds\\meathit.mp3"));
 
-	augh.AddSound(SoundSample::CreateSample(L"sounds\\ouch.wav"));
-	augh.AddSound(SoundSample::CreateSample(L"sounds\\ouch2.mp3"));
-	augh.AddSound(SoundSample::CreateSample(L"sounds\\ouch3.mp3"));
+	hissing.AddSound(SoundSample::CreateSample(L"sounds\\sss1.wav"));
+	hissing.AddSound(SoundSample::CreateSample(L"sounds\\sss2.wav"));
+	hissing.AddSound(SoundSample::CreateSample(L"sounds\\sss3.wav"));
 
-	sword_hit.AddSound(SoundSample::CreateSample(L"sounds\\swordHit.wav"));
-	sword_hit.AddSound(SoundSample::CreateSample(L"sounds\\swordHit2.wav"));
-	sword_hit.AddSound(SoundSample::CreateSample(L"sounds\\swordHit3.wav"));
-	sword_hit.AddSound(SoundSample::CreateSample(L"sounds\\swordHit4.wav"));
+	satan_hissing.AddSound(SoundSample::CreateSample(L"sounds\\sssatan.wav"));
+
 }
 
-SoundSample SoundBank::meat_hit;
-SoundSample SoundBank::sword_hit;
-SoundSample SoundBank::augh;
+SoundSample SoundBank::hissing;
+SoundSample SoundBank::satan_hissing;

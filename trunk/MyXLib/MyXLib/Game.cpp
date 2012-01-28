@@ -478,6 +478,9 @@ void InitializeGame(const shared_ptr<MX::Draw> &_draw, const shared_ptr<MX::Spri
 	spriter = _spriter;
 	scene = _scene;
 
+	SoundBank::Initialize();
+
+
 
 	liner = shared_ptr<MX::Liner>(MX::Liner::Create(draw));
 	liner->SetAntialias(true);
@@ -513,8 +516,7 @@ void initGame(const shared_ptr<MX::Draw> &_draw, const shared_ptr<MX::Spriter> &
 	draw = _draw;
 	spriter = _spriter;
 	scene = _scene;
-	SoundBank::Initialize();
-
+	
 	GraphicRes.Init(*_draw);
 
 }
