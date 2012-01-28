@@ -253,7 +253,8 @@ shared_ptr<MX::Animation> CreateAnimationFromFile(wchar_t* file, int number, DWO
 
 			dist = 48.0f * scaleX;
 
-			pos = before->pos - dirVec(before->rotation)*dist; 
+			pos = before->pos - dirVec(before->rotation)*dist;
+			rotation = before->rotation; 
 			toPos = before->pos;
 			prevd = normalized(toPos-pos);
 		}
@@ -357,7 +358,7 @@ shared_ptr<MX::Animation> CreateAnimationFromFile(wchar_t* file, int number, DWO
 		ActorSprite *before;  ///< before this segment
 	protected:
 
-		
+		friend class Player;
 		Player* head;
 		ActorSprite *butt;    ///< after this segment
 		float speedMult;
@@ -367,29 +368,30 @@ shared_ptr<MX::Animation> CreateAnimationFromFile(wchar_t* file, int number, DWO
 		//unsigned num;
 	};
 
-	Player::Player()
+	Player::Player(const v2d& p, float d)
 	{
 		Player_Direction = 0.0f;
 		Rotation_Speed = 2.0f;
-		speed = 300.0f;
+		speed = 150.0f;
 		KeyLeft = VK_LEFT;
 		KeyRight = VK_RIGHT;
 		next_body_part = NULL;
 		last_body_part = this;
 
-		Player_Direction = 0.0f;
+		Player_Direction = d; // 0.0f;
+		this->rotation = d;
 
 		scaleX = 0.65f;
 		scaleY = 0.8f;
 
 		//x = 100.0f;
 		//y = 100.0f;
-		pos = v2d(100.0f,100.0f);
+		pos = p;
 		z = 0.1f;
 		animation = make_shared<SpecificAnimation>(GraphicRes.snake_head);
 		animation->Start();
 
-		for(int i =0; i<30; ++i)
+		for(int i =0; i<10; ++i)
 			AddBodypart();
 	}
 
@@ -473,13 +475,25 @@ shared_ptr<MX::Animation> CreateAnimationFromFile(wchar_t* file, int number, DWO
 		__super::Do();
 	}
 
-
-
+	static const unsigned NECK_MAX = 10;
+	bool Player::isInNeck(Collidable* c)
+	{
+		unsigned n=0;
+		for(auto next = dynamic_cast<PlayerSnake_Body*>(next_body_part);
+			next != NULL;
+			next = dynamic_cast<PlayerSnake_Body*>(next->butt))
+		{
+			if(next == c)
+				return true;
+			if(++n > NECK_MAX)
+				break;
+		}
+		return false;
+	}
 }
 
 void Player::AddBodypart()
 {
-
 	auto body_part = make_shared<PlayerSnake_Body>(last_body_part, this);
 	if (!next_body_part)
 		next_body_part = body_part.get();
@@ -507,13 +521,10 @@ void InitializeGame(const shared_ptr<MX::Draw> &_draw, const shared_ptr<MX::Spri
 
 	scene->AddActor(make_shared<MX::PlayerCrosshair>(*draw));
 
-	auto player1 = make_shared<MX::Player>(), player2 = make_shared<MX::Player>();
-	scene->AddActor(player1);
-
-	player2->pos.x = 1000;
-	player2->pos.y = 700;
-	player2->Player_Direction = 3.14f;
+	auto player1 = make_shared<MX::Player>(v2d(150.0f, 400.0f), 1.57f);
+	auto player2 = make_shared<MX::Player>(v2d(1000.0f, 400.0f), -1.57f);
 	
+	scene->AddActor(player1);
 
 	player2->KeyLeft = 'A';
 	player2->KeyRight = 'D';

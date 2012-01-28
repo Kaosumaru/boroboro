@@ -18,13 +18,14 @@ namespace MX
 class Player : public Collidable
 {
 public:
-	Player();
+	Player(const v2d& p, float d);
 
 	void calculate_playerspeed();
 	void KeyoardNavigate();
 	void Move();
 	void AddBodypart();
 	void Do();
+	bool isInNeck(Collidable* c);
 
 	float Player_Direction; //direction in radians
 	float Rotation_Speed;
