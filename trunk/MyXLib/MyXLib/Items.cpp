@@ -2,6 +2,7 @@
 #include "Items.h"
 #include "Game.h"
 #include "GameResources.h"
+#include "Sounds.h"
 #include "HellFire.h"
 #include "../MXLib/MXScript.h"
 #include <set>
@@ -196,6 +197,7 @@ PentagramItem::PentagramItem()
 void PentagramItem::Use(Scene *scene, Player *user)
 {
 	scene->AddActor(make_shared<PentagramPlayer>(user));
+	SoundBank::flame.Play();
 	AddHellFire(scene, user);
 }
 
