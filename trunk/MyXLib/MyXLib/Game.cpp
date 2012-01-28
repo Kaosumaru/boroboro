@@ -382,6 +382,23 @@ shared_ptr<MX::Animation> CreateAnimationFromFile(wchar_t* file, int number, DWO
 		}
 		return false;
 	}
+
+	void Player::bounce(const v2d& normal)
+	{
+	     v2d dir;
+		 dir = dirVec(this->rotation);
+		 v2d bou = dir + normal * (dot(dir, normal) * 2);
+		 float newrot = atan2(bou.x, bou.y);
+		 rotation = newrot;
+		 /// @todo DO not always mirror 
+	}
+
+	void Player::onEat(Player* another)
+	{
+		v2d normal = normalized(another->pos - pos);
+		bounce(normal);
+		another->bounce(normal*-1);
+	}
 }
 
 void Player::AddBodypart()
