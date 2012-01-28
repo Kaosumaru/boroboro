@@ -34,6 +34,7 @@ public:
 	static SoundSample put_shit;
 	static SoundSample no_ass;
 	static SoundSample bump;
+	static SoundSample flame;
 };
 
 };

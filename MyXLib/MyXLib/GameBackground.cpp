@@ -111,10 +111,6 @@ public:
 
 	void Do()
 	{
-
-
-	
-	
 		D3DXMatrixIdentity(&shear_transform);
 		shear_transform._21 = cos((float)GetTickCount()/1000)*shear_factor;
 		shear_transform._41 = - (pos.y+16.0f)*shear_transform._21 + shear_transform._21;

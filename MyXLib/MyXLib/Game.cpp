@@ -424,7 +424,10 @@ shared_ptr<MX::Animation> CreateAnimationFromFile(wchar_t* file, int number, DWO
 		float dadot = dot(dir, normal);
 		if(dadot > 0)
 			return;
-		else if(dadot < -0.7)
+
+		SoundBank::bump.Play();
+
+		if(dadot < -0.7)
 		{
 			this->rotation += sign(cross(dir, normal)) * 1.6; // must be * a little more than PI/2
 			return;

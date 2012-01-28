@@ -25,6 +25,7 @@ void SoundBank::Initialize()
 
 	bump.AddSound(SoundSample::CreateSample(L"sounds\\bing.wav"));
 
+	flame.AddSound(SoundSample::CreateSample(L"sounds\\flamewind.wav"));
 }
 
 SoundSample SoundBank::hissing;
@@ -34,3 +35,4 @@ SoundSample SoundBank::snake_bite;
 SoundSample SoundBank::put_shit;
 SoundSample SoundBank::no_ass;
 SoundSample SoundBank::bump;
+SoundSample SoundBank::flame;
