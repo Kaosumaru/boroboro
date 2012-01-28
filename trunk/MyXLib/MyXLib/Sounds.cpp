@@ -23,6 +23,9 @@ void SoundBank::Initialize()
 	apple_bite.AddSound(SoundSample::CreateSample(L"sounds\\apple-crunch.wav"));
 	snake_bite.AddSound(SoundSample::CreateSample(L"sounds\\bite.wav"));
 
+	put_shit.AddSound(SoundSample::CreateSample(L"sounds\\shit.wav"));
+	no_ass.AddSound(SoundSample::CreateSample(L"sounds\\niemamdupy.wav"));
+
 	bump.AddSound(SoundSample::CreateSample(L"sounds\\bing.wav"));
 
 	flame.AddSound(SoundSample::CreateSample(L"sounds\\flamewind2.wav"));
