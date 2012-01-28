@@ -143,17 +143,25 @@ shared_ptr<MX::Animation> CreateAnimationFromFile(wchar_t* file, int number, DWO
 		void sharpenTail()
 		{
 			scaleX = scaleY = 0.38f;
+			float lscale = scaleX;
 			for(auto befo = dynamic_cast<PlayerSnake_Body*>(this->before);
 				befo != NULL && this->before != head;
 				befo = dynamic_cast<PlayerSnake_Body*>(befo->before))
 			{
-				befo->scaleX += 0.01f;
-				befo->scaleY += 0.01f;
-				//befo->scaleX = atan(before->scaleX*1.85f) * 0.634f;
-				//befo->scaleY = atan(before->scaleY*1.85f) * 0.634f;
-				befo->dist = 48.0f * befo->scaleX;
-				if(befo->scaleX > 0.58f)
+				lscale +=0.01f;
+				befo->scaleX = befo->scaleY = lscale;				
+				befo->dist = 48.0f * lscale;
+				if(lscale > 0.58f)
+				{
+					befo->scaleX = befo->scaleY = 0.58f;
+					//break;
+					while(befo != NULL && this->before != head)
+					{
+						befo->scaleX = befo->scaleY = 0.58f;
+						befo = dynamic_cast<PlayerSnake_Body*>(befo->before);
+					}
 					break;
+				}
 			}
 		}
 
@@ -226,6 +234,16 @@ shared_ptr<MX::Animation> CreateAnimationFromFile(wchar_t* file, int number, DWO
 
 		void onEat(Player* player)
 		{
+			//if(player->headonColCounter)
+			//	return;
+			//player->headonColCounter = 5;
+			if(this->scaleX >= 0.5)
+			{
+				v2d normal = normalized(player->pos - pos);
+				player->bounce(normal);
+				return;
+			}
+
 			if (head && head->invisible)
 				return;
 
@@ -275,8 +293,6 @@ shared_ptr<MX::Animation> CreateAnimationFromFile(wchar_t* file, int number, DWO
 				AddBackGore(scene, before);
 
 
-
-
 			if (butt)
 			{
 				PlayerSnake_Body * body = dynamic_cast<PlayerSnake_Body*>(butt);
@@ -290,11 +306,9 @@ shared_ptr<MX::Animation> CreateAnimationFromFile(wchar_t* file, int number, DWO
 
 				butt = NULL;
 			}
-
 		
 			if (head)
 				head->RecalcLength();
-			
 
 			Die();
 
