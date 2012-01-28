@@ -5,6 +5,7 @@
 
 using namespace MX;
 
+MX::Scene *_scene;
 
 class WarpRotationCommand : public WaitCommand
 {
@@ -109,10 +110,75 @@ public:
 	*/
 };
 
+
+class Berry : public ActorSprite
+{
+public:
+	Berry()
+	{
+		z = 0.9f;
+
+		pos.x = (float)(rand()%1280);
+		pos.y = (float)(rand()%800);
+
+		animation = make_shared<SpecificAnimation>(GraphicRes.berry);
+		animation->Start();
+
+
+		shared_ptr<MX::Command> com = MX::q(wait(5000), lerp_color(0x00FFFFFF, 1000), die());
+		OnDo.connect(com);
+	}
+};
+
+class BerrySpawner : public Actor, public EffectWithCooldown
+{
+public:
+	BerrySpawner()
+	{
+
+	}
+
+	DWORD GetCooldownTime()
+	{
+		
+		return 3000 * ((float)(rand()%100)/100.0f) * 2000;
+	}
+
+	float RandFloat()
+	{
+		return ((float)(rand()%1001) / 1000.0);
+	}
+
+
+	void DoEffect()
+	{
+		_scene->AddActor(make_shared<Berry>());
+	}
+
+
+
+	void Do()
+	{
+		if (CooldownElapsed())
+			DoEffect();
+
+	}
+
+
+
+protected:
+
+};
+
+
 void InitBackground(MX::Scene *scene)
 {
+	_scene = scene;
+
 	scene->AddActor(make_shared<Flower1>());
 	scene->AddActor(make_shared<GameBackground>());
+	scene->AddActor(make_shared<BerrySpawner>());
+	
 
 		
 }
