@@ -33,6 +33,7 @@ public:
 	}
 
 	void allUCanEat(MX::Player* player);
+	bool doesCollide(Collidable* col);
 };
 
 extern SphereWorld& sw;
