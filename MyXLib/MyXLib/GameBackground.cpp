@@ -65,6 +65,18 @@ public:
 	}
 };
 
+class GameForeground : public ActorSprite
+{
+public:
+	GameForeground()
+	{
+		z = 0.0f;
+		pos.x = 0.0f;
+		pos.y = 0.0f;
+		animation = make_shared<SpecificAnimation>(GraphicRes.foreground);
+		animation->Start();
+	}
+};
 
 class GameBackgroundGrass : public ActorSprite
 {
@@ -132,7 +144,10 @@ public:
 
 	void onEat(Player* player)
 	{
-
+		player->AddBodypart();
+		player->AddBodypart();
+		player->AddBodypart();
+		Die();
 	}
 };
 
@@ -184,7 +199,9 @@ void InitBackground(MX::Scene *scene)
 	scene->AddActor(make_shared<Flower1>());
 	scene->AddActor(make_shared<GameBackground>());
 	scene->AddActor(make_shared<BerrySpawner>());
+	scene->AddActor(make_shared<GameForeground>());
 	
-
+	//for (int i = 0; i < 10; i ++)
+	//	scene->AddActor(make_shared<GameBackgroundGrass>());
 		
 }

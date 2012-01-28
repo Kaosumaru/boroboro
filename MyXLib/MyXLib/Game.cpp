@@ -8,6 +8,7 @@
 #include "Collidable.h"
 #include "../MXLib/MXParticles.h"
 #include "../MXLib/MXAnimUtils.h"
+#include "../MXLib/MXParticles.h"
 
 shared_ptr<MX::Draw> draw;
 shared_ptr<MX::Spriter> spriter;
@@ -20,6 +21,115 @@ namespace MX
 {
 
 
+	class SikaczCreator
+	{
+	public:
+		SikaczCreator() : 
+			start_scaleX(1.0f, 1.0f),
+			start_scaleY(1.0f, 1.0f),
+			start_rotation(0.0f, 6.3f),
+			end_rotation(0.0f, 6.3f),
+			end_scaleX(1.0f, 1.0f),
+			end_scaleY(1.0f, 1.0f),		
+			speed(60.0f, 100.0f),
+			life(1000,1000),
+			direction(0.0f, 6.3f),
+			particle_z(0.0f,1.0f),
+			start_color(0xDDFFFFFF, 0xBEFFFFF), end_color(0x00FFFFFF, 0x00FFFFFF)
+		{}
+
+		void CreateParticle(Actor *parent, Scene *scene, float start_x, float start_y)
+		{
+			auto particle = make_shared<StandardParticle>(animation);
+			particle->start_stamp = World::GetCurrentTime();
+			
+			particle->color = GetColor(start_color);
+			particle->dest_color = GetColor(end_color);
+
+			particle->life_time = GetDWORD(life);
+
+			particle->scaleX = GetFloat(start_scaleX);
+			particle->scaleY = GetFloat(start_scaleY);
+
+			particle->dest_scaleX = GetFloat(end_scaleX);
+			particle->dest_scaleY = GetFloat(end_scaleY);
+
+			particle->rotation = GetFloat(start_rotation);
+			particle->dest_rotation = GetFloat(end_rotation);
+
+			particle->speed = GetFloat(speed);
+
+			float dir = GetFloat(direction);
+
+			//particle->delta.x = sin(dir);
+			//particle->delta.y = cos(dir);
+			particle->delta = dirVec(dir);
+
+			particle->pos.x = start_x;
+			particle->pos.y = start_y;
+			particle->z = GetFloat(particle_z);
+
+			scene->AddActor(particle);
+		}
+
+		void SetAnimation(const shared_ptr<Animation> &_animation) { animation = _animation; }
+
+
+
+		pair<D3DXCOLOR, D3DXCOLOR> start_color, end_color;
+		pair<DWORD, DWORD> life;
+
+		pair<float, float> start_scaleX, start_scaleY;
+		pair<float, float> end_scaleX, end_scaleY;
+
+		pair<float, float> start_rotation, end_rotation;
+		pair<float, float> direction, speed;
+		pair<float, float> particle_z;
+
+		float original_direction;
+	protected:
+		inline float GetRandomFloat() { return ((float) (rand() % 1001)/ 1000.0f); }
+
+		float GetFloat(const pair<float, float> &pfloat)
+		{
+			return pfloat.first + (pfloat.second - pfloat.first) * GetRandomFloat();
+		}
+
+		DWORD GetColor(const pair<D3DXCOLOR, D3DXCOLOR> &color)
+		{
+			D3DXCOLOR c;
+			D3DXColorLerp(&c, &color.first, &color.second, GetRandomFloat());
+			return c;
+		}
+
+		DWORD GetDWORD(const pair<DWORD, DWORD> &pdword)
+		{
+			return pdword.first + (DWORD)((float)(pdword.second - pdword.first) * GetRandomFloat());
+		}
+
+
+		shared_ptr<Animation> animation;
+	};
+
+	template <class ParticleCreator = SikaczCreator, class ParticleDispatcher = SimpleParticleDispatcher>
+	class SikaczGenerator : public Actor
+	{
+	public:
+		SikaczGenerator(Scene *_scene) : scene(_scene) {}
+
+		void Do()
+		{
+			int particles = dispatcher.DispatchParticles();
+			for (int i = 0; i < particles; i ++)
+				creator.CreateParticle(this, scene, pos.x, pos.y);
+			Actor::Do();
+		}
+
+		ParticleCreator creator;
+		ParticleDispatcher dispatcher;
+	protected:
+		Scene *scene;
+	};
 
 
 shared_ptr<MX::Animation> CreateAnimationFromFile(wchar_t* file)
@@ -94,94 +204,6 @@ shared_ptr<MX::Animation> CreateAnimationFromFile(wchar_t* file, int number, DWO
 	};
 	
 
-	Player::Player()
-	{
-		Player_Direction = 0.0f;
-		Rotation_Speed = 2.0f;
-		speed = 300.0f;
-		KeyLeft = VK_LEFT;
-		KeyRight = VK_RIGHT;
-
-		last_body_part = this;
-
-		Player_Direction = 0.0f;
-
-		scaleX = 0.65f;
-		scaleY = 0.8f;
-
-		//x = 100.0f;
-		//y = 100.0f;
-		pos = v2d(100.0f,100.0f);
-		z = 0.0f;
-		animation = make_shared<SpecificAnimation>(GraphicRes.snake_head);
-		animation->Start();
-
-		for(int i =0; i<12; ++i)
-			AddBodypart();
-	}
-
-	void Player::calculate_playerspeed()
-	{
-		Rotation_Speed = speed / 50.0f;
-	}
-
-
-	void Player::KeyoardNavigate()
-	{
-		calculate_playerspeed();
-		if (World::Key[KeyLeft])
-		{
-			Player_Direction -= Rotation_Speed * World::GetElapsedFloat();
-		}
-		else if (World::Key[KeyRight])
-		{
-			Player_Direction += Rotation_Speed * World::GetElapsedFloat();
-		}
-		else if (World::Key[VK_SPACE])
-		{
-			static EffectWithGivenCooldown boom(1000);
-
-			if (boom.DoThis())
-			{
-			auto part = make_shared<MX::ParticleGenerator<MX::SimpleParticleCreator, MX::SimpleParticleDispatcher<3,10>>>(scene);
-			part->creator.SetAnimation(GraphicRes.blood);
-			part->pos.x = pos.x;
-			part->pos.y = pos.y;
-
-			shared_ptr<MX::Command> com = MX::q(wait(250), die());
-			part->OnDo.connect(com);
-			scene->AddActor(part);
-			}
-
-		}
-	}
-
-	void Player::Move()
-	{
-		//float dx, dy;
-		//dx = cos(Player_Direction);
-		//dy = sin(Player_Direction);
-		v2d d = dirVec(Player_Direction);
-
-		//x += dx * speed * World::GetElapsedFloat();
-		//y += dy * speed * World::GetElapsedFloat();
-		pos = pos + d * speed * World::GetElapsedFloat();
-
-		//std::wstringstream w;
-		//w<<
-		//OutputDebugString(
-	}
-
-
-	void Player::Do()
-	{
-		KeyoardNavigate();
-		Move();
-		Actor::rotation = Player_Direction;
-		__super::Do();
-	}
-
-
 	class PlayerSnake_Body : public Collidable
 	{
 	public:
@@ -243,6 +265,15 @@ shared_ptr<MX::Animation> CreateAnimationFromFile(wchar_t* file, int number, DWO
 
 		void Do()
 		{
+			if (before == NULL)
+			{
+				rotation += (rand()%100-50)*0.005f+(rand()%100-50)*0.005f+(rand()%100-50)*0.005f+(rand()%100-50)*0.005f;
+				v2d d = dirVec(rotation);
+				pos = pos + d * head->speed * World::GetElapsedFloat();
+				__super::Do();
+				return;
+			}
+
 			v2d d = toPos - pos;
 			float ld = length(d);
 			if(ld < 7.0f+dist*0.15f)
@@ -287,9 +318,46 @@ shared_ptr<MX::Animation> CreateAnimationFromFile(wchar_t* file, int number, DWO
 			__super::Do();
 		}
 
-	protected:
+		void onEat(Player* player)
+		{
+			Urwij();
+		}
+
+		void Urwij()
+		{
+			auto part = make_shared<MX::ParticleGenerator<MX::SimpleParticleCreator, MX::SimpleParticleDispatcher<3,10>>>(scene);
+			part->creator.SetAnimation(GraphicRes.blood);
+			part->pos.x = pos.x;
+			part->pos.y = pos.y;
+
+			shared_ptr<MX::Command> com = MX::q(wait(250), die());
+			part->OnDo.connect(com);
+			scene->AddActor(part);
+
+			if (butt)
+			{
+				PlayerSnake_Body * body = dynamic_cast<PlayerSnake_Body*>(butt);
+				body->before = NULL;
+				butt = NULL;
+			}
+
+			/*
+			typedef SikaczGenerator<SikaczCreator, SimpleParticleDispatcher<3,10> > SikaczT;
+			auto sikacz = make_shared<SikaczT>(scene);
+
+			OnDeath.connect(bind(&SikaczT::Die, sikacz));*/
+
+			Die();
+
+		}
+
+		ActorSprite * GetButt() { return butt; }
+
 
 		ActorSprite *before;  ///< before this segment
+	protected:
+
+		
 		Player* head;
 		ActorSprite *butt;    ///< after this segment
 		float speedMult;
@@ -298,11 +366,122 @@ shared_ptr<MX::Animation> CreateAnimationFromFile(wchar_t* file, int number, DWO
 		v2d prevd;
 		//unsigned num;
 	};
+
+	Player::Player()
+	{
+		Player_Direction = 0.0f;
+		Rotation_Speed = 2.0f;
+		speed = 300.0f;
+		KeyLeft = VK_LEFT;
+		KeyRight = VK_RIGHT;
+		next_body_part = NULL;
+		last_body_part = this;
+
+		Player_Direction = 0.0f;
+
+		scaleX = 0.65f;
+		scaleY = 0.8f;
+
+		//x = 100.0f;
+		//y = 100.0f;
+		pos = v2d(100.0f,100.0f);
+		z = 0.1f;
+		animation = make_shared<SpecificAnimation>(GraphicRes.snake_head);
+		animation->Start();
+
+		for(int i =0; i<30; ++i)
+			AddBodypart();
+	}
+
+	void Player::calculate_playerspeed()
+	{
+		Rotation_Speed = speed / 50.0f;
+	}
+
+
+	void Player::KeyoardNavigate()
+	{
+		calculate_playerspeed();
+		if (World::Key[KeyLeft])
+		{
+			Player_Direction -= Rotation_Speed * World::GetElapsedFloat();
+		}
+		else if (World::Key[KeyRight])
+		{
+			Player_Direction += Rotation_Speed * World::GetElapsedFloat();
+		}
+		else if (World::Key[VK_SPACE])
+		{
+			static EffectWithGivenCooldown boom(1000);
+
+			if (boom.DoThis())
+			{
+				ActorSprite *test = next_body_part;
+				
+
+				for (int i = 0; i < 6; i ++)
+				{
+					PlayerSnake_Body * body = dynamic_cast<PlayerSnake_Body*>(test);
+					test = body->GetButt();
+					
+				}
+
+				PlayerSnake_Body * body = dynamic_cast<PlayerSnake_Body*>(test);
+				body->Urwij();
+
+			}
+
+			/*
+			if (boom.DoThis())
+			{
+			auto part = make_shared<MX::ParticleGenerator<MX::SimpleParticleCreator, MX::SimpleParticleDispatcher<3,10>>>(scene);
+			part->creator.SetAnimation(GraphicRes.blood);
+			part->pos.x = pos.x;
+			part->pos.y = pos.y;
+
+			shared_ptr<MX::Command> com = MX::q(wait(250), die());
+			part->OnDo.connect(com);
+			scene->AddActor(part);
+			}*/
+
+		}
+	}
+
+	void Player::Move()
+	{
+		//float dx, dy;
+		//dx = cos(Player_Direction);
+		//dy = sin(Player_Direction);
+		v2d d = dirVec(Player_Direction);
+
+		//x += dx * speed * World::GetElapsedFloat();
+		//y += dy * speed * World::GetElapsedFloat();
+		pos = pos + d * speed * World::GetElapsedFloat();
+
+		//std::wstringstream w;
+		//w<<
+		//OutputDebugString(
+	}
+
+
+	void Player::Do()
+	{
+		KeyoardNavigate();
+		Move();
+		Actor::rotation = Player_Direction;
+		__super::Do();
+	}
+
+
+
 }
 
 void Player::AddBodypart()
 {
+
 	auto body_part = make_shared<PlayerSnake_Body>(last_body_part, this);
+	if (!next_body_part)
+		next_body_part = body_part.get();
 	PlayerSnake_Body* lastButt = dynamic_cast<PlayerSnake_Body*>(last_body_part);
 	if(lastButt)
 		lastButt->newButt(&(*body_part));
@@ -329,6 +508,11 @@ void InitializeGame(const shared_ptr<MX::Draw> &_draw, const shared_ptr<MX::Spri
 
 	auto player1 = make_shared<MX::Player>(), player2 = make_shared<MX::Player>();
 	scene->AddActor(player1);
+
+	player2->pos.x = 1000;
+	player2->pos.y = 700;
+	player2->Player_Direction = 3.14f;
+	
 
 	player2->KeyLeft = 'A';
 	player2->KeyRight = 'D';

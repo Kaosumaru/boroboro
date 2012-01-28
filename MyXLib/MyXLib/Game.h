@@ -35,6 +35,7 @@ public:
 	char KeyRight;
 	char KeyUse;
 
+	ActorSprite *next_body_part;
 	ActorSprite *last_body_part;
 
 };
