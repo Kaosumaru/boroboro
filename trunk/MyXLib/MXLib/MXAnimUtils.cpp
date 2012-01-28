@@ -15,7 +15,7 @@ shared_ptr<MX::Animation> CreateAnimationFromFile(MX::Draw &draw, wchar_t* file)
 
 	shared_ptr<MX::Animation> anim(new MX::Animation(500));
 	shared_ptr<MX::Frame> frame(new MX::Frame(cross));
-	anim->AddFrame(MX::AnimationFrame(frame, 10000, cross->Width()/2.0f, cross->Height()/2.0f));
+	anim->AddFrame(MX::AnimationFrame(frame, 3000, cross->Width()/2.0f, cross->Height()/2.0f));
 	return anim;
 }
 

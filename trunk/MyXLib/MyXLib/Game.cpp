@@ -4,6 +4,7 @@
 #include "GameMap.h"
 #include "Sounds.h"
 #include "GameResources.h"
+#include "Gamebackground.h"
 #include "../MXLib/MXParticles.h"
 #include "../MXLib/MXAnimUtils.h"
 
@@ -94,7 +95,7 @@ shared_ptr<MX::Animation> CreateAnimationFromFile(wchar_t* file, int number, DWO
 		Player()
 		{
 			Player_Direction = 0.0f;
-			Rotation_Speed = 6.0f;
+			Rotation_Speed = 3.0f;
 			speed = 100.0f;
 			KeyLeft = VK_LEFT;
 			KeyRight = VK_RIGHT;
@@ -103,8 +104,8 @@ shared_ptr<MX::Animation> CreateAnimationFromFile(wchar_t* file, int number, DWO
 
 			Player_Direction = 0.0f;
 
-			scaleX = 0.5f;
-			scaleY = 0.5f;
+			scaleX = 0.8f;
+			scaleY = 0.8f;
 
 			//x = 100.0f;
 			//y = 100.0f;
@@ -178,7 +179,7 @@ shared_ptr<MX::Animation> CreateAnimationFromFile(wchar_t* file, int number, DWO
 			scaleY = 0.5f;
 			speedMult = 1.0f;
 			dist = 30.0f;
-			z = bef->z+0.01f;
+			z = bef->z+0.00001f;
 
 			animation = make_shared<SpecificAnimation>(GraphicRes.snake_body);
 			animation->Start();
@@ -262,6 +263,8 @@ void InitializeGame(const shared_ptr<MX::Draw> &_draw, const shared_ptr<MX::Spri
 	liner = shared_ptr<MX::Liner>(MX::Liner::Create(draw));
 	liner->SetAntialias(true);
 	
+
+	InitBackground(_scene);
 
 	scene->AddActor(make_shared<MX::PlayerCrosshair>(*draw));
 

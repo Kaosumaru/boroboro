@@ -38,17 +38,23 @@ bool Spriter::Begin(DWORD flags)
 	return sprite->Begin(flags) == S_OK;
 }
 
-void Spriter::Draw(Image &image, float x, float y, float z, float cx, float cy, float rotation, float scaleX, float scaleY, D3DCOLOR color, RECT *src)
+void Spriter::Draw(Image &image, float x, float y, float z, float cx, float cy, float rotation, float scaleX, float scaleY, D3DCOLOR color, RECT *src, D3DXMATRIX *custom_transform)
 {
 
-	D3DXMATRIX matrix;
+	D3DXMATRIX matrix, m2;
 	D3DXVECTOR2 center(x, y);
-	D3DXMatrixTransformation2D(&matrix, &center, 0.0f, &D3DXVECTOR2(scaleX, scaleY), &center, rotation,  &D3DXVECTOR2(0.0f, 0.0f));
-	/*
-	D3DXVECTOR3 center(cx, cy, 0.0f);
-	D3DXMatrixTransformation(&matrix, &center, NULL, &D3DXVECTOR3(scaleX, -scaleY, 0.0f), &center, &D3DXQUATERNION(0.0f,0.0f, 1.0f, rotation),  &D3DXVECTOR3(x,y,z));*/
+	D3DXMatrixTransformation2D(&matrix, &center, 0.0f, &D3DXVECTOR2(scaleX, scaleY), &center, rotation, &D3DXVECTOR2(0.0f, 0.0f));
 
-	SetTransform(&matrix);
+
+	if (custom_transform)
+	{
+		D3DXMatrixMultiply(&m2, &matrix, custom_transform);
+		SetTransform(&m2);
+	}
+	else
+		SetTransform(&matrix);
+		
+	
 	Draw(image, D3DXVECTOR3(x-cx,y-cy,z), D3DXVECTOR3(0.0f,0.0f,0.0f), color, src);
 }
 
@@ -63,9 +69,9 @@ void Spriter::Draw(Image &image, const D3DXVECTOR3 &position, const D3DXVECTOR3 
 }
 
 
-void Spriter::Draw(Frame &frame, float x, float y, float z, float cx, float cy, float rotation, float scaleX, float scaleY, D3DCOLOR color)
+void Spriter::Draw(Frame &frame, float x, float y, float z, float cx, float cy, float rotation, float scaleX, float scaleY, D3DCOLOR color, D3DXMATRIX *custom_transform)
 {
-	Draw(*frame.image, x, y, z, cx, cy, rotation, scaleX, scaleY, color, &frame.src);
+	Draw(*frame.image, x, y, z, cx, cy, rotation, scaleX, scaleY, color, &frame.src, custom_transform);
 }
 
 void Spriter::DrawCenter(Frame &frame, float x, float y, float z, float rotation, float scaleX, float scaleY, D3DCOLOR color)

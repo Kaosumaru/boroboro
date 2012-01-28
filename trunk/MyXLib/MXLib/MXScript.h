@@ -195,6 +195,7 @@ namespace MX
 	shared_ptr<Command> warp_scale(float scaleX, float scaleY, unsigned mili);
 
 
+
 	class QueueCommand : public Command
 	{
 	public:

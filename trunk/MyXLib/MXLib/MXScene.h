@@ -152,6 +152,7 @@ namespace MX
 		virtual void DrawSprite();
 
 		shared_ptr<SpecificAnimation> animation;
+		D3DXMATRIX                   *custom_transform;
 	};
 
 	//czy sprite to rodzaj aktora? tak. upraszcza to caaaa³¹¹¹ logikê.
