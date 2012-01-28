@@ -78,6 +78,7 @@ public:
 	shared_ptr<UseItem> Item;
 
 	bool invisible;
+	bool pentakill;
 	bool AlternativeLook;
 
 	int GetLength() { return length; }

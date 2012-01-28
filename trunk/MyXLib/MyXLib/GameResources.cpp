@@ -41,6 +41,7 @@ void GraphicResources::Init(MX::Draw &draw)
 
 	pentagram = MX::CreateAnimationFromFile(draw, L"images\\pentagram.png");
 	pentagram_static = MX::CreateAnimationFromFile(draw, L"images\\pentagram2.png");
+	pentagram_small = MX::CreateAnimationFromFile(draw, L"images\\PentaSmall.png");
 	
 	grass[0] = MX::CreateAnimationFromFile(draw, L"images\\Background\\kepka_01.png");
 	grass[1] = MX::CreateAnimationFromFile(draw, L"images\\Background\\kepka_02.png");

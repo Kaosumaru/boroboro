@@ -235,7 +235,7 @@ shared_ptr<MX::Animation> CreateAnimationFromFile(wchar_t* file, int number, DWO
 		//	return;
 		//player->headonColCounter = 5;
 
-		if(this->scaleX >= 0.4)
+		if(this->scaleX >= 0.4 && !player->pentakill)
 		{
 			v2d normal = normalized(player->pos - pos);
 			player->bounce(normal);
@@ -309,6 +309,8 @@ shared_ptr<MX::Animation> CreateAnimationFromFile(wchar_t* file, int number, DWO
 
 	Player::Player(const v2d& p, float d, bool alternative) : Shield(10000)
 	{
+		pentakill = false;
+
 		item_pos.x = 80;
 		item_pos.y = 695;
 

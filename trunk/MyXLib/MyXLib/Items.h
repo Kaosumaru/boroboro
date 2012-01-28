@@ -39,4 +39,12 @@ public:
 	void Use(Scene *scene, Player *user);
 };
 
+class PentagramItem : public UseItem
+{
+public:
+	PentagramItem();
+	void Use(Scene *scene, Player *user);
+};
+
+
 };
