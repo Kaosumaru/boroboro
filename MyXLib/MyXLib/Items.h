@@ -32,4 +32,11 @@ public:
 	void Use(Scene *scene, Player *user);
 };
 
+class PoopItem : public UseItem
+{
+public:
+	PoopItem();
+	void Use(Scene *scene, Player *user);
+};
+
 };

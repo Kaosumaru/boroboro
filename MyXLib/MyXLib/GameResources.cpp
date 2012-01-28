@@ -65,6 +65,9 @@ void GraphicResources::Init(MX::Draw &draw)
 
 	bottle = MX::CreateAnimationFromFile(draw, L"images\\bottle.png");
 	shield = MX::CreateAnimationFromFile(draw, L"images\\apple.png");
+	rotten_apple = MX::CreateAnimationFromFile(draw, L"images\\apple2.png");
+
+	poop = MX::CreateAnimationFromFile(draw, L"images\\shit.png");
 }
 
 
