@@ -17,9 +17,19 @@ void GraphicResources::Init(MX::Draw &draw)
 	bool b = cross->Load( draw, L"images\\wonsz\\WonszGlowa2.png");
 	shared_ptr<MX::Frame> frame(new MX::Frame(cross));
 	snake_head->AddFrame(MX::AnimationFrame(frame, 100, cross->Width()/2.0f, cross->Height()/2.0f));
-
-
 	snake_body = MX::CreateAnimationFromFile(draw, L"images\\wonsz\\WonszBody.png");
+
+
+	snake_head2 = MX::CreateAnimationFromFile(draw, L"images\\wonsz\\WonszGlowa3.png");
+
+	{
+		shared_ptr<MX::Image> cross(new MX::Image());
+		bool b = cross->Load( draw, L"images\\wonsz\\WonszGlowa4.png");
+		shared_ptr<MX::Frame> frame(new MX::Frame(cross));
+		snake_head2->AddFrame(MX::AnimationFrame(frame, 100, cross->Width()/2.0f, cross->Height()/2.0f));
+		snake_body2 = MX::CreateAnimationFromFile(draw, L"images\\wonsz\\WonszBody2.png");
+	}
+
 
 	flower1 = MX::CreateAnimationFromFile(draw, L"images\\flower\\flower1.png");
 	flower2 = MX::CreateAnimationFromFile(draw, L"images\\flower\\flower2.png");
