@@ -3,6 +3,7 @@
 #include "GameResources.h"
 #include "Collidable.h"
 #include "Game.h"
+#include "Sounds.h"
 #include "../MXLib/MXScript.h"
 
 using namespace MX;
@@ -149,6 +150,7 @@ public:
 
 	void onEat(Player* player)
 	{
+		SoundBank::apple_bite.Play();
 		player->AddBodypart();
 		player->AddBodypart();
 		player->AddBodypart();
@@ -211,6 +213,7 @@ public:
 
 	void onEat(Player* player)
 	{
+		SoundBank::satan_hissing.Play();
 		//player->Item = make_shared<ItemType>();
 		Die();
 	}
