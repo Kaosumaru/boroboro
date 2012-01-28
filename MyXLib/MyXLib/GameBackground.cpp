@@ -2,6 +2,7 @@
 #include "GameBackground.h"
 #include "GameResources.h"
 #include "Collidable.h"
+#include "Game.h"
 #include "../MXLib/MXScript.h"
 
 using namespace MX;

@@ -469,6 +469,7 @@ shared_ptr<MX::Animation> CreateAnimationFromFile(wchar_t* file, int number, DWO
 		KeyoardNavigate();
 		Move();
 		Actor::rotation = Player_Direction;
+		sw.allUCanEat(this);
 		__super::Do();
 	}
 

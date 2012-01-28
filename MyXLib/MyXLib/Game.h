@@ -9,13 +9,13 @@
 #include "../MXLib/MXFont.h"
 #include "../MXLib/MXLine.h"
 #include "../MXLib/MXScript.h"
-
+#include "collidable.h"
 
 using namespace std;
 
 namespace MX
 {
-class Player : public ActorSprite
+class Player : public Collidable
 {
 public:
 	Player();
