@@ -17,6 +17,7 @@
 #include "../MXLib/MXLine.h"
 #include "GameMap.h"
 #include "game.h"
+#include "TitleScreen.h"
 
 using namespace std;
 
@@ -99,8 +100,8 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 
 
 
-	InitializeGame(draw1,spriter, &(*General_Scene));
-
+	InitializeGame(draw1,spriter, General_Scene.get());
+	//InitializeTitle(draw1,spriter, General_Scene.get());
 
 
 /*
@@ -134,13 +135,7 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 			
 				if (spriter->Begin(D3DXSPRITE_ALPHABLEND | D3DXSPRITE_SORT_DEPTH_FRONTTOBACK))
 				{
-
-
-					//spriter->Draw(*image, 0.0f, 0.0f, 1.0f);
 					General_Scene->Draw();
-				//	spriter->Draw(*image2, 0.0f, 0.0f, 0.2f);
-					//spriter->Draw(*image3, 0.1f, 768.0f - image3->Height(), 0.0f);
-	
 					spriter->ResetTransform();
 					spriter->End();
 				}

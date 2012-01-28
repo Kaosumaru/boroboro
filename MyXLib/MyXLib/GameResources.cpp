@@ -69,6 +69,8 @@ void GraphicResources::Init(MX::Draw &draw)
 	rotten_apple = MX::CreateAnimationFromFile(draw, L"images\\apple2.png");
 
 	poop = MX::CreateAnimationFromFile(draw, L"images\\shit.png");
+
+	
 }
 
 

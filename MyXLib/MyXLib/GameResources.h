@@ -97,6 +97,7 @@ public:
 	std::shared_ptr<MX::Animation> rotten_apple;
 	std::shared_ptr<MX::Animation> poop;
 
+
 };
 
 extern GraphicResources GraphicRes;

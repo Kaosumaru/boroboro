@@ -140,8 +140,7 @@ public:
 		animation->Start();
 
 
-		shared_ptr<MX::Command> com = MX::q(wait(5000), lerp_color(0x00FFFFFF, 1000), die());
-		OnDo.connect(com);
+		OnDo.connect(MX::q(wait(5000), lerp_color(0x00FFFFFF, 1000), die()));
 	}
 
 	void onEat(Player* player)
@@ -190,8 +189,8 @@ public:
 		scaleX = 0.2f;
 		scaleY = 0.2f;
 
-		pos.x = (float)(rand()%1280);
-		pos.y = (float)(rand()%800);
+		OnDo.connect(MX::q(wait(5000), lerp_color(0x00FFFFFF, 1000), die()));
+
 
 		animation = make_shared<SpecificAnimation>(GraphicRes.pentagram);
 		animation->Start();
@@ -249,21 +248,52 @@ public:
 
 	void DoEffect()
 	{
-		switch (rand() % 4)
+		float x_rand = (float)(rand()%1280);
+		float y_rand = (float)(rand()%800);
+
+		shared_ptr<Collidable> pItem;
+		switch (rand() % 10)
 		{
 		case 0:
-			_scene->AddActor(make_shared<BonusItem<GoodBootleItem>>(GraphicRes.bottle, 5000, 3000));
-			break;
 		case 1:
-			_scene->AddActor(make_shared<BonusItem<PoopItem>>(GraphicRes.rotten_apple, 5000, 3000));
+		case 2:
+		case 8:
+			pItem = make_shared<BonusItem<GoodBootleItem>>(GraphicRes.bottle, 5000, 3000);
 			break;
 		case 2:
-			_scene->AddActor(make_shared<BonusItem<ShieldItem>>(GraphicRes.shield, 5000, 3000));
-			break;
 		case 3:
-			_scene->AddActor(make_shared<PentagramBonus>());
+		case 4:
+			pItem = make_shared<BonusItem<PoopItem>>(GraphicRes.rotten_apple, 5000, 3000);
+			break;
+		case 5:
+		case 6:
+		case 7:			
+			pItem = make_shared<BonusItem<ShieldItem>>(GraphicRes.shield, 5000, 3000);
+			break;
+		case 9:
+			pItem = make_shared<PentagramBonus>();
 			break;
 		}
+
+		pItem->pos.x = x_rand;
+		pItem->pos.y = y_rand;
+
+		int nTries = 3;
+		while (sw.doesCollide(pItem.get()))
+		{
+			x_rand = (float)(rand()%1280);
+			y_rand = (float)(rand()%800);
+
+			pItem->pos.x = x_rand;
+			pItem->pos.y = y_rand;
+
+			if (--nTries == 0)
+				return;
+		}
+
+		_scene->AddActor(pItem);
+
+
 
 	}
 

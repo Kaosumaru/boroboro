@@ -31,3 +31,21 @@ void SphereWorld::allUCanEat(MX::Player* player)
 	else if(player->pos.y > 800-MARGIN)
 		player->bounce(v2d(0.0f, -1.0f));
 }
+
+
+bool SphereWorld::doesCollide(Collidable* col)
+{
+	for(auto it = collidables.begin(); it!=collidables.end(); ++it)
+	{
+		if (!(*it)->alive)
+			continue;
+		if(*it == col)
+			continue;
+		v2d d = (*it)->pos - col->pos;
+		float rrit = (*it)->r; //(*it)->scaleX*(*it)->scaleX + (*it)->scaleY*(*it)->scaleY;
+		float rrp = col->r; //player->scaleX*player->scaleX + player->scaleY*player->scaleY;
+		if(norm(d) < rrit*rrit + rrp*rrp + 2*rrit*rrp)
+			return true;
+	}
+	return false;
+}
