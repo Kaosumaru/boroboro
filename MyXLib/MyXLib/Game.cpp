@@ -18,6 +18,9 @@ shared_ptr<MX::Liner> liner;
 namespace MX
 {
 
+
+
+
 shared_ptr<MX::Animation> CreateAnimationFromFile(wchar_t* file)
 {
 	shared_ptr<MX::Image> cross(new MX::Image());
@@ -95,8 +98,8 @@ shared_ptr<MX::Animation> CreateAnimationFromFile(wchar_t* file, int number, DWO
 		Player()
 		{
 			Player_Direction = 0.0f;
-			Rotation_Speed = 3.0f;
-			speed = 100.0f;
+			Rotation_Speed = 2.0f;
+			speed = 300.0f;
 			KeyLeft = VK_LEFT;
 			KeyRight = VK_RIGHT;
 
@@ -118,9 +121,15 @@ shared_ptr<MX::Animation> CreateAnimationFromFile(wchar_t* file, int number, DWO
 				AddBodypart();
 		}
 
+		void calculate_playerspeed()
+		{
+			Rotation_Speed = speed / 50.0f;
+		}
+
 
 		void KeyoardNavigate()
 		{
+			calculate_playerspeed();
 			if (World::Key[KeyLeft])
 			{
 				Player_Direction -= Rotation_Speed * World::GetElapsedFloat();
@@ -128,6 +137,23 @@ shared_ptr<MX::Animation> CreateAnimationFromFile(wchar_t* file, int number, DWO
 			else if (World::Key[KeyRight])
 			{
 				Player_Direction += Rotation_Speed * World::GetElapsedFloat();
+			}
+			else if (World::Key[VK_SPACE])
+			{
+				static EffectWithGivenCooldown boom(1000);
+
+				if (boom.DoThis())
+				{
+				auto part = make_shared<MX::ParticleGenerator<MX::SimpleParticleCreator, MX::SimpleParticleDispatcher<3,10>>>(scene);
+				part->creator.SetAnimation(GraphicRes.blood);
+				part->pos.x = pos.x;
+				part->pos.y = pos.y;
+
+				shared_ptr<MX::Command> com = MX::q(wait(250), die());
+				part->OnDo.connect(com);
+				scene->AddActor(part);
+				}
+
 			}
 		}
 
@@ -315,7 +341,13 @@ void InitializeGame(const shared_ptr<MX::Draw> &_draw, const shared_ptr<MX::Spri
 
 	scene->AddActor(make_shared<MX::PlayerCrosshair>(*draw));
 
-	scene->AddActor(make_shared<MX::Player>());
+	auto player1 = make_shared<MX::Player>(), player2 = make_shared<MX::Player>();
+	scene->AddActor(player1);
+
+	player2->KeyLeft = 'A';
+	player2->KeyRight = 'D';
+
+	scene->AddActor(player2);
 
 	scene->AddActor(make_shared<MX::Flower1>());
 }
