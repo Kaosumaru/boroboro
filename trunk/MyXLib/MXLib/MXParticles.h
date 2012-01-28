@@ -119,7 +119,7 @@ namespace MX
 			start_color(0xDDFFFFFF, 0xBEFFFFF), end_color(0x00FFFFFF, 0x00FFFFFF)
 		{}
 
-		void CreateParticle(Actor *parent, const shared_ptr<Scene> &scene, float start_x, float start_y)
+		void CreateParticle(Actor *parent, Scene *scene, float start_x, float start_y)
 		{
 			auto particle = make_shared<StandardParticle>(animation);
 			particle->start_stamp = World::GetCurrentTime();
@@ -195,20 +195,20 @@ namespace MX
 	class ParticleGenerator : public Actor
 	{
 	public:
-		ParticleGenerator(const shared_ptr<Scene> &_scene) : scene(_scene) {}
+		ParticleGenerator(Scene *_scene) : scene(_scene) {}
 
 		void Do()
 		{
 			int particles = dispatcher.DispatchParticles();
 			for (int i = 0; i < particles; i ++)
-				creator.CreateParticle(this, scene, x, y);
+				creator.CreateParticle(this, scene, pos.x, pos.y);
 			Actor::Do();
 		}
 
 		ParticleCreator creator;
 		ParticleDispatcher dispatcher;
 	protected:
-		shared_ptr<Scene> scene;
+		Scene *scene;
 	};
 
 };
