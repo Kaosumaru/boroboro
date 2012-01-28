@@ -48,6 +48,8 @@ namespace MX
 	public:
 		virtual ~Command(){}
 		virtual bool operator () (Actor &actor) { return false; }
+
+		virtual void Clear() {}
 	};
 
 

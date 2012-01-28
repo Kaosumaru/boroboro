@@ -128,7 +128,7 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 		{
 
 	
-			draw1->Clear(0xFF007F0E);
+			draw1->Clear(0xFF000000);
 			if (draw1->Begin())
 			{
 			
