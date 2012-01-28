@@ -163,6 +163,7 @@ PoopItem::PoopItem()
 
 void PoopItem::Use(Scene *scene, Player *user)
 {
+	SoundBank::put_shit.Play();
 	scene->AddActor(make_shared<PoopMine>(scene, user));
 }
 

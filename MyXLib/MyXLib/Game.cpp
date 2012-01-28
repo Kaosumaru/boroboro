@@ -297,16 +297,17 @@ shared_ptr<MX::Animation> CreateAnimationFromFile(wchar_t* file, int number, DWO
 		}
 	
 		if (head)
+		{
+			int oldLength = head->GetLength();
 			head->RecalcLength();
+			if(oldLength - head->GetLength() > 8);
+			    SoundBank::no_ass.Play();
+		}
 
 		Die();
-
 	}
 
-
-
-
-
+	
 	Player::Player(const v2d& p, float d, bool alternative) : Shield(10000)
 	{
 		pentakill = false;
