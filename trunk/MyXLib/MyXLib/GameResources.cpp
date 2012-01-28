@@ -46,6 +46,10 @@ void GraphicResources::Init(MX::Draw &draw)
 
 	blood = MX::CreateAnimationFromFile(draw, L"images\\blood.png");
 	berry = MX::CreateAnimationFromFile(draw, L"images\\berry.png");
+
+	foreground = MX::CreateAnimationFromFile(draw, L"images\\background3.png");
+	foreground->frames[0].centerX = 0.0f;
+	foreground->frames[0].centerY = 0.0f;
 }
 
 
