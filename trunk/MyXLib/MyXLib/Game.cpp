@@ -104,7 +104,7 @@ shared_ptr<MX::Animation> CreateAnimationFromFile(wchar_t* file, int number, DWO
 
 			Player_Direction = 0.0f;
 
-			scaleX = 0.8f;
+			scaleX = 0.65f;
 			scaleY = 0.8f;
 
 			//x = 100.0f;
@@ -114,7 +114,7 @@ shared_ptr<MX::Animation> CreateAnimationFromFile(wchar_t* file, int number, DWO
 			animation = make_shared<SpecificAnimation>(GraphicRes.snake_head);
 			animation->Start();
 
-			for(int i =0; i<100; ++i)
+			for(int i =0; i<12; ++i)
 				AddBodypart();
 		}
 
@@ -175,20 +175,53 @@ shared_ptr<MX::Animation> CreateAnimationFromFile(wchar_t* file, int number, DWO
 	public:
 		PlayerSnake_Body(ActorSprite *bef, Player *player)
 		{
-			scaleX = 0.5f;
-			scaleY = 0.5f;
 			speedMult = 1.0f;
-			dist = 30.0f;
 			z = bef->z+0.00001f;
 
 			animation = make_shared<SpecificAnimation>(GraphicRes.snake_body);
 			animation->Start();
 
 			before = bef;
-			toPos = before->pos;
 			head = player;
 			butt = NULL;
+			/*
+			if(before == head)
+				scaleX = scaleY = 0.9999999f * 0.54f;
+			else
+			{
+				scaleX = before->scaleX * before->scaleX * float(1.0/0.54);
+				scaleY = scaleX;
+			}
+			*/
+			/*
+			if(before == head)
+				scaleX = scaleY = 0.65f;
+			else
+			{
+				scaleX = 0.98f * before->scaleX;
+				scaleY = 0.98f * before->scaleX;
+			}
+			*/
+
+			scaleX = scaleY = 0.38f;
+			for(auto befo = dynamic_cast<PlayerSnake_Body*>(before);
+				befo != NULL && bef != head;
+				befo = dynamic_cast<PlayerSnake_Body*>(befo->before))
+			{
+				befo->scaleX += 0.01f;
+				befo->scaleY += 0.01f;
+				//befo->scaleX = atan(before->scaleX*1.85f) * 0.634f;
+				//befo->scaleY = atan(before->scaleY*1.85f) * 0.634f;
+				befo->dist = 48.0f * befo->scaleX;
+				if(befo->scaleX > 0.58f)
+					break;
+			}
+
+			dist = 48.0f * scaleX;
+
 			pos = before->pos - dirVec(before->rotation)*dist; 
+			toPos = before->pos;
+			prevd = normalized(toPos-pos);
 		}
 		
 		void newButt(ActorSprite *b)
@@ -200,7 +233,7 @@ shared_ptr<MX::Animation> CreateAnimationFromFile(wchar_t* file, int number, DWO
 		{
 			v2d d = toPos - pos;
 			float ld = length(d);
-			if(ld < 5)
+			if(ld < 7.0f+dist*0.15f)
 			{
 				toPos = before->pos;
 				d = toPos - pos;
@@ -208,17 +241,29 @@ shared_ptr<MX::Animation> CreateAnimationFromFile(wchar_t* file, int number, DWO
 			v2d dd = before->pos - pos;
 			float ldd = length(dd);
 			speedMult = ldd/dist;
-			/*if(speedMult < 0.9f)
+		
+			speedMult = speedMult*speedMult;
+
+			if(speedMult < 0.9f)
 				speedMult = 0.9f;
 			else if(speedMult > 1.1f)
 				speedMult = 1.1f;
-				*/
-			speedMult = speedMult*speedMult;
-			
+
 			d = normalized(d);
+			dd = normalized(dd);
+			d = d*2+ prevd*4.5f + dd;
+			d = normalized(d);
+
+			prevd = d;
+
+			v2d prevPos = pos;
 			pos = pos + d * speedMult * head->speed * World::GetElapsedFloat();
 
-			dd = normalized(dd);
+			if(length(pos - prevPos) > 4.0f)
+			{
+				d = dd;
+			}
+
 			if(butt)
 			{
 				v2d b = normalized(pos - butt->pos);
@@ -238,6 +283,8 @@ shared_ptr<MX::Animation> CreateAnimationFromFile(wchar_t* file, int number, DWO
 		float speedMult;
 		float dist;
 		v2d toPos;
+		v2d prevd;
+		//unsigned num;
 	};
 }
 
@@ -271,7 +318,6 @@ void InitializeGame(const shared_ptr<MX::Draw> &_draw, const shared_ptr<MX::Spri
 	scene->AddActor(make_shared<MX::Player>());
 
 	scene->AddActor(make_shared<MX::Flower1>());
-
 }
 
 void initGame(const shared_ptr<MX::Draw> &_draw, const shared_ptr<MX::Spriter> &_spriter, MX::Scene *_scene)
