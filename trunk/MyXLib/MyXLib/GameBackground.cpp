@@ -246,10 +246,18 @@ public:
 
 	void DoEffect()
 	{
-		if (rand() % 2)
+		switch (rand() % 3)
+		{
+		case 0:
 			_scene->AddActor(make_shared<BonusItem<GoodBootleItem>>(GraphicRes.bottle, 5000, 3000));
-		else
+			break;
+		case 1:
+			_scene->AddActor(make_shared<BonusItem<PoopItem>>(GraphicRes.rotten_apple, 5000, 3000));
+			break;
+		case 2:
 			_scene->AddActor(make_shared<BonusItem<ShieldItem>>(GraphicRes.shield, 5000, 3000));
+			break;
+		}
 
 	}
 

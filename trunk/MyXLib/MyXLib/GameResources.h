@@ -93,6 +93,9 @@ public:
 	std::shared_ptr<MX::Animation> pentagram;
 	std::shared_ptr<MX::Animation> pentagram_static;
 
+	std::shared_ptr<MX::Animation> rotten_apple;
+	std::shared_ptr<MX::Animation> poop;
+
 };
 
 extern GraphicResources GraphicRes;

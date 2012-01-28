@@ -3,6 +3,7 @@
 #include "Game.h"
 #include "GameResources.h"
 #include "../MXLib/MXScript.h"
+#include <set>
 
 namespace MX
 {
@@ -90,5 +91,73 @@ void ShieldItem::Use(Scene *scene, Player *user)
 {
 	scene->AddActor(make_shared<ShieldPlayer>(user));
 }
+
+
+class PoopPlayer : public Actor
+{
+public:
+	PoopPlayer(Player *u)
+	{
+		user = u;
+		OnDo.connect(MX::q(wait(3000), die()));
+		user->speed_multiplier = 0.5f;
+		
+
+	}
+
+
+	void OnDie()
+	{
+		__super::OnDie();
+		user->speed_multiplier = 1.0f;
+	}
+protected:
+	Player *user;
+};
+
+
+class PoopMine : public Collidable
+{
+public:
+	PoopMine(Scene *s, Player *user)
+	{
+		scene = s;
+		OnDo.connect(MX::q(wait(5000), lerp_color(0x00FFFFFF, 500), die()));
+
+		r = 16.0f;
+		pos = user->pos;
+
+		auto next = dynamic_cast<PlayerSnake_Body*>(user->next_body_part);
+		for(;next != NULL && next->GetButt() != NULL;next = dynamic_cast<PlayerSnake_Body*>(next->GetButt())){}
+
+		pos.x = next->pos.x;
+		pos.y = next->pos.y;
+
+		animation = make_shared<SpecificAnimation>(GraphicRes.poop);
+		animation->Start();
+	}
+
+	void onEat(Player* player)
+	{
+		if (hit_by_poop.insert(player).second)
+			scene->AddActor(make_shared<PoopPlayer>(player));
+	}
+
+	std::set<Player*> hit_by_poop;
+	Scene *scene;
+};
+
+
+PoopItem::PoopItem()
+{
+	item_image = GraphicRes.poop;
+}
+
+void PoopItem::Use(Scene *scene, Player *user)
+{
+	scene->AddActor(make_shared<PoopMine>(scene, user));
+}
+
+
 
 }
