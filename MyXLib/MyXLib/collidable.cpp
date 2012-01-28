@@ -8,6 +8,8 @@ void SphereWorld::allUCanEat(MX::Player* player)
 {
 	for(auto it = collidables.begin(); it!=collidables.end(); ++it)
 	{
+		if(player->isInNeck(*it))
+			continue;
 		v2d d = (*it)->pos - player->pos;
 		float rrit = (*it)->r; //(*it)->scaleX*(*it)->scaleX + (*it)->scaleY*(*it)->scaleY;
 		float rrp = player->r; //player->scaleX*player->scaleX + player->scaleY*player->scaleY;
