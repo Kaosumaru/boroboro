@@ -10,6 +10,7 @@
 #include "../MXLib/MXLine.h"
 #include "../MXLib/MXScript.h"
 #include "collidable.h"
+#include "GameResources.h"
 #include "Items.h"
 
 using namespace std;
@@ -32,7 +33,6 @@ public:
 
 	inline float GetSpeed() { return speed * speed_multiplier; }
 
-	float Player_Direction; //direction in radians
 	float Rotation_Speed;
 	float speed;
 	float speed_multiplier;
@@ -41,11 +41,17 @@ public:
 	char KeyLeft;
 	char KeyRight;
 	char KeyUse;
+	char KeyShield;
 
 	ActorSprite *next_body_part;
 	ActorSprite *last_body_part;
 
 	shared_ptr<UseItem> Item;
+
+	bool invisible;
+protected:
+	void ShieldSelf();
+	EffectWithGivenCooldown Shield;
 };
 
 };

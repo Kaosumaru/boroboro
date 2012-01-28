@@ -6,6 +6,7 @@
 #include "GameResources.h"
 #include "Gamebackground.h"
 #include "Collidable.h"
+#include "HellFire.h"
 #include "BloodAndgore.h"
 #include "../MXLib/MXParticles.h"
 #include "../MXLib/MXAnimUtils.h"
@@ -217,6 +218,8 @@ shared_ptr<MX::Animation> CreateAnimationFromFile(wchar_t* file, int number, DWO
 
 		void onEat(Player* player)
 		{
+			if (head && head->invisible)
+				return;
 #if 0
 			if (head != player)
 				player->AddBodypart();
@@ -293,21 +296,51 @@ shared_ptr<MX::Animation> CreateAnimationFromFile(wchar_t* file, int number, DWO
 		//unsigned num;
 	};
 
-	Player::Player(const v2d& p, float d, DWORD c)
+
+	class ShieldPlayer : public Actor
 	{
+	public:
+		ShieldPlayer(Player *u)
+		{
+			user = u;
+			OnDo.connect(MX::q(wait(2000), die()));
+			user->speed_multiplier = 0.0f;
+			user->invisible = true;
+		}
+
+
+		void OnDie()
+		{
+			__super::OnDie();
+			user->speed_multiplier = 1.0f;
+			user->invisible = false;
+		}
+
+		void Do()
+		{
+			Actor::Do();
+		}
+
+	protected:
+		Player *user;
+	};
+
+	Player::Player(const v2d& p, float d, DWORD c) : Shield(1000)
+	{
+		invisible = false;
 		color = c;
-		Player_Direction = 0.0f;
+		rotation = 0.0f;
 		Rotation_Speed = 2.0f;
-		speed = 150.0f;
+		speed = 300.0f;
 		speed_multiplier = 1.0f;
 		KeyLeft = VK_LEFT;
 		KeyRight = VK_RIGHT;
 		KeyUse = VK_UP;
+		KeyShield = VK_DOWN;
 		next_body_part = NULL;
 		last_body_part = this;
 
-		Player_Direction = d; // 0.0f;
-		this->rotation = d;
+		rotation = d;
 
 		scaleX = 0.65f;
 		scaleY = 0.8f;
@@ -334,22 +367,28 @@ shared_ptr<MX::Animation> CreateAnimationFromFile(wchar_t* file, int number, DWO
 		calculate_playerspeed();
 		if (World::Key[KeyLeft])
 		{
-			Player_Direction -= Rotation_Speed * World::GetElapsedFloat();
+			rotation -= Rotation_Speed * World::GetElapsedFloat();
 		}
 		else if (World::Key[KeyRight])
 		{
-			Player_Direction += Rotation_Speed * World::GetElapsedFloat();
+			rotation += Rotation_Speed * World::GetElapsedFloat();
 		}
 		else if (World::Key[KeyUse] && Item)
 		{
 			Item->Use(scene, this);
 			Item = NULL;
 		}
+		else if (World::Key[KeyShield])
+		{
+			if (Shield.DoThis())
+				//scene->AddActor(make_shared<ShieldPlayer>(this));
+				AddHellFire(scene, this);
+		}
 	}
 
 	void Player::Move()
 	{
-		v2d d = dirVec(Player_Direction);
+		v2d d = dirVec(rotation);
 		pos = pos + d * GetSpeed() * World::GetElapsedFloat();
 	}
 
@@ -358,7 +397,6 @@ shared_ptr<MX::Animation> CreateAnimationFromFile(wchar_t* file, int number, DWO
 	{
 		KeyoardNavigate();
 		Move();
-		Actor::rotation = Player_Direction;
 		sw.allUCanEat(this);
 		__super::Do();
 	}
@@ -386,6 +424,7 @@ shared_ptr<MX::Animation> CreateAnimationFromFile(wchar_t* file, int number, DWO
 		 v2d bou = dir + normal * (dot(dir, normal) * 2);
 		 float newrot = atan2(bou.x, bou.y);
 		 rotation = newrot;
+
 		 /// @todo DO not always mirror 
 	}
 
@@ -402,9 +441,7 @@ void Player::AddBodypart()
 	if (last_body_part == NULL)
 		last_body_part = this;
 	auto body_part = make_shared<PlayerSnake_Body>(last_body_part, this);
-
 	body_part->color = color;
-
 	if (!next_body_part)
 		next_body_part = body_part.get();
 	PlayerSnake_Body* lastButt = dynamic_cast<PlayerSnake_Body*>(last_body_part);
@@ -439,6 +476,7 @@ void InitializeGame(const shared_ptr<MX::Draw> &_draw, const shared_ptr<MX::Spri
 	player2->KeyLeft = 'A';
 	player2->KeyRight = 'D';
 	player2->KeyUse = 'W';
+	player2->KeyShield = 'S';
 
 
 	scene->AddActor(player2);
