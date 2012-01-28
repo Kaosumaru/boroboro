@@ -87,8 +87,6 @@ shared_ptr<MX::Animation> CreateAnimationFromFile(wchar_t* file, int number, DWO
 			animation->Start();
 		}
 	};
-
-
 	
 	class Player : public ActorSprite
 	{
@@ -97,11 +95,28 @@ shared_ptr<MX::Animation> CreateAnimationFromFile(wchar_t* file, int number, DWO
 		{
 			Player_Direction = 0.0f;
 			Rotation_Speed = 6.0f;
-			Player_Speed = 400.0f;
+			speed = 100.0f;
 			KeyLeft = VK_LEFT;
 			KeyRight = VK_RIGHT;
+
+			last_body_part = this;
+
+			Player_Direction = 0.0f;
+
+			scaleX = 0.5f;
+			scaleY = 0.5f;
+
+			//x = 100.0f;
+			//y = 100.0f;
+			pos = v2d(100.0f,100.0f);
+			z = 0.0f;
+			animation = make_shared<SpecificAnimation>(GraphicRes.snake_head);
+			animation->Start();
+
+			for(int i =0; i<10; ++i)
+				AddBodypart();
 		}
-			
+
 
 		void KeyoardNavigate()
 		{
@@ -122,102 +137,16 @@ shared_ptr<MX::Animation> CreateAnimationFromFile(wchar_t* file, int number, DWO
 			//dy = sin(Player_Direction);
 			v2d d = dirVec(Player_Direction);
 
-			//x += dx * Player_Speed * World::GetElapsedFloat();
-			//y += dy * Player_Speed * World::GetElapsedFloat();
-			pos = pos + d * Player_Speed * World::GetElapsedFloat();
+			//x += dx * speed * World::GetElapsedFloat();
+			//y += dy * speed * World::GetElapsedFloat();
+			pos = pos + d * speed * World::GetElapsedFloat();
 
 			//std::wstringstream w;
 			//w<<
 			//OutputDebugString(
 		}
 
-		float Player_Direction; //direction in radians
-		float Rotation_Speed;
-		float Player_Speed;
-
-
-		char KeyLeft;
-		char KeyRight;
-		char KeyUse;
-	};
-
-
-
-	class PlayerSnake_Body : public ActorSprite
-	{
-	public:
-		PlayerSnake_Body(ActorSprite *previous)
-		{
-			scaleX = 0.5f;
-			scaleY = 0.5f;
-
-			z = previous->z+0.01f;
-
-			animation = make_shared<SpecificAnimation>(GraphicRes.snake_body);
-			animation->Start();
-
-			previous_part = previous;
-		}
-			
-		void Do()
-		{
-			//float dx, dy;
-			//dx = cos(previous_part->rotation);
-			//dy = sin(previous_part->rotation);
-
-			//x = previous_part->x;
-			//y = previous_part->y;
-
-			//x -= dx*32;
-			//y -= dy*32;
-
-			//rotation = previous_part->rotation;
-
-			v2d d = normalized(previous_part->pos - pos);
-			d = normalized(d);
-		    
-			pos = pos + d* 400.0f * World::GetElapsedFloat();
-			
-			__super::Do();
-		}
-
-	protected:
-
-		ActorSprite *previous_part;
-
-	};
-
-	class PlayerSnake : public Player, public enable_shared_from_this<PlayerSnake>
-	{
-	public:
-		PlayerSnake(Draw &draw) : Player() 
-		{
-			last_body_part = this;
-
-			Player_Direction = 0.0f;
-
-			scaleX = 0.5f;
-			scaleY = 0.5f;
-
-			//x = 100.0f;
-			//y = 100.0f;
-			pos = v2d(100.0f,100.0f);
-			z = 0.0f;
-			animation = make_shared<SpecificAnimation>(GraphicRes.snake_head);
-			animation->Start();
-
-			AddBodypart();
-			AddBodypart();
-			AddBodypart();
-		}
-
-		void AddBodypart()
-		{
-			auto body_part = make_shared<PlayerSnake_Body>(last_body_part);
-
-			last_body_part = &(*body_part);
-			scene->AddActor(body_part);
-		}
+		void AddBodypart();
 
 		void Do()
 		{
@@ -226,11 +155,91 @@ shared_ptr<MX::Animation> CreateAnimationFromFile(wchar_t* file, int number, DWO
 			Actor::rotation = Player_Direction;
 			__super::Do();
 		}
-	protected:
+
+		float Player_Direction; //direction in radians
+		float Rotation_Speed;
+		float speed;
+
+
+		char KeyLeft;
+		char KeyRight;
+		char KeyUse;
+
 		ActorSprite *last_body_part;
+
 	};
 
+	class PlayerSnake_Body : public ActorSprite
+	{
+	public:
+		PlayerSnake_Body(ActorSprite *bef, Player *player)
+		{
+			scaleX = 0.5f;
+			scaleY = 0.5f;
+			speedMult = 1.0f;
+			dist = 30.0f;
+			z = bef->z+0.01f;
+
+			animation = make_shared<SpecificAnimation>(GraphicRes.snake_body);
+			animation->Start();
+
+			before = bef;
+			head = player;
+			butt = NULL;
+			pos = before->pos - dirVec(before->rotation)*dist; 
+		}
+		
+		void newButt(ActorSprite *b)
+		{
+			butt = b;
+		}
+
+		void Do()
+		{
+			v2d d = before->pos - pos;
+			float ld = length(d);
+			speedMult = ld/dist;
+			/*if(speedMult < 0.9f)
+				speedMult = 0.9f;
+			else if(speedMult > 1.1f)
+				speedMult = 1.1f;
+				*/
+			speedMult = speedMult*speedMult;
+			d = normalized(d);
+			pos = pos + d * speedMult * head->speed * World::GetElapsedFloat();
+			
+			if(butt)
+			{
+				v2d b = normalized(pos - butt->pos);
+				d = d + b;
+				d = normalized(d);
+			}
+			this->rotation = atan(d.y/d.x); 
+
+			__super::Do();
+		}
+
+	protected:
+
+		ActorSprite *before;  ///< before this segment
+		Player* head;
+		ActorSprite *butt;    ///< after this segment
+		float speedMult;
+		float dist;
+	};
 }
+
+void Player::AddBodypart()
+{
+	auto body_part = make_shared<PlayerSnake_Body>(last_body_part, this);
+	PlayerSnake_Body* lastButt = dynamic_cast<PlayerSnake_Body*>(last_body_part);
+	if(lastButt)
+		lastButt->newButt(&(*body_part));
+	last_body_part = &(*body_part);
+	scene->AddActor(body_part);
+}
+
+
 
 void InitializeGame(const shared_ptr<MX::Draw> &_draw, const shared_ptr<MX::Spriter> &_spriter, MX::Scene *_scene)
 {
@@ -245,7 +254,7 @@ void InitializeGame(const shared_ptr<MX::Draw> &_draw, const shared_ptr<MX::Spri
 
 	scene->AddActor(make_shared<MX::PlayerCrosshair>(*draw));
 
-	scene->AddActor(make_shared<MX::PlayerSnake>(*draw));
+	scene->AddActor(make_shared<MX::Player>());
 
 	scene->AddActor(make_shared<MX::Flower1>());
 
