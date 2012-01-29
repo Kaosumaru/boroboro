@@ -94,6 +94,7 @@ class GameForeground : public ActorSprite
 public:
 	GameForeground()
 	{
+		color = 0xFFFFFFFF;
 		z = 0.0f;
 		pos.x = 0.0f;
 		pos.y = 0.0f;
@@ -284,7 +285,7 @@ public:
 		case 0:
 		case 1:
 		case 2:
-			pItem = make_shared<BonusItem<GoodBootleItem>>((SoundSample*)NULL, GraphicRes.bottle, 5000, 3000);
+			pItem = make_shared<BonusItem<GoodBootleItem>>(&SoundBank::gulp, GraphicRes.bottle, 5000, 3000);
 			break;
 		case 3:
 		case 4:
@@ -337,13 +338,15 @@ void InitBackground(MX::Scene *scene, const shared_ptr<MX::Spriter> &spriter)
 	_scene = scene;
 
 
-	scene->AddActor(make_shared<Flower1>());
 	scene->AddActor(make_shared<Stone1>(v2d(600.0f, 600.0f)));
 	scene->AddActor(make_shared<GameBackground>());
 	scene->AddActor(make_shared<BerrySpawner>());
 	scene->AddActor(make_shared<BonusSpawner>());
 	scene->AddActor(make_shared<GameForeground>());
 	
+	for (int i = 0; i < 5; i ++)
+		scene->AddActor(make_shared<Stone1>(v2d((float)(rand()%1280), (float)(rand()%800))));
+
 	//for (int i = 0; i < 10; i ++)
 	//	scene->AddActor(make_shared<GameBackgroundGrass>());
 		
