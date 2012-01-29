@@ -40,20 +40,6 @@ shared_ptr<Command> warp_rotation(float nR, unsigned mili)
 }
 
 
-class Flower1 : public ActorSprite
-{
-public:
-	Flower1()
-	{
-		scaleX = 0.5f;
-		scaleY = 0.5f;
-
-		pos.x = 100.0f;
-		pos.y = 100.0f;
-		animation = make_shared<SpecificAnimation>(GraphicRes.flower1);
-		animation->Start();
-	}
-};
 
 class Stone1 : public Collidable
 {
@@ -186,8 +172,8 @@ public:
 		z = 0.9f;
 		r = 16.0f;
 
-		pos.x = (float)(rand()%1280);
-		pos.y = (float)(rand()%800);
+		pos.x = 50.0f + (float)(rand()%1180);
+		pos.y = 50.0f + (float)(rand()%700);
 
 		animation = make_shared<SpecificAnimation>(anim);
 		animation->Start();
@@ -276,8 +262,8 @@ public:
 
 	void DoEffect()
 	{
-		float x_rand = (float)(rand()%1280);
-		float y_rand = (float)(rand()%800);
+		float x_rand = 50.0f + (float)(rand()%1180);
+		float y_rand = 50.0f + (float)(rand()%700);
 
 		shared_ptr<Collidable> pItem;
 		switch (rand() % 10)

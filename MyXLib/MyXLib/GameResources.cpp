@@ -36,9 +36,6 @@ void GraphicResources::Init(MX::Draw &draw)
 	}
 
 
-	flower1 = MX::CreateAnimationFromFile(draw, L"images\\flower\\flower1.png");
-	flower2 = MX::CreateAnimationFromFile(draw, L"images\\flower\\flower2.png");
-
 	stone1 = MX::CreateAnimationFromFile(draw, L"images\\kamien.png");
 
 	fire = MX::CreateAnimationFromFile(draw, L"images\\fire.png");
