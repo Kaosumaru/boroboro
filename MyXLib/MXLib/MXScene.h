@@ -80,8 +80,7 @@ namespace MX
 	public:
 		Actor()
 		{
-			z = -1.0f;
-			//x = y = 0.0f;
+			z = 1.0f;
 			scaleX = scaleY = 1.0f;
 			color = 0xFFFFFFFF;
 			rotation = 0.0f;
