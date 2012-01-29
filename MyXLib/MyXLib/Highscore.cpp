@@ -3,6 +3,7 @@
 #include "GameResources.h"
 #include "Highscore.h"
 #include "Game.h"
+#include "Sounds.h"
 
 namespace MX
 {
@@ -108,7 +109,11 @@ public:
 			elapsed_time ++;
 			int remaining = max_time - elapsed_time;
 			if (remaining >= 0)
+			{
+				if (remaining  == 3)
+					SoundBank::beep.Play();
 				sprintf(pointstext, "%02d:%02d", remaining/60, remaining%60);
+			}
 			else
 			{
 				if (!end)

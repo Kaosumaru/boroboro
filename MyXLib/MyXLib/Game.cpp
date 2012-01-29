@@ -22,7 +22,7 @@ shared_ptr<MX::Liner> liner;
 
 namespace MX
 {
-
+Stream GameMusic;
 
 shared_ptr<MX::Animation> CreateAnimationFromFile(wchar_t* file)
 {
@@ -516,6 +516,7 @@ shared_ptr<MX::Player> player1, player2;
 
 void InitializeGame(const shared_ptr<MX::Draw> &_draw, const shared_ptr<MX::Spriter> &_spriter, MX::Scene *_scene)
 {
+	MX::GameMusic.Play();
 	SoundBank::AmbientSound.Stop();
 
 	_scene->KillAll();
@@ -532,8 +533,6 @@ void InitializeGame(const shared_ptr<MX::Draw> &_draw, const shared_ptr<MX::Spri
 	
 
 	InitBackground(_scene, _spriter);
-
-	scene->AddActor(make_shared<MX::PlayerCrosshair>(*draw));
 
 	player1 = make_shared<MX::Player>(v2d(150.0f, 400.0f), 1.57f, false);
 	player2 = make_shared<MX::Player>(v2d(1000.0f, 400.0f), -1.57f, true);
@@ -620,6 +619,7 @@ protected:
 
 void EndGame()
 {
+	MX::GameMusic.Stop();
 	int nResult = 0;
 	if (player1->score > player2->score)
 		nResult = 1;
@@ -687,7 +687,7 @@ public:
 
 void InitializeDemo(const shared_ptr<MX::Draw> &_draw, const shared_ptr<MX::Spriter> &_spriter, MX::Scene *_scene)
 {
-//	SoundBank::AmbientSound.Play();
+	SoundBank::AmbientSound.Play();
 	draw = _draw;
 	spriter = _spriter;
 	scene = _scene;
@@ -761,5 +761,6 @@ void initGame(const shared_ptr<MX::Draw> &_draw, const shared_ptr<MX::Spriter> &
 	
 	GraphicRes.Init(*_draw);
 
+	MX::GameMusic.LoadStream(L"music\\game.mp3");
 }
 
