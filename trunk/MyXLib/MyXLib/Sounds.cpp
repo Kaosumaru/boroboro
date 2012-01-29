@@ -31,6 +31,7 @@ void SoundBank::Initialize()
 	flame.AddSound(SoundSample::CreateSample(L"sounds\\flamewind2.wav"));
 
 	gulp.AddSound(SoundSample::CreateSample(L"sounds\\gulp.wav"));
+	beep.AddSound(SoundSample::CreateSample(L"sounds\\beep.wav"));
 
 
 //	AmbientSound = SoundSample::CreateSample(L"sounds\\AmbientSound.wav");
@@ -46,5 +47,7 @@ SoundSample SoundBank::no_ass;
 SoundSample SoundBank::bump;
 SoundSample SoundBank::flame;
 SoundSample SoundBank::gulp;
+SoundSample SoundBank::beep;
+
 
 Stream SoundBank::AmbientSound;
