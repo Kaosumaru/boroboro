@@ -35,6 +35,10 @@ public:
 	static SoundSample no_ass;
 	static SoundSample bump;
 	static SoundSample flame;
+
+	static Stream AmbientSound;
+
+	
 };
 
 };

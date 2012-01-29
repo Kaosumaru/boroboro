@@ -13,7 +13,7 @@ void GraphicResources::Init(MX::Draw &draw)
 {
 	//snake_head = MX::CreateAnimationFromFile(draw, L"images\\wonsz\\WonszGlowa.png");
 	snake_head = MX::CreateAnimationFromFile(draw, L"images\\wonsz\\head_open\\waz_head_open_", 9, 75, 64, 64);
-
+	snake_tongue = MX::CreateAnimationFromFile(draw, L"images\\wonsz\\tonge.png");
 
 	/*
 	shared_ptr<MX::Image> cross(new MX::Image());
@@ -25,7 +25,7 @@ void GraphicResources::Init(MX::Draw &draw)
 	snake_body = MX::CreateAnimationFromFile(draw, L"images\\wonsz\\WonszBody.png");
 
 
-	snake_head2 = MX::CreateAnimationFromFile(draw, L"images\\wonsz\\WonszGlowa3.png");
+	snake_head2 = MX::CreateAnimationFromFile(draw, L"images\\wonsz\\head_open2\\anim", 7, 75, 64, 64);
 
 	{
 		shared_ptr<MX::Image> cross(new MX::Image());
@@ -51,6 +51,7 @@ void GraphicResources::Init(MX::Draw &draw)
 	pentagram_static = MX::CreateAnimationFromFile(draw, L"images\\pentagram2.png");
 	pentagram_small = MX::CreateAnimationFromFile(draw, L"images\\PentaSmall.png");
 	
+#if 0
 	grass[0] = MX::CreateAnimationFromFile(draw, L"images\\Background\\kepka_01.png");
 	grass[1] = MX::CreateAnimationFromFile(draw, L"images\\Background\\kepka_02.png");
 	grass[2] = MX::CreateAnimationFromFile(draw, L"images\\Background\\kepka_03.png");
@@ -64,11 +65,12 @@ void GraphicResources::Init(MX::Draw &draw)
 
 	grass[2]->frames[0].centerX = 256.0f;
 	grass[2]->frames[0].centerY = 128.0f;
+#endif
 
 	blood = MX::CreateAnimationFromFile(draw, L"images\\blood.png");
 	berry = MX::CreateAnimationFromFile(draw, L"images\\berry.png");
 
-	foreground = MX::CreateAnimationFromFile(draw, L"images\\foreground.png");
+	foreground = MX::CreateAnimationFromFile(draw, L"images\\foreground2.png");
 	foreground->frames[0].centerX = 0.0f;
 	foreground->frames[0].centerY = 0.0f;
 

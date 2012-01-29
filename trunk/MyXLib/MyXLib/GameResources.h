@@ -71,6 +71,7 @@ public:
 
 
 	std::shared_ptr<MX::Animation> snake_head;
+	std::shared_ptr<MX::Animation> snake_tongue;
 	std::shared_ptr<MX::Animation> snake_body;
 
 	std::shared_ptr<MX::Animation> snake_head2;
@@ -86,7 +87,9 @@ public:
 
 	std::shared_ptr<MX::Animation> background;
 	std::shared_ptr<MX::Animation> foreground;
+#if 0
 	std::shared_ptr<MX::Animation> grass[4];
+#endif
 
 	std::shared_ptr<MX::Animation> blood;
 	std::shared_ptr<MX::Animation> berry;

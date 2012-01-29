@@ -44,6 +44,7 @@ GoodBootleItem::GoodBootleItem()
 
 void GoodBootleItem::Use(Scene *scene, Player *user)
 {
+	SoundBank::hissing.Play();
 	scene->AddActor(make_shared<BottleBoost>(user));
 }
 

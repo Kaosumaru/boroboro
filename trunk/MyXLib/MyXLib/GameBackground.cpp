@@ -102,6 +102,8 @@ public:
 	}
 };
 
+
+#if 0
 class GameBackgroundGrass : public ActorSprite
 {
 public:
@@ -143,6 +145,8 @@ public:
 	*/
 };
 
+#endif
+
 
 class Berry : public Collidable
 {
@@ -175,8 +179,9 @@ template<typename ItemType>
 class BonusItem : public Collidable
 {
 public:
-	BonusItem(const shared_ptr<Animation> &anim, int time = 5000, int vanish_time = 3000)
+	BonusItem(SoundSample *sound, const shared_ptr<Animation> &anim, int time = 5000, int vanish_time = 3000)
 	{
+		gsound = sound;
 		z = 0.9f;
 		r = 16.0f;
 
@@ -192,9 +197,13 @@ public:
 
 	void onEat(Player* player)
 	{
+		if (gsound)
+			gsound->Play();
 		player->Item = make_shared<ItemType>();
 		Die();
 	}
+
+	SoundSample *gsound;
 };
 
 class PentagramBonus : public Collidable
@@ -275,17 +284,17 @@ public:
 		case 0:
 		case 1:
 		case 2:
-			pItem = make_shared<BonusItem<GoodBootleItem>>(GraphicRes.bottle, 5000, 3000);
+			pItem = make_shared<BonusItem<GoodBootleItem>>((SoundSample*)NULL, GraphicRes.bottle, 5000, 3000);
 			break;
 		case 3:
 		case 4:
 		case 5:
-			pItem = make_shared<BonusItem<PoopItem>>(GraphicRes.rotten_apple, 5000, 3000);
+			pItem = make_shared<BonusItem<PoopItem>>(&SoundBank::apple_bite, GraphicRes.rotten_apple, 5000, 3000);
 			break;
 		case 6:
 		case 7:
 		case 8:			
-			pItem = make_shared<BonusItem<ShieldItem>>(GraphicRes.shield, 5000, 3000);
+			pItem = make_shared<BonusItem<ShieldItem>>(&SoundBank::apple_bite, GraphicRes.shield, 5000, 3000);
 			break;
 		case 9:
 			pItem = make_shared<PentagramBonus>();
