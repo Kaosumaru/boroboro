@@ -565,8 +565,10 @@ void InitializeGame(const shared_ptr<MX::Draw> &_draw, const shared_ptr<MX::Spri
 class WinInfo : public ActorSprite
 {
 public:
-	WinInfo(int res) : ActorSprite(CreateAnimationFromFile(res == 0 ? L"images\\draw.png" : res == 1 ? L"images\\player1win.png" : L"images\\player2win.png")) 
+	WinInfo(int res) : ActorSprite(CreateAnimationFromFile(res == 0 ? L"images\\end_remis.png" : res == 1 ? L"images\\end_player1.png" : L"images\\end_player2.png")) 
 	{
+		color = 0x00FFFFFF;
+		OnDo.connect(q(lerp_color(0xFFFFFFFF, 2000)));
 		z = 0.5f;
 		pos.x = 640.0f;
 		pos.y = 400.0f;
