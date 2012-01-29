@@ -35,6 +35,17 @@ shared_ptr<MX::Animation> CreateAnimationFromFile(wchar_t* file)
 	return anim;
 }
 
+shared_ptr<MX::Animation> CreateAnimationFromFile(wchar_t* file, float cx, float cy)
+{
+	shared_ptr<MX::Image> cross(new MX::Image());
+	bool b = cross->Load(*draw, file);
+
+	shared_ptr<MX::Animation> anim(new MX::Animation(500));
+	shared_ptr<MX::Frame> frame(new MX::Frame(cross));
+	anim->AddFrame(MX::AnimationFrame(frame, 10000, cx, cy));
+	return anim;
+}
+
 
 shared_ptr<MX::Animation> CreateAnimationFromFile(wchar_t* file, int number, DWORD speed, float cx, float cy)
 {
@@ -324,7 +335,7 @@ shared_ptr<MX::Animation> CreateAnimationFromFile(wchar_t* file, int number, DWO
 		invisible = false;
 		rotation = 0.0f;
 		Rotation_Speed = 2.0f;
-		speed = 150.0f;
+		speed = 250.0f;
 		speed_multiplier = 1.0f;
 		KeyLeft = VK_LEFT;
 		KeyRight = VK_RIGHT;
@@ -685,6 +696,7 @@ void InitializeDemo(const shared_ptr<MX::Draw> &_draw, const shared_ptr<MX::Spri
 	press_enter->OnDo.connect(q(wait(4500), lerp_color(0xFFFFFFFF, 4000)));
 	press_enter->pos.x = 640.0f;
 	press_enter->pos.y = 700.0f;
+	press_enter->z = 0.9f;
 	_scene->AddActor(press_enter);
 
 
@@ -700,6 +712,8 @@ void InitializeDemo(const shared_ptr<MX::Draw> &_draw, const shared_ptr<MX::Spri
 	loop->AddCommand(make_shared<WarpScaleCommand>(1.0f, 1.0f, 500));
 	BoroTitle->OnDo.connect(loop);
 
+
+	_scene->AddActor(make_shared<ActorSprite>(CreateAnimationFromFile(L"images\\bkg.png", 0.0f, 0.0f)));
 	_scene->AddActor(BoroTitle);
 
 	_scene->AddActor(make_shared<TitleEnd>());
