@@ -33,6 +33,27 @@ public:
 };
 
 
+class Background2 : public ActorSprite
+{
+public:
+	Background2(MX::Scene *_scene, const shared_ptr<Animation> &anim = NULL) : ActorSprite(anim)
+	{
+		scene = _scene;
+	}
+	
+	void Do()
+	{
+		ActorSprite::Do();
+		if (World::Key[VK_SPACE] || World::Key[VK_RETURN])
+			scene->KillAll();
+	}
+
+protected:
+	MX::Scene *scene;
+
+};
+
+
 void InitializeTitle(const shared_ptr<MX::Draw> &_draw, const shared_ptr<MX::Spriter> &_spriter, MX::Scene *_scene)
 {
 
@@ -50,7 +71,7 @@ void InitializeTitle(const shared_ptr<MX::Draw> &_draw, const shared_ptr<MX::Spr
 	auto splash1 = make_shared<ActorSprite>(title_background);
 	splash1->color = 0x00FFFFFF;
 
-	auto splash2 = make_shared<ActorSprite>(title_background2);
+	auto splash2 = make_shared<Background2>(_scene, title_background2);
 	splash2->color = 0x00FFFFFF;
 
 
