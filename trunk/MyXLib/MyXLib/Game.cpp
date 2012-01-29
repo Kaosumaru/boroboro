@@ -91,21 +91,7 @@ shared_ptr<MX::Animation> CreateAnimationFromFile(wchar_t* file, int number, DWO
 		}
 	};
 
-	class Flower1 : public ActorSprite
-	{
-	public:
-		Flower1()
-		{
-			scaleX = 0.5f;
-			scaleY = 0.5f;
 
-			pos.x = 100.0f;
-			pos.y = 100.0f;
-			animation = make_shared<SpecificAnimation>(GraphicRes.flower1);
-			animation->Start();
-		}
-	};
-	
 
 	PlayerSnake_Body::PlayerSnake_Body(ActorSprite *bef, Player *player, bool bAlternative)
 	{
@@ -551,7 +537,6 @@ void InitializeGame(const shared_ptr<MX::Draw> &_draw, const shared_ptr<MX::Spri
 
 	scene->AddActor(player2);
 
-	scene->AddActor(make_shared<MX::Flower1>());
 
 	InitHighscore(draw, spriter, scene, player1, player2);
 
