@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "tspawner.hpp"
 #include "Items.h"
 #include "Game.h"
 #include "GameResources.h"
@@ -155,7 +156,6 @@ public:
 	Scene *scene;
 };
 
-
 PoopItem::PoopItem()
 {
 	item_image = GraphicRes.poop;
@@ -164,7 +164,7 @@ PoopItem::PoopItem()
 void PoopItem::Use(Scene *scene, Player *user)
 {
 	SoundBank::put_shit.Play();
-	scene->AddActor(make_shared<PoopMine>(scene, user));
+	scene->AddActor(make_shared<TSpawner<PoopMine> >(user, 100, 5));
 }
 
 

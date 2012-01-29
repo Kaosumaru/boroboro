@@ -72,6 +72,9 @@
     <ClInclude Include="TitleScreen.h">
       <Filter>TitleScreen</Filter>
     </ClInclude>
+    <ClInclude Include="tspawner.hpp">
+      <Filter>Game</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
