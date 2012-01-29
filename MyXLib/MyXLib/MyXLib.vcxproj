@@ -94,6 +94,7 @@
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="TitleScreen.h" />
+    <ClInclude Include="tspawner.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BloodAndGore.cpp" />
