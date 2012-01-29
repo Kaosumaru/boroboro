@@ -335,7 +335,7 @@ shared_ptr<MX::Animation> CreateAnimationFromFile(wchar_t* file, int number, DWO
 		invisible = false;
 		rotation = 0.0f;
 		Rotation_Speed = 2.0f;
-		speed = 250.0f;
+		speed = 150.0f;
 		speed_multiplier = 1.0f;
 		KeyLeft = VK_LEFT;
 		KeyRight = VK_RIGHT;
