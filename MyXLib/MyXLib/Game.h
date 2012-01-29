@@ -94,6 +94,8 @@ public:
 
 	v2d item_pos;
 	MovementType MovType;
+
+	int score;
 protected:
 	int length;
 	void ShieldSelf();
@@ -108,6 +110,8 @@ protected:
 };
 
 void InitializeGame(const shared_ptr<MX::Draw> &_draw, const shared_ptr<MX::Spriter> &_spriter, MX::Scene *_scene);
+void EndGame();
+
 void InitializeDemo(const shared_ptr<MX::Draw> &_draw, const shared_ptr<MX::Spriter> &_spriter, MX::Scene *_scene);
 
 

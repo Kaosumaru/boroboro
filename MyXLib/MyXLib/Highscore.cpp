@@ -70,6 +70,7 @@ public:
 		if (cooldown.DoThis())
 		{
 			points += player->GetLength();
+			player->score = points;
 			itoa(points, pointstext, 10);
 		}
 
@@ -96,6 +97,7 @@ public:
 		strcpy(pointstext, "2:00");
 		elapsed_time = 0;
 		max_time = 120;
+		end = false;
 	}
 
 	void Do()
@@ -105,14 +107,24 @@ public:
 		{
 			elapsed_time ++;
 			int remaining = max_time - elapsed_time;
-			if (remaining > 0)
+			if (remaining >= 0)
 				sprintf(pointstext, "%02d:%02d", remaining/60, remaining%60);
+			else
+			{
+				if (!end)
+				{
+					end = true;
+					EndGame();
+				}
+	
+			}
 		}
 		DigitsDrawer::DrawText(*spriter, digits, pos.x, pos.y, z, pointstext, color);
 		Actor::Do();
 	}
 
 	
+	bool end;
 	int elapsed_time;
 	int max_time;
 	EffectWithGivenCooldown cooldown;
@@ -144,7 +156,7 @@ void InitHighscore(const shared_ptr<MX::Draw> &draw, const shared_ptr<MX::Sprite
 	MX::scene->AddActor(hi2);
 
 	auto time = make_shared<MX::TimeLimit>();
-	time->pos.x = 500;
+	time->pos.x = 550;
 	time->pos.y = 5;
 	time->z = 0.0f;
 	time->color = 0xFFFFFFFF;

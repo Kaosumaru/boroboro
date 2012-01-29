@@ -98,6 +98,8 @@ public:
 	std::shared_ptr<MX::Animation> poop;
 
 
+	std::shared_ptr<MX::Animation> white_screen;
+
 };
 
 extern GraphicResources GraphicRes;

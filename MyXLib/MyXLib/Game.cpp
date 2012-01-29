@@ -310,6 +310,7 @@ shared_ptr<MX::Animation> CreateAnimationFromFile(wchar_t* file, int number, DWO
 	
 	Player::Player(const v2d& p, float d, bool alternative, int len) : Shield(10000)
 	{
+		score = 0;
 		rotation_proportion = 75.0f;
 		MovType = NormalControl;
 		pentakill = false;
@@ -474,9 +475,12 @@ void Player::AddBodypart()
 }
 
 
+shared_ptr<MX::Player> player1, player2;
+
 
 void InitializeGame(const shared_ptr<MX::Draw> &_draw, const shared_ptr<MX::Spriter> &_spriter, MX::Scene *_scene)
 {
+	_scene->KillAll();
 	draw = _draw;
 	spriter = _spriter;
 	scene = _scene;
@@ -493,8 +497,8 @@ void InitializeGame(const shared_ptr<MX::Draw> &_draw, const shared_ptr<MX::Spri
 
 	scene->AddActor(make_shared<MX::PlayerCrosshair>(*draw));
 
-	auto player1 = make_shared<MX::Player>(v2d(150.0f, 400.0f), 1.57f, false);
-	auto player2 = make_shared<MX::Player>(v2d(1000.0f, 400.0f), -1.57f, true);
+	player1 = make_shared<MX::Player>(v2d(150.0f, 400.0f), 1.57f, false);
+	player2 = make_shared<MX::Player>(v2d(1000.0f, 400.0f), -1.57f, true);
 	
 	scene->AddActor(player1);
 
@@ -514,8 +518,73 @@ void InitializeGame(const shared_ptr<MX::Draw> &_draw, const shared_ptr<MX::Spri
 
 	InitHighscore(draw, spriter, scene, player1, player2);
 
+
+
+
 }
 
+
+class WinInfo : public ActorSprite
+{
+public:
+	WinInfo() : ActorSprite(CreateAnimationFromFile(L"images\\draw.png")) 
+	{
+		z = 0.5f;
+		pos.x = 640.0f;
+		pos.y = 400.0f;
+	}
+
+	void Do()
+	{
+		ActorSprite::Do();
+		if (World::Key[VK_SPACE])
+		{
+			scene->KillAll();
+			InitializeDemo(draw, ::spriter, scene);
+		}
+	}
+};
+
+
+class EndGamer : public ActorSprite
+{
+public:
+	EndGamer(bool bFirst) : ActorSprite(CreateAnimationFromFile(L"images\\BlackFire.png"))
+	{
+		FirstPlayerWin = bFirst;
+		color = 0x00FFFFFF;
+		OnDo.connect(q(lerp_color(0xFFFFFFFF, 4000)));
+		OnDo.connect(q(warp_scale(60.0f, 60.0f, 4000), die()));
+		pos.x = 640.0f;
+		pos.y = 400.0f;
+		z = 0.0f;
+	}
+	
+	void OnDie(){
+		ActorSprite::OnDie();
+		scene->KillAll();
+		player1 = NULL;
+		player2 = NULL;
+
+		auto info = make_shared<WinInfo>();
+
+		//if (FirstPlayerWin)
+
+		scene->AddActor(info);
+
+	}
+
+protected:
+	bool FirstPlayerWin;
+};
+
+void EndGame()
+{
+	bool bFirstWin = player1->score > player2->score;
+
+	scene->AddActor( make_shared<EndGamer>(bFirstWin) );
+
+}
 
 class PentagramTitle : public ActorSprite
 {
@@ -612,6 +681,21 @@ void InitializeDemo(const shared_ptr<MX::Draw> &_draw, const shared_ptr<MX::Spri
 	press_enter->pos.x = 640.0f;
 	press_enter->pos.y = 700.0f;
 	_scene->AddActor(press_enter);
+
+
+	auto BoroTitle = make_shared<ActorSprite>(CreateAnimationFromFile(L"images\\boroboro.png"));
+	BoroTitle->color = 0x00FFFFFF;
+	BoroTitle->OnDo.connect(q(wait(4500), lerp_color(0xFFFFFFFF, 4000)));
+	BoroTitle->pos.x = 640.0f;
+	BoroTitle->pos.y = 150.0f;
+	BoroTitle->z = 0.0f;
+
+	auto loop = make_shared<LoopCommand> ();
+	loop->AddCommand(make_shared<WarpScaleCommand>(1.075f, 1.075f, 500));
+	loop->AddCommand(make_shared<WarpScaleCommand>(1.0f, 1.0f, 500));
+	BoroTitle->OnDo.connect(loop);
+
+	_scene->AddActor(BoroTitle);
 
 	_scene->AddActor(make_shared<TitleEnd>());
 
