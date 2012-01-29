@@ -44,6 +44,8 @@ ActorSprite::ActorSprite(const shared_ptr<Animation> &anim)
 {
 	custom_transform = NULL;
 	animation = shared_ptr<SpecificAnimation>(new SpecificAnimation(anim));
+	if (animation)
+		animation->Start();
 }
 
 void ActorSprite::Do() 
@@ -114,4 +116,10 @@ void Scene::Draw()
 				it ++;
 		}
 	}
+}
+
+void Scene::KillAll()
+{
+	for (auto it = lActors.begin(); it != lActors.end(); it ++)
+		(*it)->Die();
 }

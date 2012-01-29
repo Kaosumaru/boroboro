@@ -48,7 +48,14 @@ protected:
 class Player : public Collidable
 {
 public:
-	Player(const v2d& p, float d, bool alternative);
+	typedef enum
+	{
+		NormalControl = 0,
+		ForceLeft,
+		ForceRight
+	} MovementType;
+
+	Player(const v2d& p, float d, bool alternative, int len = 30);
 
 	void calculate_playerspeed();
 	void KeyoardNavigate();
@@ -65,6 +72,7 @@ public:
 	float Rotation_Speed;
 	float speed;
 	float speed_multiplier;
+	float rotation_proportion;
 
 
 	char KeyLeft;
@@ -85,6 +93,7 @@ public:
 	void RecalcLength();
 
 	v2d item_pos;
+	MovementType MovType;
 protected:
 	int length;
 	void ShieldSelf();
@@ -99,6 +108,7 @@ protected:
 };
 
 void InitializeGame(const shared_ptr<MX::Draw> &_draw, const shared_ptr<MX::Spriter> &_spriter, MX::Scene *_scene);
+void InitializeDemo(const shared_ptr<MX::Draw> &_draw, const shared_ptr<MX::Spriter> &_spriter, MX::Scene *_scene);
 
 
 void initGame(const shared_ptr<MX::Draw> &_draw, const shared_ptr<MX::Spriter> &_spriter, MX::Scene *_scene);

@@ -180,6 +180,8 @@ namespace MX
 		void AddActor(const shared_ptr<Actor> &actor) { lActors.push_back(actor); }
 
 		static shared_ptr<MX::Draw> draw;
+
+		void KillAll();
 	protected:
 
 		list<shared_ptr<Actor>> lActors;

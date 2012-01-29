@@ -3,6 +3,7 @@
 
 #include "stdafx.h"
 #include "MyXLib.h"
+#include "Sounds.h"
 #include <memory>
 #include "../MXLib/MXDraw.h"
 #include "../MXLib/MXWorld.h"
@@ -88,7 +89,7 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 	menu1Music.Play();*/
 
 	
-	
+	SoundBank::Initialize();
 	
 	shared_ptr<MX::Liner> liner = shared_ptr<MX::Liner>(MX::Liner::Create(draw1));
 	liner->SetAntialias(true);
@@ -99,8 +100,8 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 	srand(MX::World::GetTick());
 
 
-
-	InitializeGame(draw1,spriter, General_Scene.get());
+	InitializeDemo(draw1,spriter, General_Scene.get());
+	//InitializeGame(draw1,spriter, General_Scene.get());
 	//InitializeTitle(draw1,spriter, General_Scene.get());
 
 

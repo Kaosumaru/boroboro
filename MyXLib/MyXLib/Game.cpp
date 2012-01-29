@@ -235,7 +235,7 @@ shared_ptr<MX::Animation> CreateAnimationFromFile(wchar_t* file, int number, DWO
 		//	return;
 		//player->headonColCounter = 5;
 
-		if(this->scaleX >= 0.4 && !player->pentakill)
+		if((this->head && this->scaleX >= 0.4) && !player->pentakill)
 		{
 			v2d normal = normalized(player->pos - pos);
 			player->bounce(normal);
@@ -300,7 +300,7 @@ shared_ptr<MX::Animation> CreateAnimationFromFile(wchar_t* file, int number, DWO
 		{
 			int oldLength = head->GetLength();
 			head->RecalcLength();
-			if(oldLength - head->GetLength() > 8);
+			if(oldLength - head->GetLength() > 8)
 			    SoundBank::no_ass.Play();
 		}
 
@@ -308,8 +308,10 @@ shared_ptr<MX::Animation> CreateAnimationFromFile(wchar_t* file, int number, DWO
 	}
 
 	
-	Player::Player(const v2d& p, float d, bool alternative) : Shield(10000)
+	Player::Player(const v2d& p, float d, bool alternative, int len) : Shield(10000)
 	{
+		rotation_proportion = 75.0f;
+		MovType = NormalControl;
 		pentakill = false;
 
 		item_pos.x = 80;
@@ -344,35 +346,28 @@ shared_ptr<MX::Animation> CreateAnimationFromFile(wchar_t* file, int number, DWO
 		animation = make_shared<SpecificAnimation>(AlternativeLook ? GraphicRes.snake_head2 : GraphicRes.snake_head);
 		animation->Start();
 
-		for(int i =0; i<30; ++i)
+		for(int i =0; i<len; ++i)
 			AddBodypart();
 	}
 
 	void Player::calculate_playerspeed()
 	{
-		Rotation_Speed = GetSpeed() / 75.0f;
+		Rotation_Speed = GetSpeed() / rotation_proportion;
 	}
 
 
 	void Player::KeyoardNavigate()
 	{
 		calculate_playerspeed();
-		if (World::Key[KeyLeft])
-		{
+		if (World::Key[KeyLeft] || MovType == ForceLeft)
 			rotation -= Rotation_Speed * World::GetElapsedFloat();
-		}
-		else if (World::Key[KeyRight])
-		{
+		else if (World::Key[KeyRight] || MovType == ForceRight)
 			rotation += Rotation_Speed * World::GetElapsedFloat();
-		}
-		else if (World::Key[KeyUse] && Item)
+
+		if (World::Key[KeyUse] && Item)
 		{
 			Item->Use(scene, this);
 			Item = NULL;
-		}
-		else if (World::Key[KeyShield])
-		{
-
 		}
 	}
 
@@ -486,7 +481,7 @@ void InitializeGame(const shared_ptr<MX::Draw> &_draw, const shared_ptr<MX::Spri
 	spriter = _spriter;
 	scene = _scene;
 
-	SoundBank::Initialize();
+	
 
 
 
@@ -503,10 +498,12 @@ void InitializeGame(const shared_ptr<MX::Draw> &_draw, const shared_ptr<MX::Spri
 	
 	scene->AddActor(player1);
 
+
 	player2->KeyLeft = 'A';
 	player2->KeyRight = 'D';
 	player2->KeyUse = 'W';
 	player2->KeyShield = 'S';
+
 
 	player2->item_pos.x = 1200;
 
@@ -516,6 +513,107 @@ void InitializeGame(const shared_ptr<MX::Draw> &_draw, const shared_ptr<MX::Spri
 	scene->AddActor(make_shared<MX::Flower1>());
 
 	InitHighscore(draw, spriter, scene, player1, player2);
+
+}
+
+
+class PentagramTitle : public ActorSprite
+{
+public:
+	PentagramTitle(const std::shared_ptr<MX::Spriter> &s)
+	{
+		color = 0x00FFFFFF;
+		spriter = s;
+
+		pos.x = 640.0f;
+		pos.y = 400.0f;
+		z = 0.9f;
+
+		scaleX = 4.0f;
+		scaleY = 4.0f;
+
+		animation = make_shared<SpecificAnimation>(GraphicRes.pentagram);
+		animation->Start();
+
+		OnDo.connect(q(wait(3500), warp_scale(0.5f, 0.5f, 500)));
+		OnDo.connect(q(wait(3500), lerp_color(0xFFFFFFFF, 4000)));
+		//OnDo.connect(q(wait(3500), lerp_color(0xFFFFFFFF, 4000)));
+
+		/*
+		auto loop = make_shared<LoopCommand> ();
+		loop->AddCommand(make_shared<WarpScaleCommand>(0.23f, 0.23f, 250));
+		loop->AddCommand(make_shared<WarpScaleCommand>(0.2f, 0.2f, 250));
+		OnDo.connect(loop);*/
+	}
+	void Do(){
+		rotation +=  0.005 * World::GetElapsedTime();
+		ActorSprite::Do();
+		GraphicRes.pentagram_static->Animate(*spriter, pos.x, pos.y, z , 0.0f, scaleX, scaleY, color);
+	}
+
+	std::shared_ptr<MX::Spriter> spriter;
+
+};
+
+
+class TitleEnd : public Actor
+{
+public:
+	void Do()
+	{
+		Actor::Do();
+		if (World::Key[VK_RETURN])
+		{
+			scene->KillAll();
+			InitializeGame(draw, spriter, scene);
+		}
+	}
+};
+
+
+void InitializeDemo(const shared_ptr<MX::Draw> &_draw, const shared_ptr<MX::Spriter> &_spriter, MX::Scene *_scene)
+{
+	draw = _draw;
+	spriter = _spriter;
+	scene = _scene;
+
+	float cent = 640.0f, dist = 200.0f;
+	auto player1 = make_shared<MX::Player>(v2d(cent-dist, 400.0f), 1.57f, false, 27);
+	auto player2 = make_shared<MX::Player>(v2d(cent+dist, 400.0f), -1.57f, true, 27);
+
+
+	player1->KeyLeft = 0;
+	player1->KeyRight = 0;
+	player1->KeyUse = 0;
+	player1->KeyShield = 0;
+	player1->rotation_proportion = 200.0f;
+
+
+	player2->KeyLeft = 0;
+	player2->KeyRight = 0;
+	player2->KeyUse = 0;
+	player2->KeyShield = 0;
+	player2->rotation_proportion = 200.0f;
+
+
+	player1->MovType = Player::ForceLeft;
+	player2->MovType = Player::ForceLeft;
+
+
+	_scene->AddActor(player1);
+	_scene->AddActor(player2);
+	_scene->AddActor(make_shared<PentagramTitle>(_spriter));
+
+	
+
+	auto press_enter = make_shared<ActorSprite>(CreateAnimationFromFile(L"images\\pressenter", 2, 450, 256, 64));
+	press_enter->color = 0x00FFFFFF;
+	press_enter->OnDo.connect(q(wait(4500), lerp_color(0xFFFFFFFF, 4000)));
+	press_enter->pos.x = 640.0f;
+	press_enter->pos.y = 700.0f;
+	_scene->AddActor(press_enter);
+
+	_scene->AddActor(make_shared<TitleEnd>());
 
 }
 
