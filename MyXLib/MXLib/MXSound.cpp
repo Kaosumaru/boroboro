@@ -69,10 +69,19 @@ Channel Sample::GetChannel(bool override)
 
 void Sample::Play(bool override)
 {
+
 	Channel c;
 	c.handle = BASS_SampleGetChannel(handle, !override);
 	if (c.IsValid())
 		c.Play();
+}
+
+void Sample::Stop()
+{
+	Channel c;
+	c.handle = BASS_SampleGetChannel(handle, true);
+	if (c.IsValid())
+		c.Stop();
 }
 
 bool Sound::init = false;

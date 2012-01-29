@@ -318,6 +318,29 @@ shared_ptr<MX::Animation> CreateAnimationFromFile(wchar_t* file, int number, DWO
 		Die();
 	}
 
+
+	class PlayerTongue : public ActorSprite
+	{
+	public:
+		PlayerTongue(const shared_ptr<ActorSprite> &pA) : ActorSprite(GraphicRes.snake_tongue) 
+		{
+			pActor = pA;
+			z = pActor->z+0.1f;
+			pos.x = 640.0f;
+			pos.y = 400.0f;
+		}
+
+		void Do()
+		{
+			pos = pActor->pos;
+			rotation = pActor->rotation;
+			pos = pos + dirVec(rotation) * 64.0f;
+			ActorSprite::Do();
+		}
+	protected:
+		shared_ptr<ActorSprite> pActor;
+	};
+
 	
 	Player::Player(const v2d& p, float d, bool alternative, int len) : Shield(10000)
 	{
@@ -326,8 +349,8 @@ shared_ptr<MX::Animation> CreateAnimationFromFile(wchar_t* file, int number, DWO
 		MovType = NormalControl;
 		pentakill = false;
 
-		item_pos.x = 80;
-		item_pos.y = 695;
+		item_pos.x = 370;
+		item_pos.y = 770;
 
 		headonColCounter=0;
 		length = 0;
@@ -360,6 +383,8 @@ shared_ptr<MX::Animation> CreateAnimationFromFile(wchar_t* file, int number, DWO
 
 		for(int i =0; i<len; ++i)
 			AddBodypart();
+
+
 	}
 
 	void Player::calculate_playerspeed()
@@ -491,6 +516,8 @@ shared_ptr<MX::Player> player1, player2;
 
 void InitializeGame(const shared_ptr<MX::Draw> &_draw, const shared_ptr<MX::Spriter> &_spriter, MX::Scene *_scene)
 {
+	SoundBank::AmbientSound.Stop();
+
 	_scene->KillAll();
 	draw = _draw;
 	spriter = _spriter;
@@ -520,7 +547,7 @@ void InitializeGame(const shared_ptr<MX::Draw> &_draw, const shared_ptr<MX::Spri
 	player2->KeyShield = 'S';
 
 
-	player2->item_pos.x = 1200;
+	player2->item_pos.x = 900;
 
 
 	scene->AddActor(player2);
@@ -658,6 +685,7 @@ public:
 
 void InitializeDemo(const shared_ptr<MX::Draw> &_draw, const shared_ptr<MX::Spriter> &_spriter, MX::Scene *_scene)
 {
+//	SoundBank::AmbientSound.Play();
 	draw = _draw;
 	spriter = _spriter;
 	scene = _scene;
@@ -684,6 +712,9 @@ void InitializeDemo(const shared_ptr<MX::Draw> &_draw, const shared_ptr<MX::Spri
 	player1->MovType = Player::ForceLeft;
 	player2->MovType = Player::ForceLeft;
 
+
+	//_scene->AddActor(make_shared<PlayerTongue>(player1));
+	//_scene->AddActor(make_shared<PlayerTongue>(player2));
 
 	_scene->AddActor(player1);
 	_scene->AddActor(player2);

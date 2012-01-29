@@ -29,6 +29,10 @@ void SoundBank::Initialize()
 	bump.AddSound(SoundSample::CreateSample(L"sounds\\bing.wav"));
 
 	flame.AddSound(SoundSample::CreateSample(L"sounds\\flamewind2.wav"));
+
+
+//	AmbientSound = SoundSample::CreateSample(L"sounds\\AmbientSound.wav");
+	AmbientSound.LoadStream(L"sounds\\AmbientSound.wav");
 }
 
 SoundSample SoundBank::hissing;
@@ -39,3 +43,5 @@ SoundSample SoundBank::put_shit;
 SoundSample SoundBank::no_ass;
 SoundSample SoundBank::bump;
 SoundSample SoundBank::flame;
+
+Stream SoundBank::AmbientSound;

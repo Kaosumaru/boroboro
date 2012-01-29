@@ -140,6 +140,7 @@ void InitHighscore(const shared_ptr<MX::Draw> &draw, const shared_ptr<MX::Sprite
 	MX::digits = make_shared<MX::Image>();
 	MX::digits->Load( *draw, L"images\\digits.png");
 
+/*
 	auto hi1 = make_shared<MX::HiPoints>(player1);
 	hi1->pos.x = 35;
 	hi1->pos.y = 745;
@@ -154,6 +155,22 @@ void InitHighscore(const shared_ptr<MX::Draw> &draw, const shared_ptr<MX::Sprite
 	hi2->z = 0.0f;
 	hi2->color = 0xFFFF0000;
 	MX::scene->AddActor(hi2);
+	*/
+	auto hi1 = make_shared<MX::HiPoints>(player1);
+	hi1->pos.x = 430;
+	hi1->pos.y = 750;
+	hi1->z = 0.0f;
+	hi1->color = 0xFF00FF00;
+	MX::scene->AddActor(hi1);
+
+
+	auto hi2 = make_shared<MX::HiPoints>(player2);
+	hi2->pos.x = 700;
+	hi2->pos.y = 750;
+	hi2->z = 0.0f;
+	hi2->color = 0xFFFF0000;
+	MX::scene->AddActor(hi2);
+
 
 	auto time = make_shared<MX::TimeLimit>();
 	time->pos.x = 550;

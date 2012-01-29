@@ -22,6 +22,7 @@ namespace MX
 		Channel GetChannel(bool override = true);
 	
 		void Play(bool override = true);
+		void Stop();
 
 	protected:
 		DWORD handle;
