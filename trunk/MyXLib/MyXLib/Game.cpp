@@ -527,7 +527,7 @@ void InitializeGame(const shared_ptr<MX::Draw> &_draw, const shared_ptr<MX::Spri
 class WinInfo : public ActorSprite
 {
 public:
-	WinInfo() : ActorSprite(CreateAnimationFromFile(L"images\\draw.png")) 
+	WinInfo(int res) : ActorSprite(CreateAnimationFromFile(res == 0 ? L"images\\draw.png" : res == 1 ? L"images\\player1win.png" : L"images\\player2win.png")) 
 	{
 		z = 0.5f;
 		pos.x = 640.0f;
@@ -549,9 +549,9 @@ public:
 class EndGamer : public ActorSprite
 {
 public:
-	EndGamer(bool bFirst) : ActorSprite(CreateAnimationFromFile(L"images\\BlackFire.png"))
+	EndGamer(int res) : ActorSprite(CreateAnimationFromFile(L"images\\BlackFire.png"))
 	{
-		FirstPlayerWin = bFirst;
+		result = res;
 		color = 0x00FFFFFF;
 		OnDo.connect(q(lerp_color(0xFFFFFFFF, 4000)));
 		OnDo.connect(q(warp_scale(60.0f, 60.0f, 4000), die()));
@@ -566,7 +566,7 @@ public:
 		player1 = NULL;
 		player2 = NULL;
 
-		auto info = make_shared<WinInfo>();
+		auto info = make_shared<WinInfo>(result);
 
 		//if (FirstPlayerWin)
 
@@ -575,14 +575,19 @@ public:
 	}
 
 protected:
-	bool FirstPlayerWin;
+	int result;
 };
 
 void EndGame()
 {
-	bool bFirstWin = player1->score > player2->score;
+	int nResult = 0;
+	if (player1->score > player2->score)
+		nResult = 1;
+	if (player1->score < player2->score)
+		nResult = 2;
 
-	scene->AddActor( make_shared<EndGamer>(bFirstWin) );
+
+	scene->AddActor( make_shared<EndGamer>(nResult) );
 
 }
 
