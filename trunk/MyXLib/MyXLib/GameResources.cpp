@@ -11,12 +11,17 @@ GraphicResources::GraphicResources()
 
 void GraphicResources::Init(MX::Draw &draw)
 {
-	snake_head = MX::CreateAnimationFromFile(draw, L"images\\wonsz\\WonszGlowa.png");
+	//snake_head = MX::CreateAnimationFromFile(draw, L"images\\wonsz\\WonszGlowa.png");
+	snake_head = MX::CreateAnimationFromFile(draw, L"images\\wonsz\\head_open\\waz_head_open_", 9, 75, 64, 64);
 
+
+	/*
 	shared_ptr<MX::Image> cross(new MX::Image());
 	bool b = cross->Load( draw, L"images\\wonsz\\WonszGlowa2.png");
 	shared_ptr<MX::Frame> frame(new MX::Frame(cross));
 	snake_head->AddFrame(MX::AnimationFrame(frame, 100, cross->Width()/2.0f, cross->Height()/2.0f));
+	snake_head->frames[0].duration = 8000;*/
+
 	snake_body = MX::CreateAnimationFromFile(draw, L"images\\wonsz\\WonszBody.png");
 
 
@@ -69,6 +74,9 @@ void GraphicResources::Init(MX::Draw &draw)
 	rotten_apple = MX::CreateAnimationFromFile(draw, L"images\\apple2.png");
 
 	poop = MX::CreateAnimationFromFile(draw, L"images\\shit.png");
+
+
+	white_screen = MX::CreateAnimationFromFile(draw, L"images\\white_screen.png");
 
 	
 }
