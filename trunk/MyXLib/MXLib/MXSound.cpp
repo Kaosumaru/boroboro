@@ -139,7 +139,7 @@ bool Music::LoadMusic(const wchar_t *file)
 
 bool Stream::LoadStream(const wchar_t *file)
 {
-	handle = BASS_StreamCreateFile(false, (void*)file, 0, 0, BASS_UNICODE);
+	handle = BASS_StreamCreateFile(false, (void*)file, 0, 0, BASS_SAMPLE_LOOP | BASS_UNICODE);
 	return IsValid();
 }
 

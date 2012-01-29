@@ -93,11 +93,14 @@ public:
 class TimeLimit : public Actor
 {
 public:
-	TimeLimit() : cooldown(1000)
+	TimeLimit(const shared_ptr<MX::Player> &p1, const shared_ptr<MX::Player> &p2) : cooldown(1000)
 	{
-		strcpy(pointstext, "2:00");
+		player1 = p1;
+		player2 = p2;
+
+		strcpy(pointstext, "3:00");
 		elapsed_time = 0;
-		max_time = 120;
+		max_time = 180;
 		end = false;
 	}
 
@@ -108,6 +111,14 @@ public:
 		{
 			elapsed_time ++;
 			int remaining = max_time - elapsed_time;
+
+
+			if (remaining <= 120)
+			{
+				float speed = 150.0f + (float)elapsed_time/(float)max_time * 100.0f;
+				player1->speed = player2->speed = speed;
+			}
+
 			if (remaining >= 0)
 			{
 				if (remaining  == 3)
@@ -134,6 +145,9 @@ public:
 	int max_time;
 	EffectWithGivenCooldown cooldown;
 	char pointstext[256];
+
+	shared_ptr<MX::Player> player1;
+	shared_ptr<MX::Player> player2;
 };
 
 
@@ -177,7 +191,7 @@ void InitHighscore(const shared_ptr<MX::Draw> &draw, const shared_ptr<MX::Sprite
 	MX::scene->AddActor(hi2);
 
 
-	auto time = make_shared<MX::TimeLimit>();
+	auto time = make_shared<MX::TimeLimit>(player1, player2);
 	time->pos.x = 550;
 	time->pos.y = 5;
 	time->z = 0.0f;

@@ -761,6 +761,6 @@ void initGame(const shared_ptr<MX::Draw> &_draw, const shared_ptr<MX::Spriter> &
 	
 	GraphicRes.Init(*_draw);
 
-	MX::GameMusic.LoadStream(L"music\\game.mp3");
+	MX::GameMusic.LoadStream(L"music\\game.mp3" );
 }
 
