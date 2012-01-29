@@ -78,6 +78,10 @@ public:
 
 	std::shared_ptr<MX::Animation> flower1;
 	std::shared_ptr<MX::Animation> flower2;
+	
+	std::shared_ptr<MX::Animation> stone1;
+	
+	
 	std::shared_ptr<MX::Animation> fire;
 
 	std::shared_ptr<MX::Animation> background;

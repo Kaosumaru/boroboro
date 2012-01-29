@@ -55,7 +55,25 @@ public:
 	}
 };
 
-
+class Stone1 : public Collidable
+{
+public:
+	Stone1(const v2d& p)
+	{
+		pos = p;
+		scaleX = 0.5f;
+		scaleY = 0.5f;
+		animation = make_shared<SpecificAnimation>(GraphicRes.stone1);
+		animation->Start();
+	}
+	
+	virtual void onEat(Player* player) override
+	{
+		v2d normal = normalized(player->pos - pos);
+		player->bounce(normal);
+		return;
+	}
+};
 
 
 class GameBackground : public ActorSprite
@@ -311,6 +329,7 @@ void InitBackground(MX::Scene *scene, const shared_ptr<MX::Spriter> &spriter)
 
 
 	scene->AddActor(make_shared<Flower1>());
+	scene->AddActor(make_shared<Stone1>(v2d(600.0f, 600.0f)));
 	scene->AddActor(make_shared<GameBackground>());
 	scene->AddActor(make_shared<BerrySpawner>());
 	scene->AddActor(make_shared<BonusSpawner>());
