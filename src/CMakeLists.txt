@@ -63,6 +63,7 @@ endif(MSVC)
 if (EMSCRIPTEN)
   set(CMAKE_EXECUTABLE_SUFFIX ".html")
   add_definitions("-std=c++14")
+  set(MX_LINK_FLAGS "${MX_LINK_FLAGS} -s TOTAL_MEMORY=67108864" )
 endif(EMSCRIPTEN)
 
 include_directories(${PROJECT_SOURCE_DIR})
