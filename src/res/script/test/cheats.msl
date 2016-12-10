@@ -1,0 +1,12 @@
+{
+	Game.Cheats.Bindings:
+	{
+		Keys!:
+		{
+			k: Event.Sprite.CreateSprite()
+			{
+				Sprite: &Test.NewConcept
+			}
+		}
+	}
+}
