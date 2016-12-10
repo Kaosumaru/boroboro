@@ -60,7 +60,7 @@ public:
 
 	void OnRender() override
 	{
-		MX::gl::Clear({ 1.0f, 0.0f, 0.0f, 1.0f });
+		MX::gl::Clear({ 0.0f, 0.0f, 0.0f, 1.0f });
 
 		TestManager::get().Draw();
 	}

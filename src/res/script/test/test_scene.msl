@@ -1,17 +1,56 @@
 {
-  Test.Scene.Actors:
-  [
-    &Test.Logo
-  ]
+	Test.Scene.Actors:
+	[
+		&Intro.Intro
+	]
 
-  Res.Images:
-  {
-    Logo1: Image.Image()[ "images/wielki_pixel.png" ]
-  }
-  
-  Test:
-  {
-    Logo: Sprite.Image()[ &Res.Images.Logo1 ]
 
-  }
+	Intro:
+	{
+		Res:
+		{
+			Logo1: Image.Image()[ "images/wielki_pixel.png" ]
+			Logo2: Image.Image()[ "images/wielki_pixel2.png" ]
+			Sound: Sound.Sample()[ "sounds/AmbientSound.ogg" ]
+		}
+		//Logo1: Sprite.Image()[ &Intro.Res.Logo1 ]
+		//Logo1: Sprite.Image()[ &Intro.Res.Logo1 ]
+
+		Intro: Sprite.Scene()
+		[
+			Sprite.Image()
+			{
+				Image: &Intro.Res.Logo1
+				Geometry.Color: [1,1,1,0]
+				On.Run:
+				[
+					Command.Queue()
+					[
+						Command.PlaySound()[ &Intro.Res.Sound ]
+						Command.Wait(){ Time:1 }
+						Command.LerpColor(){ Color1:[1,1,1,0] Color2:[1,1,1,1] Time:5 }
+						Command.LerpColor(){ Color1:[1,1,1,1] Color2:[1,1,1,0] Time:3 }
+						Command.Unlink()[]
+					]
+				]
+			}
+			Sprite.Image()
+			{
+				Image: &Intro.Res.Logo2
+				Geometry.Color: [1,1,1,0]
+				On.Run:
+				[
+					Command.Queue()
+					[
+						Command.Wait(){ Time:5 }
+						Command.LerpColor(){  Color1:[1,1,1,0] Color2:[1,1,1,1] Time:1 }
+						Command.Wait(){ Time:3 }
+						Command.Unlink()[]
+					]
+				]
+			}
+		]
+
+
+	}
 }
