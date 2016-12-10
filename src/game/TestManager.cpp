@@ -63,7 +63,6 @@ void TestManager::reloadScripts()
 
     for (auto &actor : arr)
         AddActor(actor);
-
 }
 
 
@@ -72,26 +71,6 @@ void TestManager::reloadScripts()
 void TestManager::Draw(float x, float y)
 {
 	DisplaySceneTimer::Draw(x, y);
-
-    {
-        static std::shared_ptr<Graphic::TextureImage> text;
-        static std::shared_ptr<Graphic::TextureImage> html;
-		static std::shared_ptr<Sound::Sample> sample;
-        if ( !text )
-        {
-            text = MX::Graphic::Font::CreateDefault()->DrawTextOnBitmap( L"Hello world! gjkqx" );
-            html = MX::HTMLRendererFreetype::DrawOnBitmap( L"<b>T</b>est Test<br/>Test", 200 );
-			sample = MX::Resources::get().loadSound("sounds/clang.wav");
-			sample->Play();
-        }
-
-        //auto g = Graphic::Blender::defaultPremultiplied().Use();
-        {
-            MX::Graphic::TextureRenderer::Context guard(Graphic::Renderers::get().textRenderer());
-            text->Draw({});
-        }
-        html->Draw({0, 200});
-    }
 }
 
 
