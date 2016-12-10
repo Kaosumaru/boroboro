@@ -1,0 +1,42 @@
+attribute vec2 squareVertices;
+attribute vec4 xywh; // Position of the center of the particule and size of the square
+attribute vec4 instance_color;
+attribute float instance_angle;
+attribute vec2 instance_center;
+attribute vec4 instance_uv;
+
+uniform mat4 MVP;
+
+// Output data ; will be interpolated for each fragment.
+varying vec2 UV;
+varying vec4 color;
+varying vec4 UV_margins;
+
+void mx_glposition_instanced_vertex()
+{
+	vec2 pos;
+
+	vec2 up = vec2(sin(instance_angle), -cos(instance_angle));
+	vec2 left = vec2(up.y, -up.x);
+
+	//for left side x = instance_center.x, for right x = instance_center - xywh.z
+	//same for top/bottom
+	vec2 distance_from_center = instance_center - xywh.zw * squareVertices;
+
+	up *= distance_from_center.y;
+	left *= distance_from_center.x;
+
+	pos = xywh.xy + up + left;
+
+	gl_Position = MVP * vec4(pos.x,pos.y,0.0,1.0);
+
+	UV.x = mix(instance_uv[0], instance_uv[2], squareVertices.x);
+	UV.y = mix(instance_uv[1], instance_uv[3], squareVertices.y);
+}
+
+void main()
+{
+	UV_margins = instance_uv;
+	mx_glposition_instanced_vertex();
+	color = instance_color;
+}
