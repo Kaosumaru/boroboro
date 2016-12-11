@@ -1,0 +1,124 @@
+#include "GameManager.h"
+#include "application/Application.h"
+#include "Game/Resources/Paths.h"
+#include "Game/Resources/Resources.h"
+#include "Script/Script.h"
+#include "Script/ScriptObject.h"
+#include "Application/Window.h"
+#include <iostream>
+
+#include "Widgets/Widget.h"
+#include "Widgets/Layouters/StackWidget.h"
+#include "Widgets/Label.h"
+#include "Widgets/Controllers/ListController.h"
+#include "Widgets/Layouters/SimpleLayouters.h"
+#include "Widgets/Layouters/ScriptLayouters.h"
+
+#include "Devices/Keyboard.h"
+
+#include "Widgets/Animations/Animations.h"
+
+
+using namespace MX;
+using namespace Boro;
+using namespace std;
+
+
+class GameScene : public MX::FullscreenDisplayScene, public MX::SignalTrackable
+{
+public:
+	GameScene()
+	{
+		MX::Window::current().keyboard()->on_specific_key_down[SDL_SCANCODE_SPACE].connect([&]() { End(); }, this);
+
+		std::shared_ptr<SpriteActor> sprite;
+		ScriptObjectString script("Game");
+		script.load_property(sprite, "Background");
+		AddActor(sprite);
+	}
+
+	void End();
+protected:
+};
+
+
+class MenuScene : public MX::FullscreenDisplayScene, public MX::SignalTrackable
+{
+public:
+	MenuScene()
+	{
+		MX::Window::current().keyboard()->on_specific_key_down[SDL_SCANCODE_RETURN].connect([&]() { End(); }, this);
+
+		std::shared_ptr<SpriteActor> sprite;
+		ScriptObjectString script("Menu");
+		script.load_property(sprite, "Menu");
+		AddActor(sprite);
+	}
+
+	void End()
+	{
+		Sound::Sample::StopAll();
+		auto game = std::make_shared<GameScene>();
+		SpriteSceneStackManager::manager_of(this)->SelectScene(game);
+	}
+protected:
+};
+
+
+void GameScene::End()
+{
+	auto menu = std::make_shared<MenuScene>();
+	SpriteSceneStackManager::manager_of(this)->SelectScene(menu);
+}
+
+
+class IntroScene : public MX::FullscreenDisplayScene, public MX::SignalTrackable
+{
+public:
+	IntroScene()
+    {
+		MX::Window::current().keyboard()->on_specific_key_down[SDL_SCANCODE_RETURN].connect([&]() { End(); }, this);
+		MX::Window::current().keyboard()->on_specific_key_down[SDL_SCANCODE_SPACE].connect([&]() { End(); }, this);
+
+		std::shared_ptr<SpriteActor> sprite;
+		ScriptObjectString script("Intro");
+		script.load_property(sprite, "Intro");
+		AddActor(sprite);
+    }
+
+	void Run() override
+	{
+		MX::FullscreenDisplayScene::Run();
+		if (empty())
+			End();
+	}
+
+	void End()
+	{
+		auto menu = std::make_shared<MenuScene>();
+		SpriteSceneStackManager::manager_of(this)->SelectScene(menu);
+	}
+protected:
+};
+
+
+
+
+GameManager::GameManager()
+{
+    auto intro = std::make_shared<IntroScene>();
+	SelectScene(intro);
+
+#ifndef MX_GAME_RELEASE
+//    menu->OnGame(1, false);
+#endif
+}
+
+
+
+
+
+
+
+
+

@@ -19,6 +19,7 @@
 #include "utils/ListFiles.h"
 
 #include "Game/TestManager.h"
+#include "Game/GameManager.h"
 
 class Bootstrap : public MX::App
 {
@@ -62,12 +63,12 @@ public:
 	{
 		MX::gl::Clear({ 0.0f, 0.0f, 0.0f, 1.0f });
 
-		TestManager::get().Draw();
+		Boro::GameManager::get().Draw();
 	}
 
 	void OnLoop() override
 	{
-		TestManager::get().Run();
+		Boro::GameManager::get().Run();
 	}
 };
 

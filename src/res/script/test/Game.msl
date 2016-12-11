@@ -1,0 +1,18 @@
+{
+	Game:
+	{
+		Res:
+		{
+			BG: Image.Image()[ "images/background2.png" ]
+			FG: Image.Image()[ "images/foreground2.png" ]
+		}
+		//Logo1: Sprite.Image()[ &Intro.Res.Logo1 ]
+		//Logo1: Sprite.Image()[ &Intro.Res.Logo1 ]
+
+		Background: Sprite.Scene()
+		[
+			Sprite.Image()[ &Game.Res.BG ]
+			Sprite.Image()[ &Game.Res.FG ]
+		]
+	}
+}

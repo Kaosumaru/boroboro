@@ -1,0 +1,111 @@
+{
+	Menu:
+	{
+		Res:
+		{
+			BG: Image.Image()[ "images/bkg.png" ]
+			Title: Image.Image( Center:true )[ "images/boroboro.png" ]
+			PentagramStatic: Image.Image( Center:true )[ "images/pentagram.png" ]
+			Pentagram: Image.Image( Center:true )[ "images/pentagram2.png" ]
+			PressEnter: Animation.AnimationFromFiles()
+			{
+				Frame_duration: 0.450
+				Frame_Pivot: [256 64]
+				Frames:
+				[
+					"images/pressenter1.png"
+					"images/pressenter2.png"
+				]
+			}
+		}
+		//Logo1: Sprite.Image()[ &Intro.Res.Logo1 ]
+		//Logo1: Sprite.Image()[ &Intro.Res.Logo1 ]
+
+		Menu: Sprite.Scene()
+		[
+			Sprite.Image()[ &Menu.Res.BG ]
+
+			//-------------------
+			Sprite.Image()
+			{
+				Image: &Menu.Res.Title
+				Geometry.Position: [640 150]
+				Geometry.Color: [1 1 1 0]
+				On.Run:
+				[
+					Command.Queue()
+					[
+						Command.Wait(){ Time:4 }
+						Command.LerpColor(){ Color1:[1,1,1,0] Color2:[1,1,1,1] Time:4 }
+					]
+					Command.Loop()
+					[
+						Command.WarpScale(){ Scale:[1.075, 1.075] Time:0.5}
+						Command.WarpScale(){ Scale:[1, 1] Time:0.5}
+					]
+				]
+			}
+
+			//-------------------
+			Sprite.Image()
+			{
+				Image: &Menu.Res.PentagramStatic
+				Geometry.Position: [640 400]
+				Geometry.Color: [1 1 1 0]
+				Geometry.Scale: [4 4]
+				On.Run:
+				[
+					Command.Queue()
+					[
+						Command.Wait(){ Time:3.5 }
+						Command.LerpColor(){ Color1:[1,1,1,0] Color2:[1,1,1,1] Time:4 }
+					]
+					Command.Loop()
+					[
+						Command.Wait(){ Time:3.5 }
+						Command.WarpScale(){ Scale:[0.5, 0.5] Time:0.5}
+					]
+					Command.Rotate()[ 5 ]
+				]
+			}
+
+			//-------------------
+			Sprite.Image()
+			{
+				Image: &Menu.Res.Pentagram
+				Geometry.Position: [640 400]
+				Geometry.Color: [1 1 1 0]
+				Geometry.Scale: [4 4]
+				On.Run:
+				[
+					Command.Queue()
+					[
+						Command.Wait(){ Time:3.5 }
+						Command.LerpColor(){ Color1:[1,1,1,0] Color2:[1,1,1,1] Time:4 }
+					]
+					Command.Loop()
+					[
+						Command.Wait(){ Time:3.5 }
+						Command.WarpScale(){ Scale:[0.5, 0.5] Time:0.5}
+					]
+				]
+			}
+
+			//-------------------
+			Sprite.Animation()
+			{
+				Geometry.Position: [640 700]
+				Animation: &Menu.Res.PressEnter
+				Geometry.Color: [1 1 1 0]
+				On.Run:
+				[
+					Command.Queue()
+					[
+						Command.Wait(){ Time:4.5 }
+						Command.LerpColor(){ Color1:[1,1,1,0] Color2:[1,1,1,1] Time:4 }
+					]
+				]
+			}
+		]
+	}
+}
