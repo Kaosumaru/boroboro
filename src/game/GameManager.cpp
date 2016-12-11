@@ -17,7 +17,7 @@
 #include "Devices/Keyboard.h"
 
 #include "Widgets/Animations/Animations.h"
-
+#include "main/Player.h"
 
 using namespace MX;
 using namespace Boro;
@@ -29,16 +29,36 @@ class GameScene : public MX::FullscreenDisplayScene, public MX::SignalTrackable
 public:
 	GameScene()
 	{
+		
 		MX::Window::current().keyboard()->on_specific_key_down[SDL_SCANCODE_SPACE].connect([&]() { End(); }, this);
 
+		CreateLayer("Background");
+		
+		_world = std::make_shared<BaseGraphicSceneScriptable>();
+		AddActor(_world);
+		auto scene_guard = Context<MX::SpriteScene, Boro::World_Tag>::Lock(*_world);
+
+		CreateLayer("Game");
+		CreateLayer("Foreground");
+	}
+
+	void CreateLayer(const std::string &name)
+	{
 		std::shared_ptr<SpriteActor> sprite;
 		ScriptObjectString script("Game");
-		script.load_property(sprite, "Background");
+		script.load_property(sprite, name);
 		AddActor(sprite);
+	}
+
+	void Run() override
+	{
+		auto scene_guard = Context<MX::SpriteScene, Boro::World_Tag>::Lock(*_world);
+		MX::FullscreenDisplayScene::Run();
 	}
 
 	void End();
 protected:
+	std::shared_ptr<SpriteScene> _world;
 };
 
 
@@ -106,8 +126,13 @@ protected:
 
 GameManager::GameManager()
 {
+#ifdef _DEBUG
+	auto game = std::make_shared<GameScene>();
+	SelectScene(game);
+#else
     auto intro = std::make_shared<IntroScene>();
 	SelectScene(intro);
+#endif
 
 #ifndef MX_GAME_RELEASE
 //    menu->OnGame(1, false);

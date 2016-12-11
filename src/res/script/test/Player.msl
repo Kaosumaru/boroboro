@@ -1,0 +1,48 @@
+{
+	Boro.Player:
+	{
+		Res:
+		{
+			Head: Animation.AnimationFromFiles()
+			{
+				Frame_duration: 0.075
+				Frame_pivot: [64 64]
+				Frames_count: 9
+				Frames_offset: 1
+				Filename_template: "images/wonsz/head_open/waz_head_open_%d.png"
+			}
+			Body: Image.Image( Center:true )[ "images/wonsz/WonszBody.png" ]
+		}
+		//Logo1: Sprite.Image()[ &Intro.Res.Logo1 ]
+		//Logo1: Sprite.Image()[ &Intro.Res.Logo1 ]
+
+		Default: Boro.Player()
+		{
+			Animation: &<Player>.Res.Head
+			Body: &<Player>.Res.Body
+			Geometry.Position: [150 400]
+			Geometry.Scale: [0.8 0.65]
+			Geometry.Angle: 3.14
+			Radius: 24
+
+			Item.Pos: [370 770]
+
+			Length:30
+
+			Controller: Boro.Controller.Key()
+			{
+				Left: 4 //A
+				Right: 7 //D
+				Use: 26 //W
+			}
+/*
+			Controller: Boro.Controller.Key()
+			{
+				Left: 80
+				Right: 79
+				Use: 82
+			}
+*/
+		}
+	}
+}

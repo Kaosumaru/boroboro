@@ -10,7 +10,7 @@
 			PressEnter: Animation.AnimationFromFiles()
 			{
 				Frame_duration: 0.450
-				Frame_Pivot: [256 64]
+				Frame_pivot: [256 64]
 				Frames:
 				[
 					"images/pressenter1.png"

@@ -20,6 +20,7 @@
 
 #include "Game/TestManager.h"
 #include "Game/GameManager.h"
+#include "Game/GameInitializer.h"
 
 class Bootstrap : public MX::App
 {
@@ -56,6 +57,7 @@ public:
 		OpenMainWindow(1280, 800, false);
 
 		MX::Window::current().keyboard()->on_specific_key_down[SDL_SCANCODE_ESCAPE].static_connect([&]() { Quit(); });
+		Boro::GameInitializer::Init();
 		MX::ScriptInitializer::ReloadScripts();
 	}
 
