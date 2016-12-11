@@ -16,6 +16,7 @@
 		Game: Sprite.Scene()
 		[
 			&Boro.Player.Default
+			&Boro.Player.Red
 		]
 
 		Foreground: Sprite.Scene()
