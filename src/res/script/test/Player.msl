@@ -35,6 +35,10 @@
 				Right: 7 //D
 				Use: 26 //W
 			}
+
+			Sound.NoAss: Sound.Sample()[ "sounds/niemamdupy.ogg" ]
+			Sound.Bump: Sound.Sample()[ "sounds/bing.ogg" ]
+			Sound.Bite: Sound.Sample()[ "sounds/bite.ogg" ]
 /*
 			Controller: Boro.Controller.Key()
 			{

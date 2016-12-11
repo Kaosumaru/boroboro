@@ -145,9 +145,9 @@ namespace Boro
 			player->AddBodypart();
 #endif
 
-#ifdef WIP
-		SoundBank::snake_bite.Play();
-#endif
+		if (owner && owner->_bite)
+			owner->_bite->Play();
+
 		Urwij();
 	}
 
@@ -196,10 +196,8 @@ namespace Boro
 		{
 			int oldLength = head->GetLength();
 			head->RecalcLength();
-#ifdef WIP
-			if(oldLength - head->GetLength() > 8)
-			    SoundBank::no_ass.Play();
-#endif
+			if(oldLength - head->GetLength() > 8 && owner && owner->_noAss)
+				owner->_noAss->Play();
 		}
 
 		Unlink();
@@ -234,6 +232,13 @@ namespace Boro
 
 		for(int i =0; i<len; ++i)
 			AddBodypart();
+
+
+		{
+			script.load_property(_noAss, "Sound.NoAss");
+			script.load_property(_bite, "Sound.Bite");
+			script.load_property(_bump, "Sound.Bump");
+		}
 	}
 
 	void Player::calculate_playerspeed()
@@ -318,9 +323,8 @@ namespace Boro
 		if(dadot > 0)
 			return;
 
-#ifdef WIP
-		SoundBank::bump.Play();
-#endif
+		if (_bump)
+			_bump->Play();
 
 		auto cross = [](const glm::vec2& v1, const glm::vec2& v2)
 		{

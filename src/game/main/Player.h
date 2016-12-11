@@ -2,6 +2,7 @@
 #include <memory>
 #include "Collidable.h"
 #include "Controller.h"
+#include "sound/Sample.h"
 
 using namespace std;
 
@@ -40,6 +41,7 @@ struct World_Tag {};
 
 class Player : public MX::AnimatedSpriteAdapter<Collidable>
 {
+	friend class PlayerSnake_Body;
 public:
 	typedef enum
 	{
@@ -95,7 +97,11 @@ protected:
 
 	int length = 0;
 	unsigned headonColCounter = 0;
-	void ShieldSelf();
+
+
+	std::shared_ptr<MX::Sound::Sample> _noAss;
+	std::shared_ptr<MX::Sound::Sample> _bite;
+	std::shared_ptr<MX::Sound::Sample> _bump;
 
 #ifdef WIP
 	EffectWithGivenCooldown Shield{10000};
