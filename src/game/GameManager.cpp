@@ -18,6 +18,7 @@
 
 #include "Widgets/Animations/Animations.h"
 #include "main/Player.h"
+#include "main/Pickups.h"
 
 using namespace MX;
 using namespace Boro;
@@ -34,6 +35,10 @@ public:
 		BaseGraphicSceneScriptable::Run();
 		_actors.sort([](auto &a, auto &b)
 		{
+			if (!a)
+				return false;
+			if (!b)
+				return true;
 			return a->geometry.z > b->geometry.z;
 		});
 	}
@@ -74,6 +79,8 @@ public:
 
 		CreateLayer("Game");
 		CreateLayer("Foreground");
+
+		Boro::InitLevel(_world.get());
 	}
 
 	void Run() override

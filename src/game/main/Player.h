@@ -2,6 +2,7 @@
 #include <memory>
 #include "Collidable.h"
 #include "Controller.h"
+#include "Items.h"
 #include "sound/Sample.h"
 
 using namespace std;
@@ -57,6 +58,7 @@ public:
 	void DrawItems();
 	void Move();
 	void AddBodypart();
+	void AddBodypart(int m) { for (int i = 0; i < m; i ++) AddBodypart();  }
 	void Run() override;
 	bool isInNeck(Collidable* c);
 	void bounce(const glm::vec2& normal);
@@ -72,9 +74,8 @@ public:
 	SpriteActor *next_body_part = nullptr;
 	SpriteActor *last_body_part = this;
 
-#ifdef WIP
+
 	shared_ptr<UseItem> Item;
-#endif
 
 	bool invisible = false;
 	bool pentakill = false;

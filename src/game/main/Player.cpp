@@ -239,6 +239,10 @@ namespace Boro
 			script.load_property(_bite, "Sound.Bite");
 			script.load_property(_bump, "Sound.Bump");
 		}
+
+#ifdef _DEBUG
+		Item = std::make_shared<GoodBootleItem>();
+#endif
 	}
 
 	void Player::calculate_playerspeed()
@@ -256,12 +260,10 @@ namespace Boro
 
 		geometry.angle += _controller->direction() * Rotation_Speed * (float)MX::Time::Timer::current().elapsed_seconds();
 
-		if (_controller->useItem())
+		if (_controller->useItem() && Item)
 		{
-#ifdef WIP
-			Item->Use(scene, this);
+			Item->Use(&(world()), this);
 			Item = nullptr;
-#endif
 		}
 	}
 
