@@ -19,4 +19,5 @@ void Boro::GameInitializer::AfterScriptParse()
 {
 	ScriptClassParser::AddCreator(L"Boro.Player", new OutsideScriptClassCreatorContructor<Boro::Player>()); 
 	ScriptClassParser::AddCreator(L"Boro.Controller.Key", new OutsideScriptClassCreatorContructor<Boro::KeyController>()); 
+	ScriptClassParser::AddCreator(L"Boro.Controller.AlwaysLeft", new OutsideScriptClassCreatorContructor<Boro::AlwaysLeftController>()); 
 }

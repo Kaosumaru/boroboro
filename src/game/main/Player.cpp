@@ -12,6 +12,7 @@ namespace Boro
 		before = bef;
 		owner = head = player;
 		butt = nullptr;
+		geometry.z = bef->geometry.z+0.00001f;
 
 		sharpenTail();
 
@@ -152,7 +153,6 @@ namespace Boro
 
 	void PlayerSnake_Body::Urwij()
 	{
-#ifdef WIP
 		if (head)
 		{
 			head->last_body_part = before;
@@ -171,15 +171,18 @@ namespace Boro
 			
 		}
 
+#ifdef WIP
 		if (before)
 			AddBackGore(scene, before);
-
+#endif
 
 		if (butt)
 		{
 			PlayerSnake_Body * body = dynamic_cast<PlayerSnake_Body*>(butt);
 			body->before = NULL;
+#ifdef WIP
 			AddFrontGore(scene, butt);
+#endif
 
 			for(auto next = dynamic_cast<PlayerSnake_Body*>(butt);
 				next != NULL;
@@ -193,12 +196,13 @@ namespace Boro
 		{
 			int oldLength = head->GetLength();
 			head->RecalcLength();
+#ifdef WIP
 			if(oldLength - head->GetLength() > 8)
 			    SoundBank::no_ass.Play();
+#endif
 		}
 
-		Die();
-#endif
+		Unlink();
 	}
 
 	
@@ -215,6 +219,9 @@ namespace Boro
 				animation = Graphic::Animation::Create(single_animation);
 			SetAnimation(animation);
 		}
+
+		
+		script.load_property(rotation_proportion, "RotationProportion");
 
 		script.load_property(_controller, "Controller");
 
@@ -242,7 +249,7 @@ namespace Boro
 		if (!_controller)
 			return;
 
-		geometry.angle += _controller->direction() * (float)MX::Time::Timer::current().elapsed_seconds();
+		geometry.angle += _controller->direction() * Rotation_Speed * (float)MX::Time::Timer::current().elapsed_seconds();
 
 		if (_controller->useItem())
 		{
@@ -326,7 +333,7 @@ namespace Boro
 			return;
 		}
 		glm::vec2 bou = dir - normal * (dadot * 2);
-		float newrot = atan2(bou.y, bou.x);
+		float newrot = MX::angle(bou);
 		geometry.angle = newrot;
 	}
 

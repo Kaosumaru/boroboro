@@ -21,10 +21,31 @@
 		//Logo1: Sprite.Image()[ &Intro.Res.Logo1 ]
 		//Logo1: Sprite.Image()[ &Intro.Res.Logo1 ]
 
-		Menu: Sprite.Scene()
+		Menu.Snakes:Sprite.Scene()
 		[
-			Sprite.Image()[ &Menu.Res.BG ]
+			&Boro.Player.Red()
+			{
+				Controller: Boro.Controller.AlwaysLeft()[]
+				RotationProportion: 200
+				Geometry.Position: [440 400]
+				Geometry.Scale: [0.8 0.65]
+				Geometry.Angle: 3.14
+				Length: 27
+			}
+			&Boro.Player.Default()
+			{
+				Controller: Boro.Controller.AlwaysLeft()[]
+				RotationProportion: 200
+				Geometry.Position: [840 400]
+				Geometry.Scale: [0.8 0.65]
+				Geometry.Angle: 0
+				Length: 27
+			}
+		]
 
+		Menu.Background: Sprite.Image()[ &Menu.Res.BG ]
+		Menu.Foreground: Sprite.Scene()
+		[
 			//-------------------
 			Sprite.Image()
 			{

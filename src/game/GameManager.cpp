@@ -24,30 +24,56 @@ using namespace Boro;
 using namespace std;
 
 
-class GameScene : public MX::FullscreenDisplayScene, public MX::SignalTrackable
+class ZSortedGraphicSceneScriptable : public BaseGraphicSceneScriptable
 {
 public:
-	GameScene()
+	using BaseGraphicSceneScriptable::BaseGraphicSceneScriptable;
+
+	void Run() override
 	{
-		
-		MX::Window::current().keyboard()->on_specific_key_down[SDL_SCANCODE_SPACE].connect([&]() { End(); }, this);
+		BaseGraphicSceneScriptable::Run();
+		_actors.sort([](auto &a, auto &b)
+		{
+			return a->geometry.z > b->geometry.z;
+		});
+	}
+};
 
-		CreateLayer("Background");
-		
-		_world = std::make_shared<BaseGraphicSceneScriptable>();
-		AddActor(_world);
-		auto scene_guard = Context<MX::SpriteScene, Boro::World_Tag>::Lock(*_world);
-
-		CreateLayer("Game");
-		CreateLayer("Foreground");
+class StandardScene : public MX::FullscreenDisplayScene, public MX::SignalTrackable
+{
+protected:
+	StandardScene(const std::string& name) : _name(name)
+	{
 	}
 
 	void CreateLayer(const std::string &name)
 	{
 		std::shared_ptr<SpriteActor> sprite;
-		ScriptObjectString script("Game");
+		ScriptObjectString script(_name);
 		script.load_property(sprite, name);
 		AddActor(sprite);
+	}
+protected:
+	std::string _name;
+};
+
+class GameScene : public StandardScene
+{
+public:
+	GameScene() : StandardScene("Game")
+	{
+#ifdef _DEBUG	
+		MX::Window::current().keyboard()->on_specific_key_down[SDL_SCANCODE_SPACE].connect([&]() { End(); }, this);
+#endif
+
+		CreateLayer("Background");
+		
+		_world = std::make_shared<ZSortedGraphicSceneScriptable>();
+		AddActor(_world);
+		auto scene_guard = Context<MX::SpriteScene, Boro::World_Tag>::Lock(*_world);
+
+		CreateLayer("Game");
+		CreateLayer("Foreground");
 	}
 
 	void Run() override
@@ -62,17 +88,25 @@ protected:
 };
 
 
-class MenuScene : public MX::FullscreenDisplayScene, public MX::SignalTrackable
+class MenuScene  : public StandardScene
 {
 public:
-	MenuScene()
+	MenuScene() : StandardScene("Menu")
 	{
 		MX::Window::current().keyboard()->on_specific_key_down[SDL_SCANCODE_RETURN].connect([&]() { End(); }, this);
 
-		std::shared_ptr<SpriteActor> sprite;
-		ScriptObjectString script("Menu");
-		script.load_property(sprite, "Menu");
-		AddActor(sprite);
+		CreateLayer("Menu.Background");
+		_world = std::make_shared<ZSortedGraphicSceneScriptable>();
+		AddActor(_world);
+		auto scene_guard = Context<MX::SpriteScene, Boro::World_Tag>::Lock(*_world);
+		CreateLayer("Menu.Snakes");
+		CreateLayer("Menu.Foreground");
+	}
+
+	void Run() override
+	{
+		auto scene_guard = Context<MX::SpriteScene, Boro::World_Tag>::Lock(*_world);
+		MX::FullscreenDisplayScene::Run();
 	}
 
 	void End()
@@ -82,6 +116,7 @@ public:
 		SpriteSceneStackManager::manager_of(this)->SelectScene(game);
 	}
 protected:
+	std::shared_ptr<SpriteScene> _world;
 };
 
 

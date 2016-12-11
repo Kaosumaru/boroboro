@@ -4,21 +4,25 @@
 
 void SphereWorld::allUCanEat(Boro::Player* player)
 {
-#ifdef WIP
+	std::vector<Collidable*> matches;
 	for(auto it = collidables.begin(); it!=collidables.end(); ++it)
 	{
+#if 0
 		if (!(*it)->alive)
 			continue;
+#endif
 		if(player->isInNeck(*it) || *it == player)
 			continue;
-		glm::vec2 d = (*it)->pos - player->pos;
+		glm::vec2 d = (*it)->geometry.position - player->geometry.position;
 		float rrit = (*it)->_radius; //(*it)->scaleX*(*it)->scaleX + (*it)->scaleY*(*it)->scaleY;
 		float rrp = player->_radius; //player->scaleX*player->scaleX + player->scaleY*player->scaleY;
-		if(norm(d) < rrit*rrit + rrp*rrp + 2*rrit*rrp)
-			(*it)->onEat(player);
+		if (d.x * d.x + d.y * d.y < rrit*rrit + rrp*rrp + 2 * rrit*rrp)
+			matches.push_back(*it);
 	}
 
-#endif
+	for(auto &m : matches)
+		m->onEat(player);
+
 	static const float MARGIN = 50.0f;
 	static const glm::vec2 bounds = { 1280.0f, 800.0f };
 
@@ -41,14 +45,14 @@ bool SphereWorld::doesCollide(Collidable* col)
 #ifdef WIP
 		if (!(*it)->alive)
 			continue;
+#endif
 		if(*it == col)
 			continue;
-		glm::vec2 d = (*it)->pos - col->pos;
-		float rrit = (*it)->r; //(*it)->scaleX*(*it)->scaleX + (*it)->scaleY*(*it)->scaleY;
-		float rrp = col->r; //player->scaleX*player->scaleX + player->scaleY*player->scaleY;
-		if(norm(d) < rrit*rrit + rrp*rrp + 2*rrit*rrp)
+		glm::vec2 d = (*it)->geometry.position - col->geometry.position;
+		float rrit = (*it)->_radius; //(*it)->scaleX*(*it)->scaleX + (*it)->scaleY*(*it)->scaleY;
+		float rrp = col->_radius; //player->scaleX*player->scaleX + player->scaleY*player->scaleY;
+		if(d.x * d.x + d.y * d.y  < rrit*rrit + rrp*rrp + 2*rrit*rrp)
 			return true;
-#endif
 	}
 	return false;
 }

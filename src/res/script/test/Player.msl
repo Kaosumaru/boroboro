@@ -5,7 +5,7 @@
 		{
 			Green.Head: Animation.AnimationFromFiles()
 			{
-				Frame_duration: 0.075
+				Frame_duration: 0.055
 				Frame_pivot: [64 64]
 				Frames_count: 9
 				Frames_offset: 1

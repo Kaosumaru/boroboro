@@ -47,5 +47,19 @@ namespace Boro
 		char KeyUse = 0;
 	};
 
+	class AlwaysLeftController : public Controller
+	{
+	public:
+		AlwaysLeftController(MX::LScriptObject& script) 
+		{
+
+		}
+
+		float direction() override 
+		{ 
+			return -1.0f;
+		}
+	};
+
 };
 
