@@ -1,0 +1,19 @@
+{
+	GUI:
+	{
+		TextDrawer: Drawer.TextImage()
+		{
+			Color: [1 1 1]
+			Font.Name: "font/arial.ttf"
+			Font.Size: 18
+			Width: 0
+		}
+
+		Label.Drawer: Drawer.TextImage()
+		{
+			Prototype: &GUI.TextDrawer
+			Font.Size: 16
+			Pos: 4
+		}
+	}
+}

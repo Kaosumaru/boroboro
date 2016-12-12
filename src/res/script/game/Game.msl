@@ -13,7 +13,7 @@
 			Sprite.Image()[ &Game.Res.BG ]
 		]
 
-		Game: Sprite.Scene()
+		Players:
 		[
 			&Boro.Player.Default
 			&Boro.Player.Red

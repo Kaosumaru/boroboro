@@ -64,6 +64,8 @@ public:
 	void bounce(const glm::vec2& normal);
 	virtual void onEat(Player* another) override;
 
+    void GainItem( const std::shared_ptr<UseItem>& newItem ) { Item = newItem; }
+
 	inline float GetSpeed() { return speed * speed_multiplier; }
 
 	float Rotation_Speed = 2.0f;
@@ -74,9 +76,6 @@ public:
 	SpriteActor *next_body_part = nullptr;
 	SpriteActor *last_body_part = this;
 
-
-	shared_ptr<UseItem> Item;
-
 	bool invisible = false;
 	bool pentakill = false;
 
@@ -86,8 +85,10 @@ public:
 	glm::vec2 item_pos;
 	MovementType MovType;
 
-	int score = 0;
+	SignalizingVariable<int> score = 0;
 protected:
+	shared_ptr<UseItem> Item;
+
 	auto& world()
 	{
 		return  Context<MX::SpriteScene, Boro::World_Tag>::current();

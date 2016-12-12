@@ -1,0 +1,43 @@
+{
+	GUI.Game:
+	{
+		Layouter: Layouter.Drawer(
+			Drawer: &<Game>.Drawer
+			Drawers: [ [&GUI.Label.Drawer [Label.Time Label.Player1.Points Label.Player2.Points ]] ]
+			)
+		[
+			Table( y1:50 y2:-6 x2:-17 )
+			[
+				tr()[ Layout( n:Label.Time p:8 ) ]
+				tr( h:55 )
+				[
+				  td()[]
+				  td( w:600 )
+				  [
+				  	td( w:75 )[]
+					td( w:175 )[ Layout( n:Label.Player1.Points p:5 ) ]
+
+					td()[ Drawer.Debug.Color()[] ]
+
+					td( w:175 )[ Layout( n:Label.Player2.Points p:5 ) ]
+					td( w:75 )[]
+
+
+				  ]
+				  td()[]
+				]
+			]
+		]
+
+		Drawer: Drawer.Composite.Layouter()
+		[
+
+		]
+
+		Drawer: Drawer.Composite.Layouter()
+		[
+
+		]
+	}
+
+}

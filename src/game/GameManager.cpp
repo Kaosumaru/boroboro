@@ -6,6 +6,7 @@
 #include "Script/ScriptObject.h"
 #include "Application/Window.h"
 #include <iostream>
+#include <iomanip>
 
 #include "Widgets/Widget.h"
 #include "Widgets/Layouters/StackWidget.h"
@@ -62,8 +63,30 @@ protected:
 	std::string _name;
 };
 
+class GameOverScene  : public StandardScene
+{
+public:
+	GameOverScene(int mode) : StandardScene("GameOver")
+	{
+#ifndef _DEBUG
+		MX::Window::current().keyboard()->on_specific_key_down[SDL_SCANCODE_SPACE].connect([&]() { End(); }, this);
+#endif
+        MX::Window::current().keyboard()->on_specific_key_down[SDL_SCANCODE_RETURN].connect([&]() { End(); }, this);
+
+
+        std::vector<std::string> images = { "images/end_remis.png", "images/end_player1.png", "images/end_player2.png" };
+        auto image = Resources::get().loadImage(images[mode]);
+        AddActor( std::make_shared<ImageSpriteActor>(image) );
+	}
+
+    void End();
+protected:
+};
+
+
 class GameScene : public StandardScene
 {
+	std::shared_ptr<MX::Widgets::ScriptLayouterWidget> _bgLayouter;
 public:
 	GameScene() : StandardScene("Game")
 	{
@@ -77,21 +100,110 @@ public:
 		AddActor(_world);
 		auto scene_guard = Context<MX::SpriteScene, Boro::World_Tag>::Lock(*_world);
 
-		CreateLayer("Game");
+        AddPlayers();
+
 		CreateLayer("Foreground");
+        AddOverlay();
 
 		Boro::InitLevel(_world.get());
+
+        _time.onValueChanged.static_connect( [&]( auto a, auto b ) { if (a != b) onTick(); } );
 	}
+
+    void AddPlayers()
+    {
+        auto scene = std::make_shared<BaseGraphicSceneScriptable>();
+        ScriptObjectString script("Game");
+        script.load_property( _players, "Players" );
+        for ( auto& player : _players )
+            scene->AddActor( player );
+        AddActor(scene);
+        //
+    }
+
+    void AddOverlay()
+    {
+        {
+            auto bg = std::make_shared<MX::Widgets::ScriptLayouterWidget>();
+            bg->AddStrategy(std::make_shared<MX::Strategies::FillInParent>());
+            bg->SetLayouter("GUI.Game.Layouter");
+            AddActor(bg);
+            _bgLayouter = bg;
+        }
+
+        {
+            auto time = std::make_shared<MX::Widgets::AutoLabel>();
+            time->SetStringBuilder( [&]() 
+            {
+                std::wstringstream ss;
+                ss << std::setfill(L'0') << std::setw(1) << _time.directValueAccess() / 60;
+                ss << ":";
+                ss << std::setfill(L'0') << std::setw(2) << _time.directValueAccess() % 60;
+                return ss.str();
+            });
+            time->connect_signal( _time.onValueChanged );
+            _bgLayouter->AddNamedWidget("Label.Time", time);
+        }
+
+
+        auto createPoints = []( auto p )
+        {
+            auto points = std::make_shared<MX::Widgets::AutoLabel>();
+            points->SetStringBuilder( [x = p.get()]() 
+            {
+                return std::to_wstring(x->score);
+            });
+            points->connect_signal( p->score.onValueChanged );
+            return points;
+        };
+
+        _bgLayouter->AddNamedWidget("Label.Player1.Points", createPoints(_players[0]));
+        _bgLayouter->AddNamedWidget("Label.Player2.Points", createPoints(_players[1]));
+
+    }
 
 	void Run() override
 	{
+        if (_time > 0 )
+            _time = maxTime - (int)_timer.total_seconds();
+
 		auto scene_guard = Context<MX::SpriteScene, Boro::World_Tag>::Lock(*_world);
 		MX::FullscreenDisplayScene::Run();
+
+        if ( _time == 0 )
+            End();
 	}
 
-	void End();
+    void End()
+    {
+        int mode = 0;
+        if ( _players[0]->score > _players[1]->score )
+            mode = 1;
+        if ( _players[0]->score > _players[1]->score )
+            mode = 2;
+
+	    auto menu = std::make_shared<GameOverScene>(mode);
+	    SpriteSceneStackManager::manager_of(this)->SelectScene(menu);
+    }
 protected:
+    void onTick()
+    {
+		if (_time <= (maxTime * 2) / 3)
+		{
+			float speed = 150.0f + (float)_time/(float)maxTime * 100.0f;
+            for ( auto &p : _players ) p->speed = speed;
+        }
+
+        for ( auto &p : _players )
+        {
+            p->score = p->score + p->GetLength();
+        }
+    }
+
+    const static int maxTime = 180;
+    SignalizingVariable<int> _time = maxTime;
 	std::shared_ptr<SpriteScene> _world;
+    std::vector<std::shared_ptr<Player>> _players;
 };
 
 
@@ -127,10 +239,11 @@ protected:
 };
 
 
-void GameScene::End()
+void GameOverScene::End()
 {
-	auto menu = std::make_shared<MenuScene>();
-	SpriteSceneStackManager::manager_of(this)->SelectScene(menu);
+	Sound::Sample::StopAll();
+	auto game = std::make_shared<MenuScene>();
+	SpriteSceneStackManager::manager_of(this)->SelectScene(game);
 }
 
 
