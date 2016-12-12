@@ -21,6 +21,9 @@
 #include "main/Player.h"
 #include "main/Pickups.h"
 
+#include "sound/Stream.h"
+#include "Game/Resources/Resources.h"
+
 using namespace MX;
 using namespace Boro;
 using namespace std;
@@ -108,6 +111,15 @@ public:
 		Boro::InitLevel(_world.get());
 
         _time.onValueChanged.static_connect( [&]( auto a, auto b ) { if (a != b) onTick(); } );
+
+		auto stream = MX::Resources::get().loadStream("music/game.ogg");
+		MX::Sound::StreamManager::get().SetCurrent(stream);
+	}
+
+	~GameScene()
+	{
+		MX::Sound::StreamManager::get().SetCurrent(nullptr);
+		MX::Sound::Sample::StopAll();
 	}
 
     void AddPlayers()
