@@ -36,7 +36,7 @@ public:
 	bool doesCollide(Collidable* col);
 };
 
-class Collidable : public MX::ScriptableSpriteActor
+class Collidable : public MX::BaseGraphicSceneScriptable
 {
 public:
 	float _radius;
@@ -47,7 +47,7 @@ public:
 		sw.addCollidable(this);	
 	}
 
-	Collidable(MX::LScriptObject& script) : MX::ScriptableSpriteActor(script)
+	Collidable(MX::LScriptObject& script) : MX::BaseGraphicSceneScriptable(script)
 	{
 		SphereWorld& sw = SphereWorld::getInst();
 		_radius = 16.0f;
