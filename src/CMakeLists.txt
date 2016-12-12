@@ -51,6 +51,7 @@ endif(MSVC)
 
 
 add_subdirectory(../libmx "${CMAKE_CURRENT_BINARY_DIR}/libmx")
+set(CMAKE_MODULE_PATH ${MX_MODULES} CACHE TYPE STRING FORCE)
 
 add_definitions("${MX_DEFINES}")
 

@@ -200,7 +200,7 @@ protected:
         }
     }
 
-    const static int maxTime = 180;
+    const int maxTime = 180;
     SignalizingVariable<int> _time = maxTime;
 	std::shared_ptr<SpriteScene> _world;
     std::vector<std::shared_ptr<Player>> _players;
