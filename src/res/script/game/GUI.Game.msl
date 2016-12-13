@@ -5,7 +5,9 @@
 			Drawer: &<Game>.Drawer
 			Drawers:
 			[
-				[&GUI.Label.Drawer [Label.Time Label.Player1.Points Label.Player2.Points ]]
+				[&GUI.GreenLabel.Drawer [Label.Player1.Points]]
+				[&GUI.RedLabel.Drawer [Label.Player2.Points ]]
+				[&GUI.BigLabel.Drawer [Label.Time]]
 				[&<Game>.Item.Drawer [ Player1.Item Player2.Item ]]
 			]
 			)

@@ -1,0 +1,116 @@
+{
+	Game.Res:
+	{
+		Blood: Image.Image()
+    {
+      Path: "images/blood.png"
+      Pivot: [32,32]
+    }
+
+		Fire: Image.Image()
+    {
+      Path: "images/Fire.png"
+      Pivot: [32,32]
+    }
+
+		FrontBlood: Particles.SimpleSystem()
+    {
+      Geometry.Position: [300,300]
+
+      Emitter: Particles.Emitter.PointRotation()
+      {
+				AddParentAngle: true
+        Direction: [-0.16, 0.16]
+        Life: 1
+        Speed: [150 250]
+      }
+
+      Creator: Particles.Creator.Image()
+      {
+        Start.Color: [1 1 1 0.87]
+        Start.Scale: [0.5 1]
+				Start.Angle: [0 6.3]
+
+				End.Angle: [0 6.3]
+        End.Color: [1 1 1 0],
+        End.Scale: [0.5 1]
+        Image: &Game.Res.Blood
+      }
+
+      Generator: Particles.Generator.Simple() { PerSecond: 33.33	}
+    }
+
+		BackBlood: Particles.SimpleSystem()
+    {
+      Geometry.Position: [300,300]
+
+			On.Run:
+			[
+				Command.Queue()
+				[
+					Command.Wait(){ Time:3 }
+					Command.Unlink()[]
+				]
+			]
+
+      Emitter: Particles.Emitter.PointRotation()
+      {
+				AddParentAngle: true
+        Direction: [0 1]
+        Life: 1
+        Speed: [30 70]
+      }
+
+      Creator: Particles.Creator.Image()
+      {
+        Start.Color: [1 1 1 0.87]
+        Start.Scale: [0.5 1]
+				Start.Angle: [0 6.3]
+
+				End.Angle: [0 6.3]
+        End.Color: [1 1 1 0],
+        End.Scale: [0.5 1]
+        Image: &Game.Res.Blood
+      }
+
+      Generator: Particles.Generator.Simple() { PerSecond: 63.33	}
+    }
+
+		Flames: Particles.SimpleSystem()
+    {
+      Geometry.Position: [300,300]
+
+			On.Run:
+			[
+				Command.Queue()
+				[
+					Command.Wait(){ Time:2 }
+					Command.Unlink()[]
+				]
+			]
+
+      Emitter: Particles.Emitter.PointRotation()
+      {
+				AddParentAngle: true
+        Direction: [-0.16, 0.16]
+        Life: [0.15 0.35]
+        Speed: 400
+      }
+
+      Creator: Particles.Creator.Image()
+      {
+        Start.Color: [1 0.9 0 1]
+        Start.Scale: 0.25
+				Start.Angle: [0 6.3]
+
+				End.Angle: [0 6.3]
+        End.Color: [[1 0 0 0] [1 0 0 0.6]]
+        End.Scale: 0.25
+        Image: &Game.Res.Fire
+      }
+
+      Generator: Particles.Generator.Simple() { PerSecond: 63.33	}
+    }
+
+	}
+}

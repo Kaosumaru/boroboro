@@ -15,22 +15,22 @@ class Player;
 class PlayerSnake_Body : public MX::ImageSpriteAdapter<Collidable>
 {
 public:
-	PlayerSnake_Body(SpriteActor *bef, Player *player, const std::shared_ptr<MX::Graphic::Image> &image);
+	PlayerSnake_Body(ScriptableSpriteActor *bef, Player *player, const std::shared_ptr<MX::Graphic::Image> &image);
 	void sharpenTail();
-	void newButt(SpriteActor *b);
+	void newButt(ScriptableSpriteActor *b);
 	float GetSpeed();
 	void Run() override;
 	void Draw(float x, float y);
 	void onEat(Player* player);
 	void Urwij();
-	SpriteActor * GetButt() { return butt; }
-	SpriteActor *before;  ///< before this segment
+	ScriptableSpriteActor * GetButt() { return butt; }
+	ScriptableSpriteActor *before;  ///< before this segment
 protected:
 
 	friend class Player;
 	Player* head;
 	Player* owner;
-	SpriteActor *butt;    ///< after this segment
+	ScriptableSpriteActor *butt;    ///< after this segment
 	float speedMult = 1.0f;
 	float dist;
 	glm::vec2 toPos;
@@ -55,7 +55,6 @@ public:
 
 	void calculate_playerspeed();
 	void Navigate();
-	void DrawItems();
 	void Move();
 	void AddBodypart();
 	void AddBodypart(int m) { for (int i = 0; i < m; i ++) AddBodypart();  }
@@ -74,8 +73,8 @@ public:
 	float speed_multiplier = 1.0f;
 	float rotation_proportion = 75.0f;
 
-	SpriteActor *next_body_part = nullptr;
-	SpriteActor *last_body_part = this;
+	ScriptableSpriteActor *next_body_part = nullptr;
+	ScriptableSpriteActor *last_body_part = this;
 
 	bool invisible = false;
 	bool pentakill = false;

@@ -30,7 +30,7 @@
 				Geometry.Position: [440 400]
 				Geometry.Scale: [0.8 0.65]
 				Geometry.Angle: 3.14
-				Length: 27
+				Length: 26
 			}
 			&Boro.Player.Default()
 			{
@@ -39,7 +39,7 @@
 				Geometry.Position: [840 400]
 				Geometry.Scale: [0.8 0.65]
 				Geometry.Angle: 0
-				Length: 27
+				Length: 26
 			}
 		]
 

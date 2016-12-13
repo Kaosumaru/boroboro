@@ -12,7 +12,30 @@
 		Label.Drawer: Drawer.TextImage()
 		{
 			Prototype: &GUI.TextDrawer
-			Font.Size: 16
+			Font.Size: 22
+			Pos: 4
+		}
+
+		GreenLabel.Drawer: Drawer.TextImage()
+		{
+			Color: [0.2 1 0.2]
+			Prototype: &GUI.TextDrawer
+			Font.Size: 22
+			Pos: 4
+		}
+
+		RedLabel.Drawer: Drawer.TextImage()
+		{
+			Color: [1 0.2 0.2]
+			Prototype: &GUI.TextDrawer
+			Font.Size: 22
+			Pos: 4
+		}
+
+		BigLabel.Drawer: Drawer.TextImage()
+		{
+			Prototype: &GUI.TextDrawer
+			Font.Size: 26
 			Pos: 4
 		}
 	}

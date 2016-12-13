@@ -5,7 +5,7 @@
 		{
 			k: Event.Sprite.CreateSprite()
 			{
-				Sprite: &Test.NewConcept
+				Sprite: &Game.Res.Flames
 			}
 		}
 	}

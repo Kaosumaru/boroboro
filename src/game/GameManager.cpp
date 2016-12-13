@@ -83,9 +83,9 @@ public:
 	GameOverScene(int mode) : StandardScene("GameOver")
 	{
 #ifndef _DEBUG
-		MX::Window::current().keyboard()->on_specific_key_down[SDL_SCANCODE_SPACE].connect([&]() { End(); }, this);
+		MX::Window::current().keyboard()->on_specific_key_down[SDL_SCANCODE_RETURN].connect([&]() { End(); }, this);
 #endif
-        MX::Window::current().keyboard()->on_specific_key_down[SDL_SCANCODE_RETURN].connect([&]() { End(); }, this);
+        MX::Window::current().keyboard()->on_specific_key_down[SDL_SCANCODE_SPACE].connect([&]() { End(); }, this);
 
 
         std::vector<std::string> images = { "images/end_remis.png", "images/end_player1.png", "images/end_player2.png" };
@@ -126,7 +126,7 @@ class GameScene : public StandardScene
 #endif
 	std::shared_ptr<MX::Widgets::ScriptLayouterWidget> _bgLayouter;
 public:
-	GameScene() : StandardScene("Game")
+	GameScene(bool alt = false) : StandardScene("Game")
 	{
 #ifdef _DEBUG	
 		MX::Window::current().keyboard()->on_specific_key_down[SDL_SCANCODE_SPACE].connect([&]() { End(); }, this);
@@ -138,7 +138,7 @@ public:
 		AddActor(_world);
 		auto scene_guard = Context<MX::SpriteScene, Boro::World_Tag>::Lock(*_world);
 
-        AddPlayers();
+        AddPlayers(alt);
 
 		CreateLayer("Foreground");
         AddOverlay();
@@ -159,10 +159,10 @@ public:
 		MX::Sound::Sample::StopAll();
 	}
 
-    void AddPlayers()
+    void AddPlayers(bool alt)
     {
         ScriptObjectString script("Game");
-        script.load_property( _players, "Players" );
+        script.load_property( _players, alt ? "Players2" : "Players" );
         for ( auto& player : _players )
 			_world->AddActor( player );
         //
@@ -263,7 +263,8 @@ class MenuScene  : public StandardScene
 public:
 	MenuScene() : StandardScene("Menu")
 	{
-		MX::Window::current().keyboard()->on_specific_key_down[SDL_SCANCODE_RETURN].connect([&]() { End(); }, this);
+		MX::Window::current().keyboard()->on_specific_key_down[SDL_SCANCODE_BACKSPACE].connect([&]() { End(true); }, this);
+		MX::Window::current().keyboard()->on_specific_key_down[SDL_SCANCODE_RETURN].connect([&]() { End(false); }, this);
 
 		CreateLayer("Menu.Background");
 		_world = std::make_shared<ZSortedGraphicSceneScriptable>();
@@ -279,10 +280,10 @@ public:
 		MX::FullscreenDisplayScene::Run();
 	}
 
-	void End()
+	void End(bool alt)
 	{
 		Sound::Sample::StopAll();
-		auto game = std::make_shared<GameScene>();
+		auto game = std::make_shared<GameScene>(alt);
 		SpriteSceneStackManager::manager_of(this)->SelectScene(game);
 	}
 protected:

@@ -1,6 +1,7 @@
 #include "glm/vec2.hpp"
 #include "Items.h"
 #include "Player.h"
+#include "Particles.h"
 #include "scene/Script/SpriteCommands.h"
 #include "scene/Script/CommonCommands.h"
 #include "Game/Resources/Resources.h"
@@ -85,10 +86,8 @@ void PentagramItem::onUse(MX::SpriteScene *scene, Player *user)
 {
 	using namespace MX;
 
-#ifdef WIP
-	//fire particle
-#endif
-
+	AppendFlames(user->shared_from_this());
+	
 	user->pentakill = true;
 	auto command = command_from_functor([user]() 
 	{ 

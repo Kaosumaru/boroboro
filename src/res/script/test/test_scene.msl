@@ -4,37 +4,11 @@
 		&Intro.Intro
 	]
 
+
+
 	Test:
   {
-    Smoke: Image.Image()
-    {
-      Path: "misc/smoke.png"
-      Pivot: [32,32]
-    },
 
-    NewConcept: Particles.SimpleSystem()
-    {
-      Geometry.Position: [300,300]
-
-      Emitter: Particles.Emitter.PointRotation()
-      {
-        Direction: [0.0, 1.0]
-        Life: [3.25,4.0]
-        Speed: 50
-      }
-
-      Creator: Particles.Creator.Image()
-      {
-        Start.Color: [0.78,0.78,0.78,1.0],
-        Start.Scale: [0.78, 0.78],
-
-        End.Color: [1, 1, 1, -0.1],
-        End.Scale: [0.52, 0.52],
-        Image: &Test.Smoke
-      }
-
-      Generator: Particles.Generator.Simple() { PerSecond: 100	}
-    }
 
   }
 

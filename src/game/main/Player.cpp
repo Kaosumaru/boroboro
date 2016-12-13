@@ -1,12 +1,13 @@
 #include "glm/vec2.hpp"
 #include "Player.h"
+#include "Particles.h"
 #include "script/PropertyLoaders.h"
 
 #define INVICIBLE_TIME 2000
 
 namespace Boro
 {
-	PlayerSnake_Body::PlayerSnake_Body(SpriteActor *bef, Player *player, const std::shared_ptr<MX::Graphic::Image> &image)
+	PlayerSnake_Body::PlayerSnake_Body(ScriptableSpriteActor *bef, Player *player, const std::shared_ptr<MX::Graphic::Image> &image)
 		: MX::ImageSpriteAdapter<Collidable>(image)
 	{
 		before = bef;
@@ -51,7 +52,7 @@ namespace Boro
 	}
 
 
-	void PlayerSnake_Body::newButt(SpriteActor *b)
+	void PlayerSnake_Body::newButt(ScriptableSpriteActor *b)
 	{
 		butt = b;
 	}
@@ -117,7 +118,7 @@ namespace Boro
 			dd = dd + b;
 			dd = glm::normalize(dd);
 		}
-		this->geometry.angle = MX::angle(dd); //TES 
+		this->geometry.angle = MX::angle(dd);
 
 		Collidable::Run();
 
@@ -171,15 +172,15 @@ namespace Boro
 			
 		}
 
-#ifdef WIP
 		if (before)
-			AddBackGore(scene, before);
-#endif
+			AppendBackBlood(before->shared_from_this());
 
 		if (butt)
 		{
 			PlayerSnake_Body * body = dynamic_cast<PlayerSnake_Body*>(butt);
 			body->before = NULL;
+
+			AppendFrontBlood(butt->shared_from_this());
 #ifdef WIP
 			AddFrontGore(scene, butt);
 #endif
@@ -241,7 +242,7 @@ namespace Boro
 		}
 
 #ifdef _DEBUG
-		Item = std::make_shared<PoopItem>();
+		Item = std::make_shared<PentagramItem>();
 #endif
 	}
 
@@ -267,16 +268,6 @@ namespace Boro
 		}
 	}
 
-	void Player::DrawItems()
-	{
-#ifdef WIP
-		if (!Item || !Item->item_image)
-			return;
-
-		Item->item_image->Animate(*spriter, item_pos.x, item_pos.y);
-#endif
-	}
-
 	void Player::Move()
 	{
 		glm::vec2 d = MX::CreateVectorFromAngle(geometry.angle);
@@ -288,9 +279,6 @@ namespace Boro
 	{
 		SphereWorld& sw = SphereWorld::getInst();
 
-#ifdef WIP
-		DrawItems();
-#endif
 		if(headonColCounter)
 			--headonColCounter;
 
