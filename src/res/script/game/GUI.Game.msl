@@ -3,7 +3,11 @@
 	{
 		Layouter: Layouter.Drawer(
 			Drawer: &<Game>.Drawer
-			Drawers: [ [&GUI.Label.Drawer [Label.Time Label.Player1.Points Label.Player2.Points ]] ]
+			Drawers:
+			[
+				[&GUI.Label.Drawer [Label.Time Label.Player1.Points Label.Player2.Points ]]
+				[&<Game>.Item.Drawer [ Player1.Item Player2.Item ]]
+			]
 			)
 		[
 			Table( y1:50 y2:-6 x2:-17 )
@@ -14,13 +18,13 @@
 				  td()[]
 				  td( w:600 )
 				  [
-				  	td( w:75 )[]
+				  td( w:75 )[ Layout( n:Player1.Item p:5 ) ]
 					td( w:175 )[ Layout( n:Label.Player1.Points p:5 ) ]
 
 					td()[ Drawer.Debug.Color()[] ]
 
 					td( w:175 )[ Layout( n:Label.Player2.Points p:5 ) ]
-					td( w:75 )[]
+					td( w:75 )[ Layout( n:Player2.Item p:5 ) ]
 
 
 				  ]
@@ -34,8 +38,12 @@
 
 		]
 
-		Drawer: Drawer.Composite.Layouter()
+		Item.Drawer: Drawer.Composite.Layouter( Size:[64 64])
 		[
+			Destination( x1:32 y1: 32)
+			[
+				Drawer.Image()
+			]
 
 		]
 	}

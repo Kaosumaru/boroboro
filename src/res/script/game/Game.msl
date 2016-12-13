@@ -19,6 +19,12 @@
 			&Boro.Player.Red
 		]
 
+		Players2:
+		[
+			&Boro.Player.Default
+			&Boro.Player.Pink
+		]
+
 		Foreground: Sprite.Scene()
 		[
 			Sprite.Image()[ &Game.Res.FG ]

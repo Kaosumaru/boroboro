@@ -65,6 +65,7 @@ public:
 	virtual void onEat(Player* another) override;
 
     void GainItem( const std::shared_ptr<UseItem>& newItem ) { Item = newItem; }
+	const auto& item() { return Item; }
 
 	inline float GetSpeed() { return speed * speed_multiplier; }
 

@@ -241,7 +241,7 @@ namespace Boro
 		}
 
 #ifdef _DEBUG
-		Item = std::make_shared<GoodBootleItem>();
+		Item = std::make_shared<PoopItem>();
 #endif
 	}
 

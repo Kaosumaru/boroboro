@@ -58,7 +58,7 @@ namespace Boro
 			auto image = MX::Resources::get().loadCenteredImage(64.0f, 64.0f, "images/berry.png");
 			SetImage(image);
 
-			script.onRun.connect_command(MX::q({ MX::wait(5.0f), MX::lerp_color({1.0f, 1.0f, 1.0f, 1.0f}, {1.0f, 1.0f, 1.0f, 0.0f}, 1.0f), MX::unlink() }));
+			script.onRun.connect_command(MX::q({ MX::wait(5.0f), MX::lerp_color({1.0f, 1.0f, 1.0f, 0.0f}, 1.0f), MX::unlink() }));
 		}
 
 		void onEat(Player* player) override
@@ -87,26 +87,25 @@ namespace Boro
 	class ItemPickup : public Pickup
 	{
 	public:
-        using Creator = std::function<std::shared_ptr<UseItem>()>;
-
-        ItemPickup( const Creator& creator, const std::string& image, const std::string& sound )
+        ItemPickup( const std::shared_ptr<UseItem>& item )
 		{
-            _creator = creator;
+			_item = item;
 			geometry.z = 0.9f;
-			_pickedUp = MX::Resources::get().loadSound(sound);
-			SetImage(MX::Resources::get().loadCenteredImage(64.0f, 64.0f, image));
-
+			SetImage(item ? item->item_image : 0);
 			script.onRun.connect_command(MX::q({ MX::wait(5.0f), MX::lerp_color({1.0f, 1.0f, 1.0f, 1.0f}, {1.0f, 1.0f, 1.0f, 0.0f}, 3.0f), MX::unlink() }));
 		}
 
 		void onEat(Player* player) override
 		{
-            if (_creator)
-                player->GainItem(_creator());
+			if (_item)
+			{
+				_item->onPickedUp();
+				player->GainItem(_item);
+			}
 			Pickup::onEat(player);			
 		}
     protected:
-        Creator _creator;
+		std::shared_ptr<UseItem> _item;
 	};
 
 	class ItemPickupSpawner : public MX::ActorFactory
@@ -114,7 +113,8 @@ namespace Boro
 	public:
 		ItemPickupSpawner()
 		{
-			auto time = std::make_pair(20.0f, 25.0f);
+			//auto time = std::make_pair(20.0f, 25.0f);
+			auto time = std::make_pair(5.0f, 7.0f);
 			SetGenerator(std::make_shared<MX::ActorGeneratorRandomIntervals>(time));
 		}
 
@@ -122,46 +122,49 @@ namespace Boro
 		{
             float x_rand = 50.0f + (float)(rand()%1180); //WIPMAGIC
             float y_rand = 50.0f + (float)(rand()%700); //WIPMAGIC
-            std::shared_ptr<ItemPickup> item;
+            
+			std::shared_ptr<UseItem> item;
 		    switch (rand() % 10)
 		    {
 		    case 0:
 		    case 1:
 		    case 2:
-			    //pItem = make_shared<BonusItem<GoodBootleItem>>(&SoundBank::gulp, GraphicRes.bottle, 5000, 3000);
+				item = std::make_shared<GoodBootleItem>();
 			    break;
 		    case 3:
 		    case 4:
 		    case 5:
-			    //pItem = make_shared<BonusItem<PoopItem>>(&SoundBank::apple_bite, GraphicRes.rotten_apple, 5000, 3000);
+				item = std::make_shared<PoopItem>();
 			    break;
 		    case 6:
 		    case 7:
 		    case 8:			
-			    //pItem = make_shared<BonusItem<ShieldItem>>(&SoundBank::apple_bite, GraphicRes.shield, 5000, 3000);
+				item = std::make_shared<ShieldItem>();
 			    break;
 		    case 9:
-			    //pItem = make_shared<PentagramBonus>();
-    			    break;
+				item = std::make_shared<PentagramItem>();
+    			break;
             }
 
             if ( !item )
-                return item;
+                return nullptr;
 
-            item->geometry.position = { x_rand, y_rand };
+			std::shared_ptr<ItemPickup> pickup = std::make_shared<ItemPickup>(item);
+
+			pickup->geometry.position = { x_rand, y_rand };
 
 		    int nTries = 3;
-		    while (SphereWorld::getInst().doesCollide(item.get()))
+		    while (SphereWorld::getInst().doesCollide(pickup.get()))
 		    {
 			    x_rand = (float)(rand()%1280);
 			    y_rand = (float)(rand()%800);
 
-			    item->geometry.position = { x_rand, y_rand };
+				pickup->geometry.position = { x_rand, y_rand };
 
 			    if (--nTries == 0)
 				    return nullptr;
             }
-            return item;
+            return pickup;
 		}
 	};
 

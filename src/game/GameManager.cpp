@@ -37,6 +37,16 @@ public:
 	void Run() override
 	{
 		BaseGraphicSceneScriptable::Run();
+	}
+
+	void Draw(float x, float y)
+	{
+		Sort();
+		BaseGraphicSceneScriptable::Draw(x, y);
+	}
+
+	void Sort()
+	{
 		_actors.sort([](auto &a, auto &b)
 		{
 			if (!a)
@@ -86,6 +96,27 @@ public:
 protected:
 };
 
+class ItemWidget : public MX::Widgets::ButtonWidget
+{
+public:
+	ItemWidget(const std::shared_ptr<Player> &player)
+	{
+		_player = player;
+		AddStrategy(_iconStrategy);
+	}
+
+	void Run()
+	{
+		if (_player && _player->item())
+			_iconStrategy.SetImage(_player->item()->item_image);
+		else
+			_iconStrategy.SetImage(nullptr);
+		MX::Widgets::Widget::Run();
+	}
+protected:
+	std::shared_ptr<Player> _player;
+	MX::Strategies::Drawable::Image    _iconStrategy;
+};
 
 class GameScene : public StandardScene
 {
@@ -158,20 +189,24 @@ public:
         }
 
 
-        auto createPoints = []( auto p )
-        {
-            auto points = std::make_shared<MX::Widgets::AutoLabel>();
-            points->SetStringBuilder( [x = p.get()]() 
-            {
-                return std::to_wstring(x->score);
-            });
-            points->connect_signal( p->score.onValueChanged );
-            return points;
-        };
+		{
+			auto createPoints = []( auto p )
+			{
+				auto points = std::make_shared<MX::Widgets::AutoLabel>();
+				points->SetStringBuilder( [x = p.get()]() 
+				{
+					return std::to_wstring(x->score);
+				});
+				points->connect_signal( p->score.onValueChanged );
+				return points;
+			};
 
-        _bgLayouter->AddNamedWidget("Label.Player1.Points", createPoints(_players[0]));
-        _bgLayouter->AddNamedWidget("Label.Player2.Points", createPoints(_players[1]));
+			_bgLayouter->AddNamedWidget("Label.Player1.Points", createPoints(_players[0]));
+			_bgLayouter->AddNamedWidget("Label.Player2.Points", createPoints(_players[1]));
+		}
 
+		_bgLayouter->AddNamedWidget("Player1.Item", std::make_shared<ItemWidget>(_players[0]));
+		_bgLayouter->AddNamedWidget("Player2.Item", std::make_shared<ItemWidget>(_players[1]));
     }
 
 	void Run() override

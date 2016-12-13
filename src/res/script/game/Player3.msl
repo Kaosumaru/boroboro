@@ -1,0 +1,35 @@
+{
+	Boro.Player:
+	{
+		Res:
+		{
+			Pink.Head: Animation.AnimationFromFiles()
+			{
+				Frame_duration: 0.055
+				Frame_pivot: [64 64]
+				Frames_count: 7
+				Frames_offset: 1
+				Filename_template: "images/wonsz/head_open3/anim%d.png"
+			}
+			Pink.Body: Image.Image( Center:true )[ "images/wonsz/WonszBody3.png" ]
+		}
+		//Logo1: Sprite.Image()[ &Intro.Res.Logo1 ]
+		//Logo1: Sprite.Image()[ &Intro.Res.Logo1 ]
+
+		Pink: &Boro.Player.Default()
+		{
+			Animation: &<Player>.Res.Pink.Head
+			Body: &<Player>.Res.Pink.Body
+			Geometry.Position: [900 400]
+			Geometry.Scale: [0.8 0.65]
+			Geometry.Angle: 3.14
+
+			Controller: Boro.Controller.Key()
+			{
+				Left: 80
+				Right: 79
+				Use: 82
+			}
+		}
+	}
+}
