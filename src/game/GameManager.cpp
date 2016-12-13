@@ -23,6 +23,7 @@
 
 #include "sound/Stream.h"
 #include "Game/Resources/Resources.h"
+#include "Game/DebugCheats.h"
 
 using namespace MX;
 using namespace Boro;
@@ -120,6 +121,9 @@ protected:
 
 class GameScene : public StandardScene
 {
+#ifdef _DEBUG
+	std::shared_ptr<CheatObject> _cheats = CreateCheats();
+#endif
 	std::shared_ptr<MX::Widgets::ScriptLayouterWidget> _bgLayouter;
 public:
 	GameScene() : StandardScene("Game")
@@ -143,6 +147,8 @@ public:
 
         _time.onValueChanged.static_connect( [&]( auto a, auto b ) { if (a != b) onTick(); } );
 
+		Context<BaseGraphicScene>::SetCurrent(*_world);
+
 		auto stream = MX::Resources::get().loadStream("music/game.ogg");
 		MX::Sound::StreamManager::get().SetCurrent(stream);
 	}
@@ -155,12 +161,10 @@ public:
 
     void AddPlayers()
     {
-        auto scene = std::make_shared<BaseGraphicSceneScriptable>();
         ScriptObjectString script("Game");
         script.load_property( _players, "Players" );
         for ( auto& player : _players )
-            scene->AddActor( player );
-        AddActor(scene);
+			_world->AddActor( player );
         //
     }
 
@@ -249,7 +253,7 @@ protected:
 
     const int maxTime = 180;
     SignalizingVariable<int> _time = maxTime;
-	std::shared_ptr<SpriteScene> _world;
+	std::shared_ptr<BaseGraphicScene> _world;
     std::vector<std::shared_ptr<Player>> _players;
 };
 
