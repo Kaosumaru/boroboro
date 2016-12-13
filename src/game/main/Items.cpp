@@ -5,6 +5,7 @@
 #include "scene/Script/CommonCommands.h"
 #include "Game/Resources/Resources.h"
 #include "graphic/images/TextureImage.h"
+#include "utils/Random.h"
 
 namespace Boro
 {
@@ -19,7 +20,10 @@ void UseItem::Use(MX::SpriteScene *scene, Player *user)
 GoodBootleItem::GoodBootleItem()
 {
 	item_image = MX::Resources::get().loadCenteredImage(32.0f, 32.0f, "images/bottle.png");
-	_soundUsed = MX::Resources::get().loadSound("sounds/gulp.ogg");
+	static std::vector<MX::Sound::Sample::pointer> sounds = { MX::Resources::get().loadSound("sounds/sss1.ogg"),MX::Resources::get().loadSound("sounds/sss2.ogg"), MX::Resources::get().loadSound("sounds/sss3.ogg") };
+
+	_soundUsed = Random::randomFrom(sounds);
+	_soundPicked = MX::Resources::get().loadSound("sounds/gulp.ogg");
 }
 
 void GoodBootleItem::onUse(MX::SpriteScene *scene, Player *user)
@@ -39,7 +43,7 @@ void GoodBootleItem::onUse(MX::SpriteScene *scene, Player *user)
 ShieldItem::ShieldItem()
 {
 	item_image = MX::Resources::get().loadCenteredImage(32.0f, 32.0f, "images/apple.png");
-	_soundUsed = MX::Resources::get().loadSound("sounds/gulp.ogg");
+	_soundPicked = MX::Resources::get().loadSound("sounds/apple-crunch.ogg");
 }
 
 void ShieldItem::onUse(MX::SpriteScene *scene, Player *user)
@@ -73,7 +77,8 @@ void ShieldItem::onUse(MX::SpriteScene *scene, Player *user)
 PentagramItem::PentagramItem()
 {
 	item_image = MX::Resources::get().loadCenteredImage(32.0f, 32.0f, "images/PentaSmall.png");
-	_soundUsed = MX::Resources::get().loadSound("sounds/sssatan.ogg");
+	_soundUsed = MX::Resources::get().loadSound("sounds/flamewind2.ogg");
+	_soundPicked = MX::Resources::get().loadSound("sounds/sssatan.ogg");
 }
 
 void PentagramItem::onUse(MX::SpriteScene *scene, Player *user)
@@ -101,6 +106,7 @@ PoopItem::PoopItem()
 {
 	item_image = MX::Resources::get().loadCenteredImage(32.0f, 32.0f, "images/apple2.png");
 	_soundUsed = MX::Resources::get().loadSound("sounds/shit.ogg");
+	_soundPicked = MX::Resources::get().loadSound("sounds/apple-crunch.ogg");
 }
 
 void PoopItem::onUse(MX::SpriteScene *scene, Player *user)
