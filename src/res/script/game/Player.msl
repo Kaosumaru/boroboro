@@ -27,7 +27,7 @@
 
 			Item.Pos: [370 770]
 
-			Length:30
+			Length:25
 
 			Controller: Boro.Controller.Key()
 			{
