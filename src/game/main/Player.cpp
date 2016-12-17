@@ -242,7 +242,7 @@ namespace Boro
 		}
 
 #ifdef _DEBUG
-		Item = std::make_shared<PentagramItem>();
+		Item = std::make_shared<GoodBootleItem>();
 #endif
 	}
 

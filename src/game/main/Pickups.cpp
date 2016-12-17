@@ -108,6 +108,44 @@ namespace Boro
 		std::shared_ptr<UseItem> _item;
 	};
 
+	class PentagramPickup : public Pickup
+	{
+	public:
+		PentagramPickup()
+		{
+			_item = std::make_shared<PentagramItem>();
+			geometry.z = 0.9f;
+			geometry.scale = { 0.2f, 0.2f };
+
+			_image = MX::Resources::get().loadCenteredImage(256.0f, 256.0f, "images/pentagram.png");
+			_image_fg = MX::Resources::get().loadCenteredImage(256.0f, 256.0f, "images/pentagram2.png");
+
+			script.onRun.connect_command(MX::q({ MX::wait(5.0f), MX::lerp_color({1.0f, 1.0f, 1.0f, 1.0f}, {1.0f, 1.0f, 1.0f, 0.0f}, 3.0f), MX::unlink() }));
+			script.onRun.connect_command(MX::rotate(0.5f));
+			script.onRun.connect_command(MX::l({ MX::warp_scale(0.23f, 0.23f, 0.25f), MX::warp_scale(0.2f, 0.2f, 0.25f) }));
+		}
+
+		void onEat(Player* player) override
+		{
+			if (_item)
+			{
+				_item->onPickedUp();
+				player->GainItem(_item);
+			}
+			Pickup::onEat(player);			
+		}
+
+		void Draw(float x, float y)
+		{
+			Pickup::Draw(x, y);
+			if (_image_fg)
+				_image_fg->DrawCentered({}, { x, y }, geometry.scale, 0.0f, geometry.color);
+		}
+	protected:
+		std::shared_ptr<UseItem> _item;
+		std::shared_ptr<MX::Graphic::Image> _image_fg;
+	};
+
 	class ItemPickupSpawner : public MX::ActorFactory
 	{
 	public:
@@ -124,6 +162,7 @@ namespace Boro
             float y_rand = 50.0f + (float)(rand()%700); //WIPMAGIC
             
 			std::shared_ptr<UseItem> item;
+			std::shared_ptr<Pickup> pickup;
 		    switch (rand() % 10)
 		    {
 		    case 0:
@@ -142,14 +181,15 @@ namespace Boro
 				item = std::make_shared<ShieldItem>();
 			    break;
 		    case 9:
-				item = std::make_shared<PentagramItem>();
+				pickup = std::make_shared<PentagramPickup>();
     			break;
             }
 
-            if ( !item )
+            if (!item)
                 return nullptr;
 
-			std::shared_ptr<ItemPickup> pickup = std::make_shared<ItemPickup>(item);
+			if (!pickup)
+				pickup = std::make_shared<ItemPickup>(item);
 
 			pickup->geometry.position = { x_rand, y_rand };
 

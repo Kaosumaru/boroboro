@@ -31,10 +31,10 @@ void GoodBootleItem::onUse(MX::SpriteScene *scene, Player *user)
 {
 	using namespace MX;
 
-	user->speed_multiplier += 2.0f;
+	user->speed_multiplier += 1.0f;
 	auto command = command_from_functor([user]() 
 	{ 
-		user->speed_multiplier -= 2.0f; 
+		user->speed_multiplier -= 1.0f; 
 		return false; 
 	});
 	user->script.onRun.connect_command(q({ wait(2.0f), command }));
