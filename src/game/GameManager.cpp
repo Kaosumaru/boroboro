@@ -333,8 +333,10 @@ protected:
 
 GameManager::GameManager()
 {
-#ifdef _DEBUG
 	auto game = std::make_shared<GameScene>();
+	auto menu = std::make_shared<MenuScene>();
+
+#ifdef _DEBUG
 	SelectScene(game);
 #else
     auto intro = std::make_shared<IntroScene>();
