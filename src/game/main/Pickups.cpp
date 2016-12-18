@@ -185,7 +185,7 @@ namespace Boro
     			break;
             }
 
-            if (!item)
+            if (!item && !pickup)
                 return nullptr;
 
 			if (!pickup)
